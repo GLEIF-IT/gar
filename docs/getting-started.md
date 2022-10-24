@@ -10,6 +10,8 @@ The steps described in this section only need to be performed once to prepare yo
 perform as a GAR.
 
 ### Prerequisites
+The software in this repository is designed to run on MacBook Pro laptops with macOS Monterey (ver 12.6).
+
 The following 3 software packages are required to execute the scripts in this repository:
 
 - Docker Desktop on Mac
