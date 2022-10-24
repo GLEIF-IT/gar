@@ -20,10 +20,10 @@ if [ $ret -eq 0 ]; then
 fi
 
 # Create the local database environment (directories, datastore, keystore)
-kli init --name "${EXT_GAR_NAME}" --salt "${salt}" --passcode "${passcode}" --config-dir "${EXT_GAR_SCRIPT_DIR}" --config-file ext-gar-config.json
+kli init --name "${EXT_GAR_NAME}" --salt "${salt}" --passcode "${passcode}" --config-file ext-gar-config.json
 
 # Create your local AID for use as a participant in the External AID
-kli incept --name "${EXT_GAR_NAME}" --alias "${EXT_GAR_ALIAS}" --passcode "${passcode}" --file "${EXT_GAR_SCRIPT_DIR}"/ext-gar-local-incept.json
+kli incept --name "${EXT_GAR_NAME}" --alias "${EXT_GAR_ALIAS}" --passcode "${passcode}" --file /scripts/ext-gar-local-incept.json
 
 # Here's your AID:
 kli status --name "${EXT_GAR_NAME}" --alias "${EXT_GAR_ALIAS}" --passcode "${passcode}"

@@ -6,17 +6,23 @@
 ##                                                              ##
 ##################################################################
 
-EXT_GAR_SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-export EXT_GAR_SCRIPT_DIR
-
-alias kli="docker run -it --rm -v \"${HOME}\"/.gar:/usr/local/var/keri \"${EXT_GAR_SCRIPT_DIR}\":/scripts gleif/keri:0.6.7 kli"
-
-# Set current working directory for all scripts that must access files
 # Change to the name you want to use for your local database environment.
 export EXT_GAR_NAME="External GAR"
 
 # Change to the name you want for the alias for your local External GAR AID
-export EXT_GAR_ALIAS="Phil Feairheller"
+export EXT_GAR_ALIAS="John Doe"
+
+# Set current working directory for all scripts that must access files
+EXT_GAR_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+export EXT_GAR_SCRIPT_DIR="${EXT_GAR_DIR}/scripts"
+export EXT_GAR_DATA_DIR="${EXT_GAR_DIR}/data"
+
+function kli() {
+  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${EXT_GAR_SCRIPT_DIR}":/scripts -v "${EXT_GAR_DATA_DIR}":/data gleif/keri:0.6.7 kli "$@"
+}
+
+export -f kli
 
 # Creates the passcode for your local keystore and saves it in your keychain.  Will not overwrite
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode 2> /dev/null)"

@@ -1,5 +1,19 @@
 
+##################################################################
+##                                                              ##
+##        Setup local environment as an External GAR            ##
+##                                                              ##
+##################################################################
 
-mkdir -p ~/.gar/cf
-cp -R scripts/keri ~/.gar/cf
+# Pull container required to run all KERI/ACDC commands
+docker pull gleif/keri:0.6.7
+
+# Create local directory for datastore, keystore and configuration
+mkdir -p "${HOME}"/.gar/cf
+
+# Protect directory from others
+chmod 700 "${HOME}"/.gar
+
+# Copy AID configuration information for loading
+cp -R scripts/keri/cf/ ~/.gar/cf
 
