@@ -32,3 +32,14 @@ credentials, all foundational concepts and technologies for GLEIF's vLEI ecosyst
 | CESR         | Composable Event Streaming Representation | [IETF CESR Draft](https://github.com/WebOfTrust/ietf-cesr)                        | Samuel Smith |[Active Draft](https://datatracker.ietf.org/doc/draft-ssmith-cesr/)|
 | CESR Proof   | CESR Proof Signatures | [IETF CESR Proof Signatures Draft](https://github.com/WebOfTrust/ietf-cesr-proof) | Phil Feairheller | [Active Draft](https://datatracker.ietf.org/doc/draft-pfeairheller-cesr-proof/) | 
 | PTEL         | Public Transaction Event Logs | [IETF PTEL Draft](https://github.com/WebOfTrust/ietf-ptel)                        | Phil Feairheller | [Active Draft](https://datatracker.ietf.org/doc/draft-pfeairheller-ptel/)| 
+
+
+## Utility Scripts
+There are several scripts located in the `scripts` directory that are described specifically in any flow documentation
+but are provided as utilities that can be helpful for GAR controllers while participanting in the vLEI ecosystem.  The
+following table describes the scripts, all of which can be used any time after the steps described in [Getting Started](./docs/getting-started.md)
+
+| Script | Purpose |
+|--------|---------|
+| `./scripts/status.sh` | AID status script that can be used to inspect key state of any local AID |
+| `./scripts/contacts.sh` | Script to list any contacts locally resolved through OOBI exchange.  Indicates Authentication status |
