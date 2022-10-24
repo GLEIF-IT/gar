@@ -18,7 +18,7 @@ for the group multisig AID and initiate the inception with that configuration fi
 group once they receive the notification from the Lead.  The rest of this document describes the entire process
          
 ## Join Video Call
-
+The vLEI Ecosystem Governance Framework specifies that 
 
 ## Send and Receive OOBIs
 
