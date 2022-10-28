@@ -12,14 +12,19 @@ perform as a GAR.
 ### Prerequisites
 The software in this repository is designed to run on MacBook Pro laptops with macOS Monterey (ver 12.6).
 
-The following 3 software packages are required to execute the scripts in this repository:
+The following five software packages are required to execute the scripts in this repository:
 
+- Homebrew (brew) - The Missing Package Manager for macOS
 - Docker Desktop on Mac
 - Bash - the Bourne Again SHell
 - jq - `sed` for JSON data
+- git - distributed version control system
 
-Installation instructions for Docker Desktop can be found here: https://docs.docker.com/desktop/install/mac-install/.  Bash should be
-install by default on your MacOS computer.  Installation instructions for `jq` can be found here: https://stedolan.github.io/jq/download/
+Installation instructions for Homebrew (`brew`) can be found here: https://brew.sh.
+Installation instructions for Docker Desktop can be found here: https://docs.docker.com/desktop/install/mac-install/.  
+Bash should be installed by default on your MacOS computer.  
+Installation instructions for `jq` can be found here: https://stedolan.github.io/jq/download, utilize the brew command.
+Installation instructions for `git` can be found here: https://git-scm.com/download/mac, utilize the brew command.
 
 ### System Setup
 The scripts in this package rely on the KERIpy docker image `gleif/keri` hosted on docker hub.  The first step is to execute the
