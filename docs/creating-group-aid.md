@@ -106,11 +106,11 @@ Checking mailboxes for any challenge responses...
 
 You need to copy the second line from the output and paste it in a private chat to the participant you indicated with 
 the Alias you typed.  Once that participant signs the response this script will authenticate the contact in your database
-and diplay the authenticated contact information.  You must tell the other participant that you received a successful
+and diplay the authenticated contact information.  You must verbally tell the other participant that you received a successful
 signed response to your challenge:
 
 ```bash
-TODO: challenge reponse success output
+Signer John Doe successfully responded to challenge words: ["rice", "jewel", "into", "dance", "bean", "stadium", "west", "sister", "auto", "cupboard", "repair", "daughter"]
 ```
 
 During this process you will also be challenged with unique 12-word challenges that you must sign and return to the
@@ -128,7 +128,7 @@ challenge and then it will ask for the Alias of the AID who sent you challenge:
 ./scripts/response-to-challenge.sh
 Type or paste challenge sent to you: rice jewel into dance bean stadium west sister auto cupboard repair daughter
 Enter the Alias who sent you the words: John Doe
-TODO:  output of successfully signed challenge.
+Challenge phrase signed and sent
 ```
 
 This will sign the 12-word challenge using the private key of your local AID and send the result back to the participant
