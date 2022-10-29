@@ -28,12 +28,12 @@ export -f kli
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode 2> /dev/null)"
 if [ -z "${passcode}" ]; then
   echo "Generating random passcode and storing in Keychain"
-  security add-generic-password -a "${LOGNAME}" -s ext-gar-passcode -w "$(kli passcode generate)"
+  security add-generic-password -a "${LOGNAME}" -s ext-gar-passcode -w "$(kli passcode generate |  tr -d '\r')"
 fi
 
 # Creates the salt for your local keystore and saves it in your keychain.  Will not overwrite
 salt="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-salt 2> /dev/null)"
 if [ -z "${salt}" ]; then
   echo "Generating random salt and storing in Keychain"
-  security add-generic-password -a "${LOGNAME}" -s ext-gar-salt -w "$(kli salt)"
+  security add-generic-password -a "${LOGNAME}" -s ext-gar-salt -w "$(kli salt | tr -d '\r')"
 fi

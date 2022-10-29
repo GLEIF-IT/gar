@@ -11,7 +11,7 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcod
 salt="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-salt)"
 
 # Test to see if this script has already been run:
-OUTPUT=$(kli list --name "${EXT_GAR_NAME}" --passcode "${EXT_GAR_PASSCODE}")
+OUTPUT=$(kli list --name "${EXT_GAR_NAME}" --passcode "${passcode}")
 ret=$?
 if [ $ret -eq 0 ]; then
    echo "Local AID for ${EXT_GAR_NAME} already exists, exiting:"
