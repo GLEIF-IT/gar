@@ -88,7 +88,17 @@ following command and paste it in a PRIVATE chat with the other participant.  Th
 of the other participant you are challenging and display the 12-word phrase.  The script will then wait for the other
 participant to use their system to sign the phrase (described below) and return it to you using a KERI peer-to-peer
 protocol message.  Once you have recieved a valid signed challenge response containing the 12-word phrase from the other 
-participant, 
+participant.
+
+#### Note:
+
+---
+
+*You should orchestrate in what order each member of the group challenges, while the rest respond. Then the next member challenges, and everyone else responds in turn*
+
+*There should only be one member of the group running `generate-challenge.sh` at once.*
+
+---
 
 ```bash
 $ ./scripts/generate-challenge.sh
