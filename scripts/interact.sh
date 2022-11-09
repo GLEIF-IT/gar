@@ -2,15 +2,14 @@
 
 ##################################################################
 ##                                                              ##
-##        Script for creating local External GAR AID            ##
+##             Script for creating multisig aid                 ##
 ##                                                              ##
 ##################################################################
 
 PWD=$(pwd)
 source $PWD/source.sh
 
-# Capture password
+# Capture password and salt
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
-# Here's your AID:
-kli status --name "${EXT_GAR_NAME}" --passcode "${passcode}"
+kli multisig interact --name "${EXT_GAR_NAME}" --passcode "${passcode}"  --alias "GLEIF External AID" --data @"/scripts/anchor.json"
