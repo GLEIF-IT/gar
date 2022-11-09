@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##          Script for showing status of local AIDs             ##
+##                Script for listing credentials                ##
 ##                                                              ##
 ##################################################################
 
@@ -12,5 +12,5 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
-# Here's your AID:
-kli status --name "${EXT_GAR_NAME}" --passcode "${passcode}"
+# Here's your credentials:
+kli vc list --name "${EXT_GAR_NAME}" --passcode "${passcode}" --poll
