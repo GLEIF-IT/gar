@@ -9,6 +9,7 @@ will be KERI group multisig AIDs.
 The steps described in this section only need to be performed once to prepare your system to run the required software to
 perform as a GAR.
 
+
 ### Prerequisites
 The software in this repository is designed to run on MacBook Pro laptops with macOS Monterey (ver 12.6).
 
@@ -37,18 +38,19 @@ $ ./scripts/prepare.sh
 The output should resemble:
 
 ```bash
-0.6.7: Pulling from gleif/keri
+0.6.9: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for gleif/keri:0.6.7
-docker.io/gleif/keri:0.6.7
+Status: Image is up to date for gleif/keri:0.6.9
+docker.io/gleif/keri:0.6.9
 
 ```
 
 This script will perform a docker pull for the KERIpy image as well as creating your local directory that stores the
 datastore, keystore and configuration information generated as a GAR.  You will not need to run this script again.
 
-The final step in system setup is to edit the `source.sh` initialization script and set two values used as exported environment
-variables in the rest of the scripts.  At the top of the file there are two exported environment variables:
+The final step in system setup is to edit the `source.sh` initialization script under the role you are working as
+and set two values used as exported environment variables in the rest of the scripts.  
+At the top of the file there are two exported environment variables:
 
 ```bash
 # Change to the name you want to use for your local database environment.
@@ -56,6 +58,16 @@ export EXT_GAR_NAME="External GAR"
 
 # Change to the name you want for the alias for your local External GAR AID
 export EXT_GAR_ALIAS="John Doe"
+```
+
+or 
+
+```bash
+# Change to the name you want to use for your local database environment.
+export INT_GAR_NAME="Internal GAR"
+
+# Change to the name you want for the alias for your local Internal GAR AID
+export INT_GAR_ALIAS="John Doe"
 ```
 
 Change these values in `source.sh` to the names you want to use for your database directory and local AID alias respectively.
