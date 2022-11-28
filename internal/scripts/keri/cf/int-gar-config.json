@@ -1,0 +1,29 @@
+{
+  "dt": "2022-01-20T12:57:59.823350+00:00",
+  "iurls": [
+    "http://65.21.253.212:5623/oobi?name=EU-FI-HTZ-01-POOL-1",
+    "http://8.210.213.186:5623/oobi?name=AS-CN-ALI-01-POOL-1",
+    "http://51.79.54.121:5623/oobi?name=NA-CA-OVH-01-POOL-1",
+    "http://102.37.159.99:5623/oobi?name=AF-ZA-AZR-01-POOL-1",
+    "http://54.233.109.129:5623/oobi?name=SA-BR-AWS-01-POOL-1",
+    "http://5.161.69.25:5623/oobi?name=NA-US-HTZ-01-POOL-2",
+    "http://51.161.130.60:5623/oobi?name=OC-AU-OVH-01-POOL-2",
+    "http://20.78.61.227:5623/oobi?name=AS-JP-AZR-01-POOL-2",
+    "http://13.244.119.106:5623/oobi?name=AF-ZA-AWS-01-POOL-2",
+    "http://8.208.27.153:5623/oobi?name=EU-UK-ALI-01-POOL-2",
+    "https://www.gleif.org/.well-known/keri/oobi/EDP1vHcw_wc4M__Fj53-cJaBnZZASd-aMTaSyWEQ-PC2?name=GLEIF%20RoOT"
+  ],
+  "durls": [
+    "https://weboftrust.github.io/oobi/EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy",
+    "https://weboftrust.github.io/oobi/EMhvwOlyEJ9kN4PrwCpr9Jsv7TxPhiYveZ0oP3lJzdEi",
+    "https://weboftrust.github.io/oobi/EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E",
+    "https://weboftrust.github.io/oobi/EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw",
+    "https://weboftrust.github.io/oobi/ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+    "https://weboftrust.github.io/oobi/EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao",
+    "https://weboftrust.github.io/oobi/EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g"
+  ],
+  "wurls": [
+    "https://gleif-it.github.io/.well-known/keri/oobi/EDP1vHcw_wc4M__Fj53-cJaBnZZASd-aMTaSyWEQ-PC2",
+    "https://weboftrust.github.io/.well-known/keri/oobi/EDP1vHcw_wc4M__Fj53-cJaBnZZASd-aMTaSyWEQ-PC2"
+  ]
+}

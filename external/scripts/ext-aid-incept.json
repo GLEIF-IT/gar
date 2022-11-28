@@ -1,4 +1,9 @@
 {
+  "delpre": "EHHL5ZodRcLYKx1R6XVufz_TnYp1UXsmfGYLhIYk-GjL",
+  "aids": [
+    "ENbiqLBPHLbCz9c8F-KL8qGygi_T-bsYes1HYFxIe4HY",
+    "EIud2cHFGftkecizFIKrKb6WJwSpbt99_9p6Q8U5GsXV"
+  ],
   "transferable": true,
   "wits": [
     "BILZrnru0e-0MUmnnjOdWTrZ7OW3sCuk_C_67uYeLsN_",
@@ -7,9 +12,7 @@
     "BHeD7WvSDGwm0glBHGTuHpGeMRq7HyCOAJ8h_epQyHkR",
     "BBHjAqI2Bf_L6BtR0ueAGf12GXEKKCPo2etRCjuu87U7"
   ],
-  "toad": 5,
-  "icount": 1,
-  "ncount": 1,
-  "isith": "1",
-  "nsith": "1"
+  "toad": 4,
+  "isith": ["1/2", "1/2"],
+  "nsith": ["1/2", "1/2"]
 }

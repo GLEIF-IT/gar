@@ -521,13 +521,13 @@ perform periodic [key rotation](./rotating-group-aid.md) to ensure the safety of
 different responsibilities after their inception. 
 
 GLEIF External AID is responsible for helping Qualified vLEI Issuers (QVIs)
-[create their AIDs through delegation](./external-gar/approving-qvi-inception.md), 
-[approve rotation requests from QVIs](./external-gar/approving-qvi-rotation.md) and the 
-[issuance](./external-gar/issuing-qvi-credentials.md) and [revocation](./external-gar/revoking-qvi-credentials.md)
+[create their AIDs through delegation](../external/docs/approving-qvi-inception.md), 
+[approve rotation requests from QVIs](../external/docs/approving-qvi-rotation.md) and the 
+[issuance](../external/docs/issuing-qvi-credentials.md) and [revocation](../external/docs/revoking-qvi-credentials.md)
 of the Qualified vLEI Issuer vLEI Credential to QVIs.
 
 The GLEIF Internal AID is GLEIF's representative as the holder of the Legal Entity vLEI Credential in the vLEI Ecosystem.  As
-the holder of the Legal Entity vLEI Credential, Internal GARs must [accept the credential issuance](./internal-gar/accept-legal-entity-credential.md)
+the holder of the Legal Entity vLEI Credential, Internal GARs must [accept the credential issuance](../internal/docs/accept-legal-entity-credential.md)
 of the Legal Entity vLEI credential from a QVI.  It is also the responsibility of the GLEIF Internal AID to 
-[issue role authorization credentials](./internal-gar/authorize-role-credentials.md) to QVIs to authorize the QVI to issue
+[issue role authorization credentials](../internal/docs/authorize-role-credentials.md) to QVIs to authorize the QVI to issue
 Official Organizational Role vLEI Credentials back to GLEIF employees in official roles.
