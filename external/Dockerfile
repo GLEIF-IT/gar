@@ -1,4 +1,4 @@
-FROM gleif/keri:0.6.9
+FROM gleif/keri:0.70
 
 RUN apt-get update
 RUN apt-get install -y vim
