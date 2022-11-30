@@ -14,4 +14,4 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcod
 
 read -p "Enter the Alias to submit: " -r alias
 
-kli witness submit --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}"
+kli witness submit --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}"
