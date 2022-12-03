@@ -15,6 +15,7 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcod
 read -p "Enter the LEI of the new QVI: " -r lei
 read -p "Enter the alias of the new QVI: " -r recipient
 
-echo \"${lei}\" | jq -f "${EXT_GAR_SCRIPT_DIR}/qvi-data.jq" > "${EXT_GAR_DATA_DIR}/qvi-data.json"
+echo "\"${lei}\"" | jq -f "${EXT_GAR_SCRIPT_DIR}/qvi-data.jq" > "${EXT_GAR_DATA_DIR}/qvi-data.json"
+cp "${EXT_GAR_SCRIPT_DIR}/rules.json" "${EXT_GAR_DATA_DIR}/rules.json"
 
-kli vc issue --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_ALIAS}" --registry-name "${EXT_GAR_REG_NAME}" --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao --recipient "${recipient}" --data @"/data/qvi-data.json" --out "/data/credential.json"
+kli vc issue --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_ALIAS}" --registry-name "${EXT_GAR_REG_NAME}" --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao --recipient "${recipient}" --data @"/data/qvi-data.json" --out "/data/credential.json" --rules @"/data/rules.json"
