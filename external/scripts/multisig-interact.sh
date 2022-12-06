@@ -12,4 +12,4 @@ source $PWD/source.sh
 # Capture password and salt
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
-kli multisig interact --name "${EXT_GAR_NAME}" --passcode "${passcode}"  --alias "GLEIF External AID" --data @"/scripts/anchor.json"
+kli multisig interact --name "${EXT_GAR_NAME}" --passcode "${passcode}"  --alias "${EXT_GAR_AID_ALIAS}" --data @"/scripts/anchor.json"
