@@ -13,4 +13,4 @@ source $PWD/source.sh
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
 # Here's your credentials:
-kli vc list --name "${EXT_GAR_NAME}" --passcode "${passcode}" --poll
+kli vc list --name "${EXT_GAR_NAME}" --passcode "${passcode}" --poll "$@"
