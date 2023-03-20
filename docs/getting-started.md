@@ -38,10 +38,10 @@ $ ./scripts/prepare.sh
 The output should resemble:
 
 ```bash
-0.7.0: Pulling from gleif/keri
+0.7.4: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for gleif/keri:0.7.0
-docker.io/gleif/keri:0.7.0
+Status: Image is up to date for gleif/keri:0.7.4
+docker.io/gleif/keri:0.7.4
 
 ```
 
