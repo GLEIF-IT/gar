@@ -37,7 +37,7 @@ case $pool in
     p=int-gar-local-incept-pool-2.json
     ;;
   3 | "Test Pool")
-    p=test-incept-pool-2.json
+    p=test-incept-pool-1.json
     ;;
   *)
     echo 1>&2 "$pool: invalid pool selection"
