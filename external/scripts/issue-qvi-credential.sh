@@ -6,6 +6,12 @@
 ##                                                              ##
 ##################################################################
 
+if [ -z "$ISSUE_TIME" ]
+then
+    echo "ISSUE_TIME environment variable must be set to iso8601 formatted issuance time for credential"
+    exit 147
+fi
+
 PWD=$(pwd)
 source $PWD/source.sh
 
@@ -18,4 +24,4 @@ read -p "Enter the alias of the new QVI: " -r recipient
 echo "\"${lei}\"" | jq -f "${EXT_GAR_SCRIPT_DIR}/qvi-data.jq" > "${EXT_GAR_DATA_DIR}/qvi-data.json"
 cp "${EXT_GAR_SCRIPT_DIR}/rules.json" "${EXT_GAR_DATA_DIR}/rules.json"
 
-kli vc issue --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --registry-name "${EXT_GAR_REG_NAME}" --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao --recipient "${recipient}" --data @"/data/qvi-data.json" --out "/data/credential.json" --rules @"/data/rules.json"
+kli vc create --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --registry-name "${EXT_GAR_REG_NAME}" --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao --recipient "${recipient}" --data @"/data/qvi-data.json" --out "/data/credential.json" --rules @"/data/rules.json"
