@@ -6,6 +6,10 @@
 ##                                                              ##
 ##################################################################
 
+if [ ! -f "${HOME}"/.gar/internal.sh ]; then
+    cp ./scripts/env.sh "${HOME}"/.gar/internal.sh
+fi
+
 source "${HOME}"/.gar/internal.sh
 
 # Set current working directory for all scripts that must access files

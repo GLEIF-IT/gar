@@ -11,10 +11,7 @@
     "http://20.78.61.227:5623/oobi?name=AS-JP-AZR-01-POOL-2",
     "http://13.244.119.106:5623/oobi?name=AF-ZA-AWS-01-POOL-2",
     "http://8.208.27.153:5623/oobi?name=EU-UK-ALI-01-POOL-2",
-    "http://49.12.190.139:5623/oobi?name=EU-DE-HTZ-test",
-    "http://139.99.193.43:5623/oobi?name=OC-AU-OVH-test",
-    "http://20.3.144.86:5623/oobi?name=NA-US-AZR-test",
-    "http://47.242.47.124:5623/oobi?name=AS-CN-ALI-test"
+    "https://www.gleif.org/.well-known/keri/oobi/EDP1vHcw_wc4M__Fj53-cJaBnZZASd-aMTaSyWEQ-PC2?name=GLEIF%20RoOT"
   ],
   "durls": [
     "https://weboftrust.github.io/oobi/EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy",

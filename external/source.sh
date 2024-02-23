@@ -6,6 +6,10 @@
 ##                                                              ##
 ##################################################################
 
+if [ ! -f "${HOME}"/.gar/external.sh ]; then
+    cp ./scripts/env.sh "${HOME}"/.gar/external.sh
+fi
+
 source "${HOME}"/.gar/external.sh
 
 # Set current working directory for all scripts that must access files
