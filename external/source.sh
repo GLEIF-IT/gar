@@ -15,7 +15,7 @@ export EXT_GAR_SCRIPT_DIR="${EXT_GAR_DIR}/scripts"
 export EXT_GAR_DATA_DIR="${EXT_GAR_DIR}/data"
 
 function kli() {
-  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${EXT_GAR_SCRIPT_DIR}":/scripts -v "${EXT_GAR_DATA_DIR}":/data gleif/keri:0.7.4 kli "$@"
+  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${EXT_GAR_SCRIPT_DIR}":/scripts -v "${EXT_GAR_DATA_DIR}":/data gleif/keri:1.0.1 kli "$@"
 }
 
 export -f kli
