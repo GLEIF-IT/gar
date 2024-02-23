@@ -25,6 +25,7 @@ fi
 echo "Please select witness pool:"
 echo "1) Pool 1"
 echo "2) Pool 2"
+echo "3) Test Pool"
 read -p "Enter pool number: " -r pool
 
 p=""
@@ -34,6 +35,9 @@ case $pool in
     ;;
   2 | "Pool 2")
     p=ext-gar-local-incept-pool-2.json
+    ;;
+  3 | "Test Pool")
+    p=test-incept-pool-1.json
     ;;
   *)
     echo 1>&2 "$pool: invalid pool selection"
