@@ -31,4 +31,8 @@ kli saidify --file /data/oor-auth-edge-data.json
 # Prepare the RULES section
 cp "${INT_GAR_SCRIPT_DIR}/rules.json" "${INT_GAR_DATA_DIR}/rules.json"
 
-kli vc issue --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --registry-name "${INT_GAR_REG_NAME}" --schema EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E --recipient "${recipient}" --data @"/data/oor-auth-data.json" --edges @"/data/oor-auth-edge-data.json" --rules @"/data/rules.json" --out "/data/credential.json"
+kli vc create --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --registry-name "${INT_GAR_REG_NAME}" --schema EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E --recipient "${recipient}" --data @"/data/oor-auth-data.json" --edges @"/data/oor-auth-edge-data.json" --rules @"/data/rules.json"
+
+SAID=$(kli vc list --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --issued --said --schema EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E)
+
+kli ipex grant --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --said "${SAID}"
