@@ -40,8 +40,8 @@ The output should resemble:
 ```bash
 0.7.4: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for weboftrust/keri:1.1.0
-docker.io/weboftrust/keri:1.1.0
+Status: Image is up to date for weboftrust/keri:1.1.7
+docker.io/weboftrust/keri:1.1.7
 
 ```
 

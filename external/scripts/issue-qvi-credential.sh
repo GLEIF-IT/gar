@@ -22,4 +22,4 @@ kli vc create --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_G
 
 SAID=$(kli vc list --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --issued --said --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao)
 
-kli ipex grant --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --said "${SAID}"
+kli ipex grant --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --said "${SAID}" --recipient "${recipient}"
