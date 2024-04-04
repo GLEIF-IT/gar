@@ -1,4 +1,4 @@
-FROM weboftrust/keri:1.1.10
+FROM weboftrust/keri:1.1.10-arm64
 
 RUN apt-get update
 RUN apt-get install -y vim
