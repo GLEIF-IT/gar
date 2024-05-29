@@ -13,7 +13,7 @@ source $PWD/source.sh
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
 read -p "Enter your LEI : " -r lei
-read -p "Enter or Paste the AID of the recipient of the OOR credential: " -r AID
+read -p "Enter or Paste the AID of the recipient of the ECR credential: " -r AID
 read -p "Enter requested person legal name: " -r personLegalName
 read -p "Enter requested engagement context role: " -r engagementContextRole
 
