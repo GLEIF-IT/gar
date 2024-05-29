@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##      Script for generating random challenge phrase           ##
+  ##      Script for generating random challenge phrase           ##
 ##                                                              ##
 ##################################################################
 
