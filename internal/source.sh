@@ -19,7 +19,7 @@ export INT_GAR_SCRIPT_DIR="${INT_GAR_DIR}/scripts"
 export INT_GAR_DATA_DIR="${INT_GAR_DIR}/data"
 
 function kli() {
-  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${INT_GAR_SCRIPT_DIR}":/scripts -v "${INT_GAR_DATA_DIR}":/data weboftrust/keri:1.1.13 "$@"
+  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${INT_GAR_SCRIPT_DIR}":/scripts -v "${INT_GAR_DATA_DIR}":/data weboftrust/keri:1.1.15 "$@"
 }
 
 export -f kli
