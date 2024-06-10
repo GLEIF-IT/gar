@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##          Script for issuing ecr auth                         ##
+##          Script for issuing oor auth                         ##
 ##                                                              ##
 ##################################################################
 
@@ -13,9 +13,9 @@ source $PWD/source.sh
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
 read -p "Enter your LEI : " -r lei
-read -p "Enter or Paste the AID of the recipient of the ECR credential: " -r AID
+read -p "Enter or Paste the AID of the recipient of the OOR credential: " -r AID
 read -p "Enter requested person legal name: " -r personLegalName
-read -p "Enter requested engagement context role: " -r engagementContextRole
+read -p "Enter requested official role: " -r officialRole
 read -p "Enter the Alias of the QVI to authorize with this AUTH credential: " -r recipient
 read -p "Enter the datetime to use: " -r datetime
 
