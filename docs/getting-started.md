@@ -28,7 +28,7 @@ Installation instructions for `jq` can be found here: https://stedolan.github.io
 Installation instructions for `git` can be found here: https://git-scm.com/download/mac, utilize the brew command.
 
 ### System Setup
-The scripts in this package rely on the KERIpy docker image `gleif/keri` hosted on docker hub.  The first step is to execute the
+The scripts in this package rely on the KERIpy docker image `weboftrust/keri` hosted on docker hub.  The first step is to execute the
 following script once, the first time you prepare to use this package:
 
 ```bash
@@ -38,19 +38,21 @@ $ ./scripts/prepare.sh
 The output should resemble:
 
 ```bash
-0.7.4: Pulling from gleif/keri
+1.1.18: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for weboftrust/keri:1.1.16
-docker.io/weboftrust/keri:1.1.16
+Status: Image is up to date for weboftrust/keri:1.1.18
+docker.io/weboftrust/keri:1.1.18
 
 ```
 
 This script will perform a docker pull for the KERIpy image as well as creating your local directory that stores the
 datastore, keystore and configuration information generated as a GAR.  You will not need to run this script again.
 
-The final step in system setup is to edit the `source.sh` initialization script under the role you are working as
-and set two values used as exported environment variables in the rest of the scripts.  
-At the top of the file there are two exported environment variables:
+The final step in system setup is to edit the `scripts/env.sh` initialization script under the directory 
+(external or internal) and role you are working as and set two values used as exported environment variables in the 
+rest of the scripts.  
+
+At the top of the `scripts/env.sh` file there are two exported environment variables:
 
 ```bash
 # Change to the name you want to use for your local database environment.
@@ -70,7 +72,7 @@ export INT_GAR_NAME="Internal GAR"
 export INT_GAR_ALIAS="John Doe"
 ```
 
-Change these values in `source.sh` to the names you want to use for your database directory and local AID alias respectively.
+Change these values in `scripts/env.sh` to the names you want to use for your database directory and local AID alias respectively.
 These values are local to you and not exposed to anyone else so they just need to be values that make sense for you.  We recommend
 leaving `EXT_GAR_NAME` as it currently is and changing `EXT_GAR_ALIAS` to your full name.
 
@@ -91,8 +93,8 @@ deterministic keychain of private keys for your wallet.  This can be used to rec
 of a keystore loss.  All subsequent executions of this script will ensure the passcode and salt are stored in your keychain
 and will not recreate them
 
-The `source.sh` script also initializes several environment variables used by the rest of the scripts as well as a Bash
-function for `kli` that executes the docker image as a throw away container for each command run.
+The `source.sh` script also initializes several environment variables (via `scripts/env.sh`) used by the rest of the scripts as well
+as a Bash function for `kli` that executes the docker image as a throw away container for each command run.
 
 ## Create Your Local AID
 As a GLEIF Authorized Representative you will be a member of the group multisig AID for either the GLEIF External AID or
@@ -107,32 +109,50 @@ $ ./scripts/create-local-aid.sh
 The output from this script should resemble:
 
 ```bash
+Please select witness pool:
+1) Pool 1
+2) Pool 2
+3) Test Pool
+Enter pool number: 
+```
+
+Select the correct witness pool for your purpose and press *ENTER*. Pool 1 and 2 are production, Test Pool is staging.
+
+The output after you select your pool will resemble:
+
+```bash
 KERI Keystore created at: /usr/local/var/keri/ks/External GAR
 KERI Database created at: /usr/local/var/keri/db/External GAR
 KERI Credential Store created at: /usr/local/var/keri/reg/External GAR
-        aeid: BH5EBuQCjPGP0g96-7cH-Q8-sazWtD6OCH_AWdAtpadp
+        aeid: BHMKPSkyCN_MkEmK_LziMX9kYj3jgoeoS6oqoNhXpacJ
 
-Loading 5 OOBIs...
-http://13.245.160.59:5623/oobi?name=gleif-3 succeeded
-http://139.99.193.43:5623/oobi?name=gleif-1 succeeded
-http://20.3.144.86:5623/oobi?name=gleif-2 succeeded
-http://47.242.47.124:5623/oobi?name=gleif-4 succeeded
-http://49.12.190.139:5623/oobi?name=gleif-0 succeeded
+Loading 11 OOBIs...
+http://139.99.193.43:5623/oobi?name=OC-AU-OVH-test succeeded
+http://20.3.144.86:5623/oobi?name=NA-US-AZR-test succeeded
+http://47.242.47.124:5623/oobi?name=AS-CN-ALI-test succeeded
+http://49.12.190.139:5623/oobi?name=EU-DE-HTZ-test succeeded
+https://weboftrust.github.io/oobi/EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy succeeded
+https://weboftrust.github.io/oobi/EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao succeeded
+https://weboftrust.github.io/oobi/EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw succeeded
+https://weboftrust.github.io/oobi/EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g succeeded
+https://weboftrust.github.io/oobi/EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E succeeded
+https://weboftrust.github.io/oobi/EMhvwOlyEJ9kN4PrwCpr9Jsv7TxPhiYveZ0oP3lJzdEi succeeded
+https://weboftrust.github.io/oobi/ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY succeeded
 Waiting for witness receipts...
-Prefix  EHlegxGzgOsBLZQZJSUQW-vKwgeOo8YPcNMJIgTJO82Q
-        Public key 1:  DBMaw34egBlM_lD4x4id0DTF4ZnTeUf4o4zLs48ohN2c
+Prefix  ECxoc9W1og1e6SjYAJbewsr48yI78tFOwESaqDdYAsQJ
+        Public key 1:  DPuz8s6nR_nV-p_7cBssqDNkDc0iJfs2uP6n-02H0ZHE
 
 Alias:  John Doe
-Identifier: EHlegxGzgOsBLZQZJSUQW-vKwgeOo8YPcNMJIgTJO82Q
+Identifier: ECxoc9W1og1e6SjYAJbewsr48yI78tFOwESaqDdYAsQJ
 Seq No: 0
 
 Witnesses:
-Count:          5
-Receipts:       5
-Threshold:      5
+Count:          4
+Receipts:       4
+Threshold:      3
 
 Public Keys:
-        1. DBMaw34egBlM_lD4x4id0DTF4ZnTeUf4o4zLs48ohN2c
+        1. DPuz8s6nR_nV-p_7cBssqDNkDc0iJfs2uP6n-02H0ZHE
 ```
 
 A few items are important to understand.  You should see that the path of the Keystore, Datastore and Credential Store
