@@ -2,10 +2,10 @@
 export EXT_GAR_NAME="External GAR"
 
 # Change to the name you want for the alias for your local External GAR AID
-export EXT_GAR_ALIAS="John Doe"
+export EXT_GAR_ALIAS="Kent Bull"
 
 # Change to the name you want for the alias for your group multisig External AID
-export EXT_GAR_AID_ALIAS="GLEIF External AID"
+export EXT_GAR_AID_ALIAS="extgar"
 
 # Change to the name you want for the alias for your group multisig External AID
 export EXT_GAR_REG_NAME="External GAR Registry"
