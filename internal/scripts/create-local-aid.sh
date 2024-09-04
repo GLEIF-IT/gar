@@ -25,15 +25,23 @@ fi
 echo "Please select witness pool:"
 echo "1) Pool 1"
 echo "2) Pool 2"
+echo "3) Test Pool"
 read -p "Enter pool number: " -r pool
 
 p=""
+c=""
 case $pool in
   1 | "Pool 1")
     p=int-gar-local-incept-pool-1.json
+    c=int-gar-config.json
     ;;
   2 | "Pool 2")
     p=int-gar-local-incept-pool-2.json
+    c=int-gar-config.json
+    ;;
+  3 | "Test Pool")
+    p=test-incept-pool-1.json
+    c=test-int-gar-config.json
     ;;
   *)
     echo 1>&2 "$pool: invalid pool selection"
@@ -42,7 +50,7 @@ case $pool in
 esac
 
 # Create the local database environment (directories, datastore, keystore)
-kli init --name "${INT_GAR_NAME}" --salt "${salt}" --passcode "${passcode}" --config-dir /scripts --config-file int-gar-config.json
+kli init --name "${INT_GAR_NAME}" --salt "${salt}" --passcode "${passcode}" --config-dir /scripts --config-file $c
 
 # Create your local AID for use as a participant in the Internal AID
 kli incept --name "${INT_GAR_NAME}" --alias "${INT_GAR_ALIAS}" --passcode "${passcode}" --file /scripts/$p

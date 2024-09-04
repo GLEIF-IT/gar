@@ -6,17 +6,11 @@
 ##                                                              ##
 ##################################################################
 
-# Change to the name you want to use for your local database environment.
-export INT_GAR_NAME="Internal GAR"
+if [ ! -f "${HOME}"/.gar/internal.sh ]; then
+    cp ./scripts/env.sh "${HOME}"/.gar/internal.sh
+fi
 
-# Change to the name you want for the alias for your local Internal GAR AID
-export INT_GAR_ALIAS="John Doe"
-
-# Change to the name you want for the alias for your group multisig Internal AID
-export INT_GAR_AID_ALIAS="GLEIF Internal AID"
-
-# Change to the name you want for the alias for your group multisig Internal AID
-export INT_GAR_REG_NAME="Internal GAR Registry"
+source "${HOME}"/.gar/internal.sh
 
 # Set current working directory for all scripts that must access files
 INT_GAR_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -25,7 +19,7 @@ export INT_GAR_SCRIPT_DIR="${INT_GAR_DIR}/scripts"
 export INT_GAR_DATA_DIR="${INT_GAR_DIR}/data"
 
 function kli() {
-  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${INT_GAR_SCRIPT_DIR}":/scripts -v "${INT_GAR_DATA_DIR}":/data gleif/keri:0.7.4 kli "$@"
+  docker run -it --rm -v "${HOME}"/.gar:/usr/local/var/keri -v "${INT_GAR_SCRIPT_DIR}":/scripts -v "${INT_GAR_DATA_DIR}":/data weboftrust/keri:1.1.18 "$@"
 }
 
 export -f kli

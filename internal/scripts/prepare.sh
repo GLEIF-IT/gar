@@ -6,7 +6,7 @@
 ##################################################################
 
 # Pull container required to run all KERI/ACDC commands
-docker pull gleif/keri:0.7.4
+docker pull weboftrust/keri:1.1.18
 
 # Create local directory for datastore, keystore and configuration
 mkdir -p "${HOME}"/.gar/cf
