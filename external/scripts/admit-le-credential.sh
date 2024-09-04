@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##             Script for creating multisig aid                 ##
+##             Script for admitting the QVI credential          ##
 ##                                                              ##
 ##################################################################
 
@@ -12,14 +12,12 @@ source $PWD/source.sh
 # Capture password and salt
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
-read -p "Enter the SAID of the new QVI credential: " -r SAID
-read -p "Enter the alias of the new QVI: " -r recipient
-read -p "Enter the datetime to use: " -r datetime
+read -p "Enter the SAID of the IPEX GRANT for the LE credential: " -r SAID
+read -p "Enter the datetime of the IPEX Grant for the LE credential to use: " -r datetime
 
-kli ipex grant \
+kli ipex admit \
     --name "${EXT_GAR_NAME}" \
     --passcode "${passcode}" \
     --alias "${EXT_GAR_AID_ALIAS}" \
     --said "${SAID}" \
-    --recipient "${recipient}" \
     --time "${datetime}"
