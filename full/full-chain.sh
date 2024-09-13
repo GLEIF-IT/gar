@@ -755,7 +755,7 @@ function create_le_credential() {
         --alias ${QVI_MS} \
         --passcode ${QAR_PT1_PASSCODE} \
         --registry-name ${QVI_REGISTRY} \
-        --schema ${LE_SCHEMA} \
+        --schema "${LE_SCHEMA}" \
         --recipient ${GEDA_PRE} \
         --data @./legal-entity-data.json \
         --edges @./qvi-edge.json \
@@ -770,7 +770,7 @@ function create_le_credential() {
         --alias ${QVI_MS} \
         --passcode ${QAR_PT2_PASSCODE} \
         --registry-name ${QVI_REGISTRY} \
-        --schema ${LE_SCHEMA} \
+        --schema "${LE_SCHEMA}" \
         --recipient ${GEDA_PRE} \
         --data @./legal-entity-data.json \
         --edges @./qvi-edge.json \
