@@ -20,3 +20,13 @@ print_lcyan() {
   text=$1
   printf "\e[96m${text}\e[0m\n"
 }
+
+print_bg_blue() {
+  text=$1
+  printf "\e[44m${text}\e[0m\n"
+}
+
+print_dark_gray() {
+  text=$1
+  printf "\e[90m${text}\e[0m\n"
+}
