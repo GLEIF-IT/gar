@@ -23,7 +23,7 @@ read -p "Enter the datetime to use: " -r datetime
 echo "[\"${AID}\", \"${lei}\", \"${personLegalName}\", \"${officialRole}\"]" | jq -f "${INT_GAR_SCRIPT_DIR}/oor-auth-data.jq" > "${INT_GAR_DATA_DIR}/oor-auth-data.json"
 
 # Prepare the EDGES Section
-le_said=EB9yGbWXOn_MhTQsHltftAsNrlWAxgedMPIQl4rg6C1e
+le_said=$(kli vc list --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --said --schema ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY  | tr -d '\r' | sed -n '1 p')
 
 echo "\"${le_said}\"" | jq -f "${INT_GAR_SCRIPT_DIR}/oor-auth-edges-filter.jq" > "${INT_GAR_DATA_DIR}/oor-auth-edge-data.json"
 kli saidify --file /data/oor-auth-edge-data.json
