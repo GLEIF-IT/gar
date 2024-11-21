@@ -4,6 +4,8 @@ This document describes the steps required to bootstrap your system using the sc
 a GLEIF Authorized Representative (GAR) and member of either the GLEIF External AID or GLEIF Internal AID, both of which
 will be KERI group multisig AIDs.
 
+It uses Docker to run a customized `kli` command that mounts the local `$HOME/.gar` repo as a data directory for the `kli` command.
+
 
 ## Initial Installation
 The steps described in this section only need to be performed once to prepare your system to run the required software to
@@ -11,7 +13,7 @@ perform as a GAR.
 
 
 ### Prerequisites
-The software in this repository is designed to run on MacBook Pro laptops with macOS Monterey (ver 12.6).
+The software in this repository is designed to run on MacBook Pro laptops with macOS Monterey (ver 12.6) or higher.
 
 The following five software packages are required to execute the scripts in this repository:
 
@@ -23,13 +25,13 @@ The following five software packages are required to execute the scripts in this
 
 Installation instructions for Homebrew (`brew`) can be found here: https://brew.sh.
 Installation instructions for Docker Desktop can be found here: https://docs.docker.com/desktop/install/mac-install/.  
-Bash should be installed by default on your MacOS computer.  
+Bash/Zsh should be installed by default on your MacOS computer.  
 Installation instructions for `jq` can be found here: https://stedolan.github.io/jq/download, utilize the brew command.
 Installation instructions for `git` can be found here: https://git-scm.com/download/mac, utilize the brew command.
 
 ### System Setup
 The scripts in this package rely on the KERIpy docker image `weboftrust/keri` hosted on docker hub.  The first step is to execute the
-following script once, the first time you prepare to use this package:
+following script once, the first time you prepare to use this package, to set up the AID inception configuration files:
 
 ```bash
 $ ./scripts/prepare.sh
@@ -166,7 +168,3 @@ $ ./scripts/status.sh
 
 ## Next Steps
 Now that your system is initialized, you are ready to proceed to the next step in the process of being a GAR, ["Create GLEIF Group Multisig AID"](creating-group-aid.md).
-
-
-
-
