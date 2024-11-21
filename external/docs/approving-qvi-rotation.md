@@ -7,3 +7,9 @@ Qualified vLEI Issuers (QVI).
 This document describes the steps required to authenticate QVI Authorized Representatives (QARs) and 
 approve the rotation of their group multisig AID by participating in the creation of a KERI interaction event that contains
 a seal of the rotation event for the QVI group multisig AID.
+
+Make sure your context is set with `source source.sh` and `./scripts/prepare.sh`
+
+```bash
+./scripts/kli.sh delegate confirm --alias "GLEIF External AID" --interact
+```
