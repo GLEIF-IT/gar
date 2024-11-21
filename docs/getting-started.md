@@ -168,6 +168,3 @@ $ ./scripts/status.sh
 
 ## Next Steps
 Now that your system is initialized, you are ready to proceed to the next step in the process of being a GAR, ["Create GLEIF Group Multisig AID"](creating-group-aid.md).
-
-
-
