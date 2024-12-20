@@ -70,8 +70,8 @@ function create_backup() {
     "date": "$DATE",
     "extPasscode": "$ext_passcode",
     "extSalt": "$ext_salt",
-    "intPasscode": "$ext_passcode",
-    "intSalt": "$ext_salt"
+    "intPasscode": "$int_passcode",
+    "intSalt": "$int_salt"
 }
 EOM
 
