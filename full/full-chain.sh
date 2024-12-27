@@ -90,6 +90,12 @@ PERSON_ECR="Consultant"
 PERSON_OOR="Advisor"
 
 
+# Sally - vLEI Reporting API
+SALLY=sally
+SALLY_PASSCODE=VVmRdBTe5YCyLMmYRqTAi
+SALLY_SALT=0AD45YWdzWSwNREuAoitH_CC
+SALLY_PRE=EHLWiN8Q617zXqb4Se4KfEGteHbn_way2VG5mcHYh5bm
+
 # Credentials
 GEDA_REGISTRY=vLEI-external
 GIDA_REGISTRY=vLEI-internal
@@ -185,6 +191,7 @@ function create_aids() {
     create_aid "${QAR_PT1}"  "${QAR_PT1_SALT}"  "${QAR_PT1_PASSCODE}"  "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
     create_aid "${QAR_PT2}"  "${QAR_PT2_SALT}"  "${QAR_PT2_PASSCODE}"  "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
     create_aid "${PERSON}"   "${PERSON_SALT}"   "${PERSON_PASSCODE}"   "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
+    create_aid "${SALLY}"    "${SALLY_SALT}"    "${SALLY_PASSCODE}"    "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
     rm "$temp_icp_config"
 }
 create_aids
@@ -237,6 +244,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "$SALLY"       --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for QAR 2"
     kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${QAR_PT1}"   --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
@@ -245,6 +253,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "$SALLY"       --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for Person"
     kli oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT1}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
@@ -633,7 +642,7 @@ function resolve_qvi_oobi() {
     kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${QVI_MS}" --passcode "${GEDA_PT2_PASSCODE}" --oobi "${QVI_OOBI}"
     kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${QVI_MS}" --passcode "${GIDA_PT1_PASSCODE}" --oobi "${QVI_OOBI}"
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${QVI_MS}" --passcode "${GIDA_PT2_PASSCODE}" --oobi "${QVI_OOBI}"
-    kli oobi resolve --name "${PERSON}" --oobi-alias "${QVI_MS}" --passcode "${PERSON_PASSCODE}" --oobi "${QVI_OOBI}"
+    kli oobi resolve --name "${PERSON}"   --oobi-alias "${QVI_MS}" --passcode "${PERSON_PASSCODE}"   --oobi "${QVI_OOBI}"
     echo
 
     touch $HOME/.keri/full-chain-geda-qvi-oobi
@@ -1106,7 +1115,7 @@ function grant_le_credential() {
         --schema ${LE_SCHEMA})
 
     echo
-    print_yellow "[QVI] IPEX GRANTing LE credential with\n\tSAID ${SAID}\n\tto GEDA ${GEDA_PRE}"
+    print_yellow "[QVI] IPEX GRANTing LE credential with\n\tSAID ${SAID}\n\tto GIDA ${GIDA_PRE}"
     KLI_TIME=$(kli time)
     kli ipex grant \
         --name ${QAR_PT1} \
@@ -2065,6 +2074,69 @@ function admit_oor_credential() {
 admit_oor_credential
 
 # 25. QVI: Present issued ECR Auth and OOR Auth to Sally (vLEI Reporting API)
+
+SALLY_PID=""
+WEBHOOK_PID=""
+function sally_setup() {
+    # Supposedly not needed
+    # kli oobi resolve --name $SALLY \
+    #     --alias $SALLY \
+    #     --oobi-alias ${QVI_MS} \
+    #     --oobi ${QVI_OOBI}
+    print_yellow "[GLEIF] setting up sally"
+    print_yellow "[GLEIF] setting up webhook"
+    sally hook demo & # For the webhook Sally will call upon credential presentation
+    WEBHOOK_PID=$!
+
+    print_yellow "[GLEIF] starting sally"
+    sally server start \
+        --name $SALLY \
+        --alias $SALLY \
+        --passcode $SALLY_PASSCODE \
+        --web-hook http://127.0.0.1:9923 \
+        --auth ${GEDA_PRE} & # who will be presenting the credential
+    SALLY_PID=$!
+
+    sleep 5
+}
+sally_setup
+
+function present_le_cred_to_sally() {
+    print_yellow "[QVI] Presenting LE Credential to Sally"
+    LE_SAID=$(kli vc list --name ${GIDA_PT1} \
+        --alias ${GIDA_MS} \
+        --passcode "${GIDA_PT1_PASSCODE}" \
+        --said --schema ${LE_SCHEMA})
+
+    PID_LIST=""
+    kli ipex grant \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --said "${LE_SAID}" \
+        --recipient "${SALLY}" &
+    pid=$!
+    PID_LIST+=" $pid"
+
+    kli ipex join \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --auto &
+    pid=$!
+    PID_LIST+=" $pid"
+    wait $PID_LIST
+
+    sleep 30
+    print_green "[QVI] LE Credential presented to Sally"
+}
+present_le_cred_to_sally
+
+# send sigterm to sally PID
+function sally_teardown() {
+    kill -SIGTERM $SALLY_PID
+    kill -SIGTERM $WEBHOOK_PID
+}
+sally_teardown
 
 # 26. QVI: Revoke ECR Auth and OOR Auth credentials
 
