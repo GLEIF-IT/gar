@@ -8,27 +8,48 @@
 #   > vLEI-server -s ./schema/acdc -c ./samples/acdc/ -o ./samples/oobis/
 #
 
+# Load utility functions
+source ./script-utils.sh
+source ./kli-commands.sh $1
+
 trap ctrl_c INT
 function ctrl_c() {
     echo
-    print_red "Caught Ctrl+C, Exiting script..."
+    print_red "Caught Ctrl+C, stopping containers and exiting script..."
+    container_names=("geda1" "geda2" "gida1" "gida2" "qvi1" "qvi2")
+
+    for name in "${container_names[@]}"; do
+    if docker ps -a | grep -q "$name"; then
+        docker kill $name || true && docker rm $name || true
+    fi
+    done
     exit 1
 }
 
-source ./script-utils.sh
+required_commands=(docker kli klid kli2 kli2d jq)
+for cmd in "${required_commands[@]}"; do
+    if ! command -v $cmd &>/dev/null; then 
+        print_red "$cmd is not installed. Please install it."
+        exit 1
+    fi
+done
+
 
 # Process outline:
 # 1. GAR: Prepare environment
-KEYSTORE_DIR=${1:-$HOME/.keri}
-print_yellow "KEYSTORE_DIR: ${KEYSTORE_DIR}"
-print_yellow "Using local configuration files"
-
+KEYSTORE_DIR=${1:-$HOME/.fullchain_docker}
 CONFIG_DIR=./config
 DATA_DIR=./data
-INIT_CFG=full-chain-init-config-dev-local.json
+INIT_CFG=full-chain-init-config-dev-docker.json
 WAN_PRE=BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha
-WIT_HOST=http://127.0.0.1:5642
-SCHEMA_SERVER=http://127.0.0.1:7723
+WIT_HOST=http://host.docker.internal:5642
+SCHEMA_SERVER=http://host.docker.internal:7723
+
+# Container configuration
+CONT_CONFIG_DIR=/config
+CONT_DATA_DIR=/data
+CONT_INIT_CFG=full-chain-init-config-dev-docker.json
+CONT_ICP_CFG=/config/single-sig-incept-config.json
 
 
 GEDA_LEI=254900OPPU84GM83MG36 # GLEIF Americas
@@ -112,27 +133,11 @@ ECR_SCHEMA=EEy9PkikFcANV1l7EHukCeXqrzT1hNZjGlUk7wuMO5jw
 OOR_SCHEMA=EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy
 
 # functions
-temp_icp_config=""
-function create_temp_icp_cfg() {
-    read -r -d '' ICP_CONFIG_JSON << EOM
-{
-  "transferable": true,
-  "wits": ["$WAN_PRE"],
-  "toad": 1,
-  "icount": 1,
-  "ncount": 1,
-  "isith": "1",
-  "nsith": "1"
-}
-EOM
-    print_lcyan "Using temporary AID config file heredoc:"
-    print_lcyan "${ICP_CONFIG_JSON}"
+function create_icp_config() {
+    jq ".wits = [\"$WAN_PRE\"]" ./config/template-single-sig-incept-config.jq > ./config/single-sig-incept-config.json
 
-    # create temporary file to store json
-    temp_icp_config=$(mktemp)
-
-    # write JSON content to the temp file
-    echo "$ICP_CONFIG_JSON" > "$temp_icp_config"
+    print_lcyan "Single sig inception config JSON:"
+    print_lcyan "$(cat ./config/single-sig-incept-config.json)"
 }
 
 # creates a single sig AID
@@ -143,21 +148,30 @@ function create_aid() {
     CONFIG_DIR=$4
     CONFIG_FILE=$5
     ICP_FILE=$6
+    KLI_CMD=$7
 
-    kli init \
+    # Check if exists
+    exists=$(kli list --name "${NAME}" --passcode "${PASSCODE}")
+    if [[ ! "$exists" =~ "Keystore must already exist" ]]; then
+        print_dark_gray "AID ${NAME} already exists"
+        return
+    fi
+
+    ${KLI_CMD:-kli} init \
         --name "${NAME}" \
         --salt "${SALT}" \
         --passcode "${PASSCODE}" \
         --config-dir "${CONFIG_DIR}" \
         --config-file "${CONFIG_FILE}" >/dev/null 2>&1
-    kli incept \
+
+    ${KLI_CMD:-kli} incept \
         --name "${NAME}" \
         --alias "${NAME}" \
         --passcode "${PASSCODE}" \
         --file "${ICP_FILE}" >/dev/null 2>&1
-    PREFIX=$(kli status  --name "${NAME}"  --alias "${NAME}"  --passcode "${PASSCODE}" | awk '/Identifier:/ {print $2}' | tr -d " \t\n\r" )
+    PREFIX=$(${KLI_CMD:-kli} status  --name "${NAME}"  --alias "${NAME}"  --passcode "${PASSCODE}" | awk '/Identifier:/ {print $2}' | tr -d " \t\n\r" )
     # Need this since resolving with bootstrap config file isn't working
-    print_dark_gray "Created AID: ${NAME} with prefix: ${PREFIX}"
+    print_dark_gray "Created AID: ${NAME}"
     print_green $'\tPrefix:'" ${PREFIX}"
     resolve_credential_oobis "${NAME}" "${PASSCODE}"    
 }
@@ -166,7 +180,8 @@ function resolve_credential_oobis() {
     # Need this function because for some reason resolving more than 8 OOBIs with the bootstrap config file doesn't work
     NAME=$1
     PASSCODE=$2
-    print_dark_gray "Resolving credential OOBIs for ${NAME}"
+
+    print_dark_gray $'\t'"Resolving credential OOBIs for ${NAME}"
     # LE
     kli oobi resolve \
         --name "${NAME}" \
@@ -181,29 +196,28 @@ function resolve_credential_oobis() {
 
 # 2. GAR: Create single Sig AIDs (2)
 function create_aids() {
-    if test -d $HOME/.keri/ks/${GEDA_PT1}; then
+    if test -d ${KEYSTORE_DIR}/ks/${SALLY}; then
         print_dark_gray "AIDs already exist"
         return
     fi
     echo
 
     print_green "-----Creating AIDs-----"
-    create_temp_icp_cfg
-    create_aid "${GEDA_PT1}" "${GEDA_PT1_SALT}" "${GEDA_PT1_PASSCODE}" "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${GEDA_PT2}" "${GEDA_PT2_SALT}" "${GEDA_PT2_PASSCODE}" "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${GIDA_PT1}" "${GIDA_PT1_SALT}" "${GIDA_PT1_PASSCODE}" "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${GIDA_PT2}" "${GIDA_PT2_SALT}" "${GIDA_PT2_PASSCODE}" "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${QAR_PT1}"  "${QAR_PT1_SALT}"  "${QAR_PT1_PASSCODE}"  "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${QAR_PT2}"  "${QAR_PT2_SALT}"  "${QAR_PT2_PASSCODE}"  "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${PERSON}"   "${PERSON_SALT}"   "${PERSON_PASSCODE}"   "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    create_aid "${SALLY}"    "${SALLY_SALT}"    "${SALLY_PASSCODE}"    "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
-    rm "$temp_icp_config"
+    create_icp_config    
+    create_aid "${GEDA_PT1}" "${GEDA_PT1_SALT}" "${GEDA_PT1_PASSCODE}" "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
+    create_aid "${GEDA_PT2}" "${GEDA_PT2_SALT}" "${GEDA_PT2_PASSCODE}" "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
+    create_aid "${GIDA_PT1}" "${GIDA_PT1_SALT}" "${GIDA_PT1_PASSCODE}" "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
+    create_aid "${GIDA_PT2}" "${GIDA_PT2_SALT}" "${GIDA_PT2_PASSCODE}" "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
+    create_aid "${QAR_PT1}"  "${QAR_PT1_SALT}"  "${QAR_PT1_PASSCODE}"  "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
+    create_aid "${QAR_PT2}"  "${QAR_PT2_SALT}"  "${QAR_PT2_PASSCODE}"  "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
+    create_aid "${PERSON}"   "${PERSON_SALT}"   "${PERSON_PASSCODE}"   "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
+    create_aid "${SALLY}"    "${SALLY_SALT}"    "${SALLY_PASSCODE}"    "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
 }
 create_aids
 
 # 3. GAR: OOBI resolutions between single sig AIDs
 function resolve_oobis() {
-    if test -f $HOME/.keri/full-chain-oobis; then
+    if test -f ${KEYSTORE_DIR}/full-chain-oobis; then
         print_dark_gray "OOBIs already resolved"
         return
     fi
@@ -243,32 +257,32 @@ function resolve_oobis() {
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${PERSON}"   --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for QAR 1"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${QAR_PT2}"   --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "$SALLY"       --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${QAR_PT2}"   --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "$SALLY"       --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for QAR 2"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${QAR_PT1}"   --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "$SALLY"       --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${QAR_PT1}"   --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "$SALLY"       --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for Person"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT1}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT2}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
-    kli oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT1}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT2}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
     
-    touch $HOME/.keri/full-chain-oobis
+    touch ${KEYSTORE_DIR}/full-chain-oobis
     echo
 }
 resolve_oobis
@@ -293,35 +307,35 @@ function challenge_response() {
 
     print_dark_gray "Challenge: QAR 1 -> QAR 2"
     words_qar1_to_qar2=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${QAR_PT1}" --words "${words_qar1_to_qar2}"
-    kli challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${QAR_PT2}"    --words "${words_qar1_to_qar2}"
+    kli2 challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${QAR_PT1}" --words "${words_qar1_to_qar2}"
+    kli2 challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${QAR_PT2}"    --words "${words_qar1_to_qar2}"
 
     print_dark_gray "Challenge: QAR 2 -> QAR 1"
     words_qar2_to_qar1=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${QAR_PT2}" --words "${words_qar2_to_qar1}"
-    kli challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${QAR_PT1}"    --words "${words_qar2_to_qar1}"
+    kli2 challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${QAR_PT2}" --words "${words_qar2_to_qar1}"
+    kli2 challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${QAR_PT1}"    --words "${words_qar2_to_qar1}"
 
     print_dark_gray "---Challenge responses between GEDA and QAR---"
     
     print_dark_gray "Challenge: GEDA 1 -> QAR 1"
     words_geda1_to_qar1=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${GEDA_PT1}" --words "${words_geda1_to_qar1}"
+    kli2 challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${GEDA_PT1}" --words "${words_geda1_to_qar1}"
     kli challenge verify  --name "${GEDA_PT1}" --alias "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --signer "${QAR_PT1}"    --words "${words_geda1_to_qar1}"
 
     print_dark_gray "Challenge: QAR 1 -> GEDA 1"
     words_qar1_to_geda1=$(kli challenge generate --out string)
     kli challenge respond --name "${GEDA_PT1}" --alias "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --recipient "${QAR_PT1}" --words "${words_qar1_to_geda1}"
-    kli challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${GEDA_PT1}"    --words "${words_qar1_to_geda1}"
+    kli2 challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${GEDA_PT1}"    --words "${words_qar1_to_geda1}"
 
     print_dark_gray "Challenge: GEDA 2 -> QAR 2"
     words_geda1_to_qar2=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${GEDA_PT1}" --words "${words_geda1_to_qar2}"
+    kli2 challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${GEDA_PT1}" --words "${words_geda1_to_qar2}"
     kli challenge verify  --name "${GEDA_PT1}" --alias "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --signer "${QAR_PT2}"    --words "${words_geda1_to_qar2}"
 
     print_dark_gray "Challenge: QAR 2 -> GEDA 1"
     words_qar2_to_geda1=$(kli challenge generate --out string)
     kli challenge respond --name "${GEDA_PT1}" --alias "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --recipient "${QAR_PT2}" --words "${words_qar2_to_geda1}"
-    kli challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${GEDA_PT1}"    --words "${words_qar2_to_geda1}"
+    kli2 challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${GEDA_PT1}"    --words "${words_qar2_to_geda1}"
 
     print_dark_gray "---Challenge responses for GIDA (LE)---"
 
@@ -340,28 +354,39 @@ function challenge_response() {
     print_dark_gray "Challenge: QAR 1 -> GIDA 1"
     words_qar1_to_gida1=$(kli challenge generate --out string)
     kli challenge respond --name "${GIDA_PT1}" --alias "${GIDA_PT1}" --passcode "${GIDA_PT1_PASSCODE}" --recipient "${QAR_PT1}" --words "${words_qar1_to_gida1}"
-    kli challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${GIDA_PT1}"    --words "${words_qar1_to_gida1}"
+    kli2 challenge verify  --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --signer "${GIDA_PT1}"    --words "${words_qar1_to_gida1}"
 
     print_dark_gray "Challenge: GIDA 1 -> QAR 1"
     words_gida1_to_qar1=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${GIDA_PT1}" --words "${words_gida1_to_qar1}"
+    kli2 challenge respond --name "${QAR_PT1}" --alias "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --recipient "${GIDA_PT1}" --words "${words_gida1_to_qar1}"
     kli challenge verify  --name "${GIDA_PT1}" --alias "${GIDA_PT1}" --passcode "${GIDA_PT1_PASSCODE}" --signer "${QAR_PT1}"    --words "${words_gida1_to_qar1}"
 
     print_dark_gray "Challenge: QAR 2 -> GIDA 2"
     words_qar2_to_gida2=$(kli challenge generate --out string)
     kli challenge respond --name "${GIDA_PT2}" --alias "${GIDA_PT2}" --passcode "${GIDA_PT2_PASSCODE}" --recipient "${QAR_PT2}" --words "${words_qar2_to_gida2}"
-    kli challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${GIDA_PT2}"    --words "${words_qar2_to_gida2}"
+    kli2 challenge verify  --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --signer "${GIDA_PT2}"    --words "${words_qar2_to_gida2}"
 
     print_dark_gray "Challenge: GIDA 2 -> QAR 2"
     words_gida2_to_qar2=$(kli challenge generate --out string)
-    kli challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${GIDA_PT2}" --words "${words_gida2_to_qar2}"
+    kli2 challenge respond --name "${QAR_PT2}" --alias "${QAR_PT2}" --passcode "${QAR_PT2_PASSCODE}" --recipient "${GIDA_PT2}" --words "${words_gida2_to_qar2}"
     kli challenge verify  --name "${GIDA_PT2}" --alias "${GIDA_PT2}" --passcode "${GIDA_PT2_PASSCODE}" --signer "${QAR_PT2}"    --words "${words_gida2_to_qar2}" 
 
     print_green "-----Finished challenge and response-----"
 }
-# challenge_response
+#challenge_response
 
 # 4. GAR: Create Multisig AID (GEDA)
+function create_multisig_icp_config() {
+    PRE1=$1
+    PRE2=$2
+    cat ./config/template-multi-sig-incept-config.jq | \
+        jq ".aids = [\"$PRE1\",\"$PRE2\"]" | \
+        jq ".wits = [\"$WAN_PRE\"]" > ./config/multi-sig-incept-config.json
+
+    print_lcyan "Multisig inception config JSON:"
+    print_lcyan "$(cat ./config/multi-sig-incept-config.json)"
+}
+
 function create_geda_multisig() {
     exists=$(kli list --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" | grep "${GEDA_MS}")
     if [[ "$exists" =~ "${GEDA_MS}" ]]; then
@@ -372,52 +397,30 @@ function create_geda_multisig() {
     echo
     print_yellow "[External] Multisig Inception for GEDA"
 
-    echo
-    read -r -d '' MULTISIG_ICP_CONFIG_JSON << EOM
-{
-  "aids": [
-    "${GEDA_PT1_PRE}",
-    "${GEDA_PT2_PRE}"
-  ],
-  "transferable": true,
-  "wits": ["${WAN_PRE}"],
-  "toad": 1,
-  "isith": "2",
-  "nsith": "2"
-}
-EOM
+    create_multisig_icp_config "${GEDA_PT1_PRE}" "${GEDA_PT2_PRE}"
 
-    print_lcyan "[External] multisig inception config:"
-    print_lcyan "${MULTISIG_ICP_CONFIG_JSON}"
-
-    # create temporary file to store json
-    temp_multisig_config=$(mktemp)
-
-    # write JSON content to the temp file
-    echo "$MULTISIG_ICP_CONFIG_JSON" > "$temp_multisig_config"
-
-    # The following multisig commands run in parallel
+    # The following multisig commands run in parallel in Docker
     print_yellow "[External] Multisig Inception from ${GEDA_PT1}: ${GEDA_PT1_PRE}"
-    kli multisig incept --name ${GEDA_PT1} --alias ${GEDA_PT1} \
+    klid geda1 multisig incept --name ${GEDA_PT1} --alias ${GEDA_PT1} \
         --passcode ${GEDA_PT1_PASSCODE} \
         --group ${GEDA_MS} \
-        --file "${temp_multisig_config}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --file /config/multi-sig-incept-config.json
 
     echo
 
-    kli multisig join --name ${GEDA_PT2} \
+    klid geda2 multisig join --name ${GEDA_PT2} \
         --passcode ${GEDA_PT2_PASSCODE} \
         --group ${GEDA_MS} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+        --auto
 
     echo
     print_yellow "[External] Multisig Inception { ${GEDA_PT1}, ${GEDA_PT2} } - wait for signatures"
     echo
-    wait $PID_LIST
+    print_dark_gray "waiting on Docker containers geda1 and geda2"
+    docker wait geda1 geda2
+    docker logs geda1 # show what happened
+    docker logs geda2 # show what happened
+    docker rm geda1 geda2
 
     exists=$(kli list --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" | grep "${GEDA_MS}")
     if [[ ! "$exists" =~ "${GEDA_MS}" ]]; then
@@ -425,12 +428,10 @@ EOM
         exit 1
     fi
 
-    ms_prefix=$(kli status --name ${GEDA_PT1} --alias ${GEDA_MS} --passcode ${GEDA_PT1_PASSCODE} | awk '/Identifier:/ {print $2}')
+    ms_prefix=$(kli status --name "${GEDA_PT1}" --alias "${GEDA_MS}" --passcode "${GEDA_PT1_PASSCODE}" | awk '/Identifier:/ {print $2}')
     print_green "[External] GEDA Multisig AID ${GEDA_MS} with prefix: ${ms_prefix}"
 
-    rm "$temp_multisig_config"
-
-    touch $HOME/.keri/full-chain-geda-ms
+    touch ${KEYSTORE_DIR}/full-chain-geda-ms
 }
 create_geda_multisig
 
@@ -445,53 +446,31 @@ function create_gida_multisig() {
     echo
     print_yellow "[Internal] Multisig Inception for GIDA"
 
-    echo
-    print_yellow "[Internal] Multisig Inception temp config file."
-    read -r -d '' MULTISIG_ICP_CONFIG_JSON << EOM
-{
-  "aids": [
-    "${GIDA_PT1_PRE}",
-    "${GIDA_PT2_PRE}"
-  ],
-  "transferable": true,
-  "wits": ["${WAN_PRE}"],
-  "toad": 1,
-  "isith": "2",
-  "nsith": "2"
-}
-EOM
-
-    print_lcyan "[Internal] Using temporary multisig config file as heredoc:"
-    print_lcyan "${MULTISIG_ICP_CONFIG_JSON}"
-
-    # create temporary file to store json
-    temp_multisig_config=$(mktemp)
-
-    # write JSON content to the temp file
-    echo "$MULTISIG_ICP_CONFIG_JSON" > "$temp_multisig_config"
+    create_multisig_icp_config "${GIDA_PT1_PRE}" "${GIDA_PT2_PRE}"
 
     # Follow commands run in parallel
     print_yellow "[Internal] Multisig Inception from ${GIDA_PT1}: ${GIDA_PT1_PRE}"
-    kli multisig incept --name ${GIDA_PT1} --alias ${GIDA_PT1} \
+    klid gida1 multisig incept --name ${GIDA_PT1} --alias ${GIDA_PT1} \
         --passcode ${GIDA_PT1_PASSCODE} \
         --group ${GIDA_MS} \
-        --file "${temp_multisig_config}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --file /config/multi-sig-incept-config.json 
 
     echo
 
-    kli multisig join --name ${GIDA_PT2} \
+    klid gida2 multisig join --name ${GIDA_PT2} \
         --passcode ${GIDA_PT2_PASSCODE} \
         --group ${GIDA_MS} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+        --auto
 
     echo
     print_yellow "[Internal] Multisig Inception { ${GIDA_PT1}, ${GIDA_PT2} } - wait for signatures"
     echo
-    wait $PID_LIST
+    print_dark_gray "waiting on Docker containers gida1 and gida2"
+    docker wait gida1
+    docker wait gida2
+    docker logs gida1 # show what happened
+    docker logs gida2 # show what happened
+    docker rm gida1 gida2
 
     exists=$(kli list --name "${GIDA_PT1}" --passcode "${GIDA_PT1_PASSCODE}" | grep "${GIDA_MS}")
     if [[ ! "$exists" =~ "${GIDA_MS}" ]]; then
@@ -499,12 +478,8 @@ EOM
         exit 1
     fi
 
-    ms_prefix=$(kli status --name ${GIDA_PT1} --alias ${GIDA_MS} --passcode ${GIDA_PT1_PASSCODE} | awk '/Identifier:/ {print $2}')
+    ms_prefix=$(kli status --name "${GIDA_PT1}" --alias "${GIDA_MS}" --passcode "${GIDA_PT1_PASSCODE}" | awk '/Identifier:/ {print $2}')
     print_green "[Internal] GIDA Multisig AID ${GIDA_MS} with prefix: ${ms_prefix}"
-
-    rm "$temp_multisig_config"
-
-    touch $HOME/.keri/full-chain-gida-ms
 }
 create_gida_multisig
 
@@ -522,15 +497,15 @@ create_gida_multisig
 
 # 9. QAR: Resolve GEDA OOBI
 function resolve_geda_oobis() {
-    if test -f $HOME/.keri/full-chain-qar-geda-oobi; then
+    if test -f ${KEYSTORE_DIR}/full-chain-qar-geda-oobi; then
         print_dark_gray "GEDA OOBI already resolved for QARs"
         return
     fi
-    GEDA_OOBI=$(kli oobi generate --name ${GEDA_PT1} --passcode ${GEDA_PT1_PASSCODE} --alias ${GEDA_MS} --role witness)
+    GEDA_OOBI=$(kli oobi generate --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --alias ${GEDA_MS} --role witness)
     echo "GEDA OOBI: ${GEDA_OOBI}"
-    kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT1_PASSCODE}" --oobi "${GEDA_OOBI}"
-    kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT2_PASSCODE}" --oobi "${GEDA_OOBI}"
-    touch $HOME/.keri/full-chain-qar-geda-oobi
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT1_PASSCODE}" --oobi "${GEDA_OOBI}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT2_PASSCODE}" --oobi "${GEDA_OOBI}"
+    touch ${KEYSTORE_DIR}/full-chain-qar-geda-oobi
 }
 resolve_geda_oobis
 
@@ -538,106 +513,80 @@ resolve_geda_oobis
 # 11. QVI: Create delegated AID with GEDA as delegator
 # 12. GEDA: delegate to QVI
 function create_qvi_multisig() {
-    if test -f $HOME/.keri/full-chain-qvi-ms; then
-    print_dark_gray "[QVI] delegated multisig AID ${QVI_MS} already exists"
-    return
+    exists=$(kli list --name "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" | grep "${QVI_MS}")
+    if [[ "$exists" =~ "${QVI_MS}" ]]; then
+        print_dark_gray "[QVI] Multisig AID ${QVI_MS} already exists"
+        return
     fi
 
     echo
     print_yellow "[QVI] delegated multisig inception from ${GEDA_MS} | ${GEDA_PRE}"
 
-    echo
-    read -r -d '' MULTISIG_ICP_CONFIG_JSON << EOM
-{
-  "delpre": "${GEDA_PRE}",
-  "aids": [
-    "${QAR_PT1_PRE}",
-    "${QAR_PT2_PRE}"
-  ],
-  "transferable": true,
-  "wits": ["${WAN_PRE}"],
-  "toad": 1,
-  "isith": "2",
-  "nsith": "2"
-}
-EOM
-
-    print_lcyan "[QVI] delegated multisig inception config"
-    print_lcyan "${MULTISIG_ICP_CONFIG_JSON}"
-
-    # create temporary file to store json
-    temp_multisig_config=$(mktemp)
-
-    # write JSON content to the temp file
-    echo "$MULTISIG_ICP_CONFIG_JSON" > "$temp_multisig_config"
+    create_multisig_icp_config "${QAR_PT1_PRE}" "${QAR_PT2_PRE}"
 
     # Follow commands run in parallel
     echo
     print_yellow "[QVI] delegated multisig inception started by ${QAR_PT1}: ${QAR_PT1_PRE}"
 
     PID_LIST=""
-    kli multisig incept --name ${QAR_PT1} --alias ${QAR_PT1} \
+    kli2d qvi1 multisig incept --name ${QAR_PT1} --alias ${QAR_PT1} \
         --passcode ${QAR_PT1_PASSCODE} \
         --group ${QVI_MS} \
-        --file "${temp_multisig_config}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --file /config/multi-sig-incept-config.json
 
     echo
 
-    kli multisig incept --name ${QAR_PT2} --alias ${QAR_PT2} \
+    kli2d qvi2 multisig join --name ${QAR_PT2} \
         --passcode ${QAR_PT2_PASSCODE} \
         --group ${QVI_MS} \
-        --file "${temp_multisig_config}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --auto
 
     echo
     print_yellow "[QVI] delegated multisig Inception { ${QAR_PT1}, ${QAR_PT2} } - wait for signatures"
-    sleep 5
     echo
-
-    exists=$(kli list --name "${QAR_PT1} --passcode ${QAR_PT1_PASSCODE}" | grep "${QVI_MS}")
-    if [ ! $exists == "*${QVI_MS}*" ]; then
-        print_red "[QVI] Multisig inception failed"
-        exit 1
-    fi
 
     print_lcyan "[External] GEDA members approve delegated inception with 'kli delegate confirm'"
     echo
 
-    kli delegate confirm --name ${GEDA_PT1} --alias ${GEDA_PT1} --passcode ${GEDA_PT1_PASSCODE} --interact --auto &
-    pid=$!
-    PID_LIST+=" $pid"
-    
-    kli delegate confirm --name ${GEDA_PT2} --alias ${GEDA_PT2} --passcode ${GEDA_PT2_PASSCODE} --interact --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+    klid geda1 delegate confirm --name "${GEDA_PT1}" --alias "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --interact --auto
+    klid geda2 delegate confirm --name "${GEDA_PT2}" --alias "${GEDA_PT2}" --passcode "${GEDA_PT2_PASSCODE}" --interact --auto
 
-    wait $PID_LIST
-
-    rm "$temp_multisig_config"
+    print_dark_gray "waiting on Docker containers qvi1, qvi2, geda1, geda2"
+    docker wait qvi1 qvi2 geda1 geda2
+    docker logs qvi1 # show what happened
+    docker logs qvi2 # show what happened
+    docker logs geda1
+    docker logs geda2
+    docker rm qvi1 qvi2 geda1 geda2
 
     echo
     print_lcyan "[QVI] Show multisig status for ${QAR_PT1}"
-    kli status --name ${QAR_PT1} --alias ${QVI_MS} --passcode ${QAR_PT1_PASSCODE}
+    kli2 status --name "${QAR_PT1}" --alias "${QVI_MS}" --passcode "${QAR_PT1_PASSCODE}"
     echo
 
-    ms_prefix=$(kli status --name ${QAR_PT1} --alias ${QVI_MS} --passcode ${QAR_PT1_PASSCODE} | awk '/Identifier:/ {print $2}')
+    exists=$(kli2 list --name "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" | grep "${QVI_MS}")
+    if [[ ! "$exists" =~ "*${QVI_MS}*" ]]; then
+        print_red "[QVI] Multisig inception failed"
+        kill -SIGINT $$ # exit script and trigger TRAP above
+    fi
+
+    ms_prefix=$(kli2 status --name "${QAR_PT1}" --alias "${QVI_MS}" --passcode "${QAR_PT1_PASSCODE}" | awk '/Identifier:/ {print $2}')
     print_green "[QVI] Multisig AID ${QVI_MS} with prefix: ${ms_prefix}"
 
-    touch $HOME/.keri/full-chain-qvi-ms
+    touch ${KEYSTORE_DIR}/full-chain-qvi-ms
 }
 create_qvi_multisig
+
+exit 0
 
 # 13. QVI: (skip) Perform endpoint role authorizations
 
 # 14. QVI: Generate OOBI for QVI to send to GEDA
-QVI_OOBI=$(kli oobi generate --name ${QAR_PT1} --passcode ${QAR_PT1_PASSCODE} --alias ${QVI_MS} --role witness)
+QVI_OOBI=$(kli oobi generate --name "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" --alias "${QVI_MS}" --role witness)
 
 # 15. GEDA and GIDA: Resolve QVI OOBI
 function resolve_qvi_oobi() {
-    if test -f $HOME/.keri/full-chain-geda-qvi-oobi; then
+    if test -f ${KEYSTORE_DIR}/full-chain-geda-qvi-oobi; then
         print_dark_gray "GEDA QVI OOBI already resolved"
         return
     fi
@@ -651,7 +600,7 @@ function resolve_qvi_oobi() {
     kli oobi resolve --name "${PERSON}"   --oobi-alias "${QVI_MS}" --passcode "${PERSON_PASSCODE}"   --oobi "${QVI_OOBI}"
     echo
 
-    touch $HOME/.keri/full-chain-geda-qvi-oobi
+    touch ${KEYSTORE_DIR}/full-chain-geda-qvi-oobi
 }
 resolve_qvi_oobi
 
@@ -938,7 +887,7 @@ create_qvi_reg
 
 # 18.6 QVI OOBIs with GIDA
 function resolve_gida_and_qvi_oobis() {
-    if test -f $HOME/.keri/full-chain-gida-qvi-oobi; then
+    if test -f ${KEYSTORE_DIR}/full-chain-gida-qvi-oobi; then
         print_dark_gray "GIDA and QVI OOBIs already resolved"
         return
     fi
@@ -951,7 +900,7 @@ function resolve_gida_and_qvi_oobis() {
     
     echo
 
-    touch $HOME/.keri/full-chain-gida-qvi-oobi
+    touch ${KEYSTORE_DIR}/full-chain-gida-qvi-oobi
 }
 resolve_gida_and_qvi_oobis
 
@@ -2099,7 +2048,7 @@ function sally_setup() {
         --name $SALLY \
         --alias $SALLY \
         --passcode $SALLY_PASSCODE \
-        --web-hook http://127.0.0.1:9923 \
+        --web-hook http://host.docker.internal:9923 \
         --auth ${GEDA_PRE} & # who will be presenting the credential
     SALLY_PID=$!
 
