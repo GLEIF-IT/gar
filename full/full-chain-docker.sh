@@ -209,8 +209,8 @@ function create_aids() {
     create_aid "${GIDA_PT2}" "${GIDA_PT2_SALT}" "${GIDA_PT2_PASSCODE}" "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
     create_aid "${QAR_PT1}"  "${QAR_PT1_SALT}"  "${QAR_PT1_PASSCODE}"  "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
     create_aid "${QAR_PT2}"  "${QAR_PT2_SALT}"  "${QAR_PT2_PASSCODE}"  "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
-    # create_aid "${PERSON}"   "${PERSON_SALT}"   "${PERSON_PASSCODE}"   "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
-    # create_aid "${SALLY}"    "${SALLY_SALT}"    "${SALLY_PASSCODE}"    "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
+    create_aid "${PERSON}"   "${PERSON_SALT}"   "${PERSON_PASSCODE}"   "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}" "kli2"
+    create_aid "${SALLY}"    "${SALLY_SALT}"    "${SALLY_PASSCODE}"    "${CONT_CONFIG_DIR}" "${CONT_INIT_CFG}" "${CONT_ICP_CFG}"
 }
 create_aids
 
@@ -230,7 +230,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${GEDA_PT1}" --oobi-alias "${QAR_PT2}"  --passcode "${GEDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GEDA_PT1}" --oobi-alias "${GIDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GEDA_PT1}" --oobi-alias "${GIDA_PT2}" --passcode "${GEDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    # kli oobi resolve --name "${GEDA_PT1}" --oobi-alias "${PERSON}"   --passcode "${GEDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${GEDA_PT1}" --oobi-alias "${PERSON}"   --passcode "${GEDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for GEDA 2"
     kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${GEDA_PT1}" --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
@@ -238,7 +238,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${QAR_PT1}"  --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${GIDA_PT1}" --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${GIDA_PT2}" --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    # kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${PERSON}"   --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${GEDA_PT2}" --oobi-alias "${PERSON}"   --passcode "${GEDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for GIDA 1"
     kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${GIDA_PT2}" --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
@@ -246,7 +246,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${GEDA_PT2}" --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${QAR_PT1}"  --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${QAR_PT2}"  --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
-    # kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${PERSON}"   --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${GIDA_PT1}" --oobi-alias "${PERSON}"   --passcode "${GIDA_PT1_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for GIDA 2"
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${GIDA_PT1}" --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
@@ -254,7 +254,7 @@ function resolve_oobis() {
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${GEDA_PT2}" --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${QAR_PT1}"  --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${QAR_PT2}"  --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
-    # kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${PERSON}"   --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${PERSON}"   --passcode "${GIDA_PT2_PASSCODE}" --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for QAR 1"
     kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${QAR_PT2}"   --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
@@ -262,8 +262,8 @@ function resolve_oobis() {
     kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
     kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "$SALLY"       --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT1}" --oobi-alias "$SALLY"       --passcode "${QAR_PT1_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     print_yellow "Resolving OOBIs for QAR 2"
     kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${QAR_PT1}"   --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
@@ -271,16 +271,16 @@ function resolve_oobis() {
     kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
     kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT1}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${GIDA_PT2}"  --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "$SALLY"       --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "${PERSON}"    --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${PERSON_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${QAR_PT2}" --oobi-alias "$SALLY"       --passcode "${QAR_PT2_PASSCODE}"  --oobi "${WIT_HOST}/oobi/${SALLY_PRE}/witness/${WAN_PRE}"
 
     # print_yellow "Resolving OOBIs for Person"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT1}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT2}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
-    # kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT1}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${QAR_PT2}"   --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${QAR_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GEDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GEDA_PT2_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
+    kli2 oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
     
     echo
 }
@@ -798,7 +798,7 @@ function grant_qvi_credential() {
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT1_PASSCODE}" \
             --poll \
-            --said
+            --said | tr -d '[:space:]'
     QVI_GRANT_SAID=$?
     if [ -z "${QVI_GRANT_SAID}" ]; then
         print_red "[QVI] QVI Credential not granted - exiting"
@@ -811,7 +811,7 @@ function grant_qvi_credential() {
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT2_PASSCODE}" \
             --poll \
-            --said
+            --said | tr -d '[:space:]'
     QVI_GRANT_SAID=$?
     if [ -z "${QVI_GRANT_SAID}" ]; then 
         print_red "[QVI] QVI Credential not granted - exiting"
@@ -1182,6 +1182,8 @@ function grant_le_credential() {
     if [ -z "${LE_GRANT_SAID}" ]; then
         print_red "LE Credential not granted"
         exit 1
+    else 
+        print_green "[Internal] ${QVI_MS} granted LE Credential to GIDA ${GIDA_PT1} SAID ${LE_GRANT_SAID}"
     fi
 
     print_green "[Internal] Polling for LE Credential in ${GIDA_PT2}..."
@@ -1196,6 +1198,8 @@ function grant_le_credential() {
     if [ -z "${LE_GRANT_SAID}" ]; then 
         print_red "LE Credential not granted"
         exit 1
+    else 
+        print_green "[Internal] ${QVI_MS} granted LE Credential to GIDA ${GIDA_PT2} SAID ${LE_GRANT_SAID}"
     fi
 
     echo
@@ -1408,38 +1412,40 @@ function grant_ecr_auth_credential() {
         --alias "${GIDA_MS}" \
         --issued \
         --said \
-        --schema ${ECR_AUTH_SCHEMA | tr -d '[:space:]'})
+        --schema "${ECR_AUTH_SCHEMA}" | tr -d '[:space:]')
 
     echo
     print_yellow $'[Internal] IPEX GRANTing ECR Auth credential with\n\tSAID'" ${SAID}"$'\n\tto QVI '"${QVI_PRE}"
 
-    KLI_TIME=$(kli time) # Use consistent time so SAID of grant is same
+    KLI_TIME=$(kli time | tr -d '[:space:]') # Use consistent time so SAID of grant is same
     klid gida1 ipex grant \
-        --name ${GIDA_PT1} \
-        --passcode ${GIDA_PT1_PASSCODE} \
-        --alias ${GIDA_MS} \
-        --said ${SAID} \
-        --recipient ${QVI_PRE} \
-        --time ${KLI_TIME} &
-    pid=$!
-    PID_LIST+=" $pid"
+        --name "${GIDA_PT1}" \
+        --passcode "${GIDA_PT1_PASSCODE}" \
+        --alias "${GIDA_MS}" \
+        --said "${SAID}" \
+        --recipient "${QVI_PRE}" \
+        --time "${KLI_TIME}" 
 
-    kli ipex join \
-        --name ${GIDA_PT2} \
-        --passcode ${GIDA_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
-
-    wait $PID_LIST
+    klid gida2 ipex grant \
+        --name "${GIDA_PT2}" \
+        --passcode "${GIDA_PT2_PASSCODE}" \
+        --alias "${GIDA_MS}" \
+        --said "${SAID}" \
+        --recipient "${QVI_PRE}" \
+        --time "${KLI_TIME}" 
 
     echo
-    print_yellow "[Internal] Waiting for IPEX messages to be witnessed"
-    sleep 5
+    print_yellow "[Internal] Granting ECR Auth credential to QVI - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers gida1 and gida2"
+    docker wait gida1 gida2
+    docker logs gida1
+    docker logs gida2
+    docker rm gida1 gida2
 
     echo
     print_green "[QVI] Polling for ECR Auth Credential in ${QAR_PT1}..."
-    kli ipex list \
+    kli2 ipex list \
             --name "${QAR_PT1}" \
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT1_PASSCODE}" \
@@ -1448,7 +1454,7 @@ function grant_ecr_auth_credential() {
             --said
 
     print_green "[QVI] Polling for ECR Auth Credential in ${QAR_PT2}..."
-    kli ipex list \
+    kli2 ipex list \
             --name "${QAR_PT2}" \
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT2_PASSCODE}" \
@@ -1464,47 +1470,63 @@ grant_ecr_auth_credential
 
 # 21.5 (part of 22) Admit ECR Auth credential from GIDA
 function admit_ecr_auth_credential() {
-    VC_SAID=$(kli vc list \
+    VC_SAID=$(kli2 vc list \
         --name "${QAR_PT2}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT2_PASSCODE}" \
         --said \
-        --schema ${ECR_AUTH_SCHEMA})
+        --schema "${ECR_AUTH_SCHEMA}" | tr -d '[:space:]')
     if [ ! -z "${VC_SAID}" ]; then
         print_dark_gray "[QVI] ECR Auth Credential already admitted"
         return
     fi
-    SAID=$(kli ipex list \
+    SAID=$(kli2 ipex list \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --type "grant" \
         --poll \
         --said | \
-        tail -1) # get the last grant, which should be the ECR Auth credential
+        tail -1 | tr -d '[:space:]') # get the last grant, which should be the ECR Auth credential
 
     echo
     print_yellow "[QVI] Admitting ECR Auth Credential ${SAID} from GIDA LE"
 
-    KLI_TIME=$(kli time) # Use consistent time so SAID of grant is same
-    kli ipex admit \
-        --name ${QAR_PT1} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --alias ${QVI_MS} \
-        --said ${SAID} \
-        --time "${KLI_TIME}" & 
-    pid=$!
-    PID_LIST+=" $pid"
+    KLI_TIME=$(kli time | tr -d '[:space:]') # Use consistent time so SAID of grant is same
+    kli2d qvi1 ipex admit \
+        --name "${QAR_PT1}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --time "${KLI_TIME}" 
 
     print_green "[QVI] Admitting ECR Auth Credential as ${QVI_MS} from GIDA LE"
-    kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+    kli2d qvi2 ipex admit \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --time "${KLI_TIME}" 
+    
+    echo
+    print_yellow "[QVI] Admitting ECR Auth credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2
 
-    wait $PID_LIST
+    VC_SAID=$(kli2 vc list \
+        --name "${QAR_PT2}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --said \
+        --schema "${ECR_AUTH_SCHEMA}" | tr -d '[:space:]')
+    if [ -z "${VC_SAID}" ]; then
+        print_red "[QVI] ECR Auth Credential not admitted"
+        exit 1
+    fi
 
     echo
     print_green "[QVI] Admitted ECR Auth Credential"
@@ -1523,9 +1545,9 @@ function prepare_oor_auth_data() {
 }
 EOM
 
-    echo "$OOR_AUTH_DATA_JSON" > ./oor-auth-data.json
+    echo "$OOR_AUTH_DATA_JSON" > ./data/oor-auth-data.json
     print_lcyan "[Internal] OOR Auth data JSON"
-    print_lcyan "$(cat ./oor-auth-data.json)"
+    print_lcyan "$(cat ./data/oor-auth-data.json)"
 }
 prepare_oor_auth_data
 
@@ -1538,7 +1560,7 @@ function create_oor_auth_credential() {
         --passcode "${GIDA_PT1_PASSCODE}" \
         --issued \
         --said \
-        --schema "${OOR_AUTH_SCHEMA}")
+        --schema "${OOR_AUTH_SCHEMA}" | tr -d '[:space:]')
     if [ ! -z "${SAID}" ]; then
         print_yellow "[QVI] OOR Auth credential already created"
         return
@@ -1547,38 +1569,51 @@ function create_oor_auth_credential() {
     echo
     print_green "[Internal] GIDA creating OOR Auth credential"
 
-    KLI_TIME=$(kli time)
-    PID_LIST=""
-    kli vc create \
-        --name ${GIDA_PT1} \
-        --alias ${GIDA_MS} \
-        --passcode ${GIDA_PT1_PASSCODE} \
-        --registry-name ${GIDA_REGISTRY} \
-        --schema ${OOR_AUTH_SCHEMA} \
-        --recipient ${QVI_PRE} \
-        --data @./oor-auth-data.json \
-        --edges @./legal-entity-edge.json \
-        --rules @./rules.json \
-        --time ${KLI_TIME} &
+    KLI_TIME=$(kli time | tr -d '[:space:]')
+    klid gida1 vc create \
+        --name "${GIDA_PT1}" \
+        --alias "${GIDA_MS}" \
+        --passcode "${GIDA_PT1_PASSCODE}" \
+        --registry-name "${GIDA_REGISTRY}" \
+        --schema "${OOR_AUTH_SCHEMA}" \
+        --recipient "${QVI_PRE}" \
+        --data @/data/oor-auth-data.json \
+        --edges @/data/legal-entity-edge.json \
+        --rules @/data/rules.json \
+        --time "${KLI_TIME}" 
 
-    pid=$!
-    PID_LIST+=" $pid"
+    klid gida2 vc create \
+        --name "${GIDA_PT2}" \
+        --alias "${GIDA_MS}" \
+        --passcode "${GIDA_PT2_PASSCODE}" \
+        --registry-name "${GIDA_REGISTRY}" \
+        --schema "${OOR_AUTH_SCHEMA}" \
+        --recipient "${QVI_PRE}" \
+        --data @/data/oor-auth-data.json \
+        --edges @/data/legal-entity-edge.json \
+        --rules @/data/rules.json \
+        --time "${KLI_TIME}" 
 
-    kli vc create \
-        --name ${GIDA_PT2} \
-        --alias ${GIDA_MS} \
-        --passcode ${GIDA_PT2_PASSCODE} \
-        --registry-name ${GIDA_REGISTRY} \
-        --schema ${OOR_AUTH_SCHEMA} \
-        --recipient ${QVI_PRE} \
-        --data @./oor-auth-data.json \
-        --edges @./legal-entity-edge.json \
-        --rules @./rules.json \
-        --time ${KLI_TIME} &
-    pid=$!
-    PID_LIST+=" $pid"
+    echo 
+    print_yellow "[Internal] GIDA creating OOR Auth credential - wait for signatures"
+    echo 
+    print_dark_gray "waiting on Docker containers gida1 and gida2"
+    docker wait gida1 gida2
+    docker logs gida1
+    docker logs gida2
+    docker rm gida1 gida2
 
-    wait $PID_LIST
+    SAID=$(kli vc list \
+        --name "${GIDA_PT1}" \
+        --alias "${GIDA_MS}" \
+        --passcode "${GIDA_PT1_PASSCODE}" \
+        --issued \
+        --said \
+        --schema "${OOR_AUTH_SCHEMA}" | tr -d '[:space:]')
+    if [ -z "${SAID}" ]; then
+        print_red "[Internal] OOR Auth Credential not created"
+        exit 1
+    fi
 
     echo
     print_lcyan "[Internal] GIDA created OOR Auth credential"
@@ -1591,7 +1626,7 @@ create_oor_auth_credential
 # 21.8 Grant OOR Auth credential to QVI
 function grant_oor_auth_credential() {
     # This relies on the last grant being the OOR Auth credential
-    GRANT_COUNT=$(kli ipex list \
+    GRANT_COUNT=$(kli2 ipex list \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --type "grant" \
@@ -1609,38 +1644,41 @@ function grant_oor_auth_credential() {
         --issued \
         --said \
         --schema ${OOR_AUTH_SCHEMA} | \
-        tail -1) # get the last credential, the OOR Auth credential
+        tail -1 | tr -d '[:space:]') # get the last credential, the OOR Auth credential
 
     echo
     print_yellow $'[Internal] IPEX GRANTing OOR Auth credential with\n\tSAID'" ${SAID}"$'\n\tto QVI'" ${QVI_PRE}"
 
-    KLI_TIME=$(kli time) # Use consistent time so SAID of grant is same
-    kli ipex grant \
-        --name ${GIDA_PT1} \
-        --passcode ${GIDA_PT1_PASSCODE} \
-        --alias ${GIDA_MS} \
-        --said ${SAID} \
-        --recipient ${QVI_PRE} \
-        --time ${KLI_TIME} &
-    pid=$!
-    PID_LIST+=" $pid"
+    KLI_TIME=$(kli time | tr -d '[:space:]') # Use consistent time so SAID of grant is same
+    klid gida1 ipex grant \
+        --name "${GIDA_PT1}" \
+        --passcode "${GIDA_PT1_PASSCODE}" \
+        --alias "${GIDA_MS}" \
+        --said "${SAID}" \
+        --recipient "${QVI_PRE}" \
+        --time "${KLI_TIME}" 
 
-    kli ipex join \
-        --name ${GIDA_PT2} \
-        --passcode ${GIDA_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
-
-    wait $PID_LIST
+    klid gida2 ipex grant \
+        --name "${GIDA_PT2}" \
+        --passcode "${GIDA_PT2_PASSCODE}" \
+        --alias "${GIDA_MS}" \
+        --said "${SAID}" \
+        --recipient "${QVI_PRE}" \
+        --time "${KLI_TIME}" 
 
     echo
-    print_yellow "[Internal] Waiting for IPEX messages to be witnessed"
-    sleep 5
+    print_yellow "[Internal] Granting OOR Auth credential to QVI - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers gida1 and gida2"
+    docker wait gida1 gida2
+    docker logs gida1
+    docker logs gida2
+    docker rm gida1 gida2
+
 
     echo
     print_green "[QVI] Polling for OOR Auth Credential in ${QAR_PT1}..."
-    kli ipex list \
+    kli2 ipex list \
             --name "${QAR_PT1}" \
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT1_PASSCODE}" \
@@ -1649,7 +1687,7 @@ function grant_oor_auth_credential() {
             --said
 
     print_green "[QVI] Polling for OOR Auth Credential in ${QAR_PT2}..."
-    kli ipex list \
+    kli2 ipex list \
             --name "${QAR_PT2}" \
             --alias "${QVI_MS}" \
             --passcode "${QAR_PT2_PASSCODE}" \
@@ -1663,49 +1701,67 @@ function grant_oor_auth_credential() {
 }
 grant_oor_auth_credential
 
+
+
 # 22. QVI: Admit OOR Auth credential
 function admit_oor_auth_credential() {
-    VC_SAID=$(kli vc list \
+    VC_SAID=$(kli2 vc list \
         --name "${QAR_PT2}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT2_PASSCODE}" \
         --said \
-        --schema ${OOR_AUTH_SCHEMA})
+        --schema ${OOR_AUTH_SCHEMA} | tr -d '[:space:]')
     if [ ! -z "${VC_SAID}" ]; then
         print_dark_gray "[QVI] OOR Auth Credential already admitted"
         return
     fi
-    SAID=$(kli ipex list \
+    SAID=$(kli2 ipex list \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --type "grant" \
         --poll \
         --said | \
-        tail -1) # get the last grant, which should be the ECR Auth credential
+        tail -1 | tr -d '[:space:]') # get the last grant, which should be the ECR Auth credential
 
     echo
     print_yellow "[QVI] Admitting OOR Auth Credential ${SAID} from GIDA LE"
 
-    KLI_TIME=$(kli time) # Use consistent time so SAID of grant is same
-    kli ipex admit \
-        --name ${QAR_PT1} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --alias ${QVI_MS} \
-        --said ${SAID} \
-        --time "${KLI_TIME}" & 
-    pid=$!
-    PID_LIST+=" $pid"
+    KLI_TIME=$(kli time | tr -d '[:space:]') # Use consistent time so SAID of grant is same
+    kli2d qvi1 ipex admit \
+        --name "${QAR_PT1}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --time "${KLI_TIME}"
 
     print_green "[QVI] Admitting OOR Auth Credential as ${QVI_MS} from GIDA LE"
-    kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+    kli2d qvi2 ipex admit \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --time "${KLI_TIME}"
 
-    wait $PID_LIST
+    echo
+    print_yellow "[QVI] Admitting OOR Auth credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2
+
+    VC_SAID=$(kli2 vc list \
+        --name "${QAR_PT2}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --said \
+        --schema ${OOR_AUTH_SCHEMA} | tr -d '[:space:]')
+    if [ -z "${VC_SAID}" ]; then
+        print_red "[QVI] OOR Auth Credential not admitted"
+        exit 1
+    fi
 
     echo
     print_green "[QVI] OOR Auth Credential admitted"
@@ -1714,15 +1770,17 @@ function admit_oor_auth_credential() {
 admit_oor_auth_credential
 
 
+
+
 # 23. QVI: Create and Issue ECR credential to Person
 # 23.1 Prepare ECR Auth edge data
 function prepare_ecr_auth_edge() {
-    ECR_AUTH_SAID=$(kli vc list \
+    ECR_AUTH_SAID=$(kli2 vc list \
         --name ${QAR_PT1} \
         --alias ${QVI_MS} \
         --passcode "${QAR_PT1_PASSCODE}" \
         --said \
-        --schema ${ECR_AUTH_SCHEMA})
+        --schema ${ECR_AUTH_SCHEMA} | tr -d '[:space:]')
     print_bg_blue "[QVI] Preparing [ECR Auth] edge with [ECR Auth] Credential SAID: ${ECR_AUTH_SAID}"
     read -r -d '' ECR_AUTH_EDGE_JSON << EOM
 {
@@ -1743,6 +1801,8 @@ EOM
 }
 prepare_ecr_auth_edge      
 
+
+
 # 23.2 Prepare ECR credential data
 function prepare_ecr_cred_data() {
     print_bg_blue "[QVI] Preparing ECR credential data"
@@ -1761,10 +1821,12 @@ EOM
 }
 prepare_ecr_cred_data
 
+
+
 # 23.3 Create ECR credential in QVI, issued to the Person
 function create_ecr_credential() {
     # Check if ECR credential already exists
-    SAID=$(kli vc list \
+    SAID=$(kli2 vc list \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
@@ -1782,8 +1844,7 @@ function create_ecr_credential() {
     KLI_TIME=$(kli time | tr -d '[:space:]')
     CRED_NONCE=$(kli nonce | tr -d '[:space:]')
     SUBJ_NONCE=$(kli nonce | tr -d '[:space:]')
-    PID_LIST=""
-    kli vc create \
+    kli2d qvi1 vc create \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
@@ -1796,11 +1857,9 @@ function create_ecr_credential() {
         --data @/data/ecr-data.json \
         --edges @/data/ecr-auth-edge.json \
         --rules @/data/ecr-rules.json \
-        --time "${KLI_TIME}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --time "${KLI_TIME}"
 
-    kli vc create \
+    kli2d qvi2 vc create \
         --name "${QAR_PT2}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT2_PASSCODE}" \
@@ -1813,11 +1872,28 @@ function create_ecr_credential() {
         --data @/data/ecr-data.json \
         --edges @/data/ecr-auth-edge.json \
         --rules @/data/ecr-rules.json \
-        --time "${KLI_TIME}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --time "${KLI_TIME}" 
 
-    wait $PID_LIST
+    echo
+    print_yellow "[QVI] creating ECR credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2
+
+    SAID=$(kli2 vc list \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --issued \
+        --said \
+        --schema ${ECR_SCHEMA} | tr -d '[:space:]')
+    if [ -z "${SAID}" ]; then
+        print_red "[QVI] ECR Credential not created"
+        exit 1
+    fi
 
     echo
     print_lcyan "[QVI] ECR credential created"
@@ -1835,7 +1911,7 @@ function grant_ecr_credential() {
         --passcode "${PERSON_PASSCODE}" \
         --poll \
         --said | \
-        tail -1) # get the last grant
+        tail -1 | tr -d '[:space:]') # get the last grant
     if [ ! -z "${ECR_GRANT_SAID}" ]; then
         print_yellow "[QVI] ECR credential already granted"
         return
@@ -1846,34 +1922,36 @@ function grant_ecr_credential() {
         --alias "${QVI_MS}" \
         --issued \
         --said \
-        --schema ${ECR_SCHEMA})
+        --schema ${ECR_SCHEMA} | tr -d '[:space:]')
 
     echo
     print_yellow $'[QVI] IPEX GRANTing ECR credential with\n\tSAID'" ${SAID}"$'\n\tto'" ${PERSON} ${PERSON_PRE}"
     KLI_TIME=$(kli time | tr -d '[:space:]')
-    kli ipex grant \
-        --name ${QAR_PT1} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --alias ${QVI_MS} \
-        --said ${SAID} \
-        --recipient ${PERSON_PRE} \
-        --time ${KLI_TIME} &
-    pid=$!
-    PID_LIST+=" $pid"
+    kli2d qvi1 ipex grant \
+        --name "${QAR_PT1}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --recipient "${PERSON_PRE}" \
+        --time "${KLI_TIME}"
 
-    kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
+    kli2d qvi2 ipex grant \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --recipient "${PERSON_PRE}" \
+        --time "${KLI_TIME}"
 
-    wait $PID_LIST
-
+    echo 
+    print_yellow "[QVI] Granting ECR credential - wait for signatures"
     echo
-    print_yellow "[QVI] Waiting for IPEX messages to be witnessed"
-    sleep 5
-
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2
+    
     echo
     print_green "[PERSON] Polling for ECR Credential in ${PERSON}..."
     kli ipex list \
@@ -1913,31 +1991,44 @@ function admit_ecr_credential() {
     echo
     print_yellow "[PERSON] Admitting ECR credential ${SAID} to ${PERSON}"
 
-    kli ipex admit \
+    kli2d person ipex admit \
         --name "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
         --alias "${PERSON}" \
-        --said "${SAID}"  & 
-    pid=$!
-    PID_LIST+=" $pid"
-
-    wait $PID_LIST
+        --said "${SAID}" 
 
     echo
-    print_green "ECR Credential admitted"
+    print_yellow "[PERSON] Admitting ECR credential - wait for signatures"
     echo
+    print_dark_gray "waiting on Docker containers person"
+    docker wait person
+    docker logs person
+    docker rm person
+
+    VC_SAID=$(kli2 vc list \
+        --name "${PERSON}" \
+        --alias "${PERSON}" \
+        --passcode "${PERSON_PASSCODE}" \
+        --said \
+        --schema ${ECR_SCHEMA} | tr -d '[:space:]')
+    if [ -z "${VC_SAID}" ]; then
+        print_red "[PERSON] ECR Credential not admitted"
+        exit 1
+    else 
+        print_green "[PERSON] ECR Credential admitted"
+    fi
 }
 admit_ecr_credential
 
 # 24. QVI: Issue, grant OOR to Person and Person admits OOR
 # 24.1 Prepare OOR Auth edge data
 function prepare_oor_auth_edge() {
-    OOR_AUTH_SAID=$(kli vc list \
-        --name ${QAR_PT1} \
-        --alias ${QVI_MS} \
+    OOR_AUTH_SAID=$(kli2 vc list \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --said \
-        --schema ${OOR_AUTH_SCHEMA} | tr -d '[:space:]')
+        --schema "${OOR_AUTH_SCHEMA}" | tr -d '[:space:]')
     print_bg_blue "[QVI] Preparing [OOR Auth] edge with [OOR Auth] Credential SAID: ${OOR_AUTH_SAID}"
     read -r -d '' OOR_AUTH_EDGE_JSON << EOM
 {
@@ -1979,7 +2070,7 @@ prepare_oor_cred_data
 # 24.3 Create OOR credential in QVI, issued to the Person
 function create_oor_credential() {
     # Check if OOR credential already exists
-    SAID=$(kli vc list \
+    SAID=$(kli2 vc list \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
@@ -1996,7 +2087,7 @@ function create_oor_credential() {
 
     KLI_TIME=$(kli time | tr -d '[:space:]')
     PID_LIST=""
-    kli vc create \
+    kli2d qvi1 vc create \
         --name "${QAR_PT1}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
@@ -2006,11 +2097,9 @@ function create_oor_credential() {
         --data @/data/oor-data.json \
         --edges @/data/oor-auth-edge.json \
         --rules @/data/oor-rules.json \
-        --time "${KLI_TIME}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --time "${KLI_TIME}" 
 
-    kli vc create \
+    kli2d qvi2 vc create \
         --name "${QAR_PT2}" \
         --alias "${QVI_MS}" \
         --passcode "${QAR_PT2_PASSCODE}" \
@@ -2020,11 +2109,16 @@ function create_oor_credential() {
         --data @/data/oor-data.json \
         --edges @/data/oor-auth-edge.json \
         --rules @/data/oor-rules.json \
-        --time "${KLI_TIME}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --time "${KLI_TIME}" 
 
-    wait $PID_LIST
+    echo 
+    print_yellow "[QVI] creating OOR credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2    
 
     echo
     print_lcyan "[QVI] OOR credential created"
@@ -2036,7 +2130,7 @@ create_oor_credential
 # 24.4 QVI Grant OOR credential to PERSON
 function grant_oor_credential() {
     # This only works the last grant is the OOR credential
-    GRANT_COUNT=$(kli ipex list \
+    GRANT_COUNT=$(kli2 ipex list \
         --name "${PERSON}" \
         --alias "${PERSON}" \
         --type "grant" \
@@ -2047,7 +2141,7 @@ function grant_oor_credential() {
         print_yellow "[QVI] OOR credential already granted"
         return
     fi
-    SAID=$(kli vc list \
+    SAID=$(kli2 vc list \
         --name "${QAR_PT1}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --alias "${QVI_MS}" \
@@ -2057,31 +2151,35 @@ function grant_oor_credential() {
 
     echo
     print_yellow $'[QVI] IPEX GRANTing OOR credential with\n\tSAID'" ${SAID}"$'\n\tto'" ${PERSON} ${PERSON_PRE}"
-    kli ipex grant \
+    KLI_TIME=$(kli time | tr -d '[:space:]')
+    kli2d qvi1 ipex grant \
         --name "${QAR_PT1}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --alias "${QVI_MS}" \
         --said "${SAID}" \
-        --recipient "${PERSON_PRE}" &
-    pid=$!
-    PID_LIST+=" $pid"
+        --recipient "${PERSON_PRE}" \
+        --time "${KLI_TIME}"
 
-    kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
-        --auto &
-    pid=$!
-    PID_LIST+=" $pid"
-
-    wait $PID_LIST
+    kli2d qvi2 ipex grant \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --recipient "${PERSON_PRE}" \
+        --time "${KLI_TIME}"
 
     echo
-    print_yellow "[QVI] Waiting for IPEX messages to be witnessed"
-    sleep 5
+    print_yellow "[QVI] Granting OOR credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers qvi1 and qvi2"
+    docker wait qvi1 qvi2
+    docker logs qvi1
+    docker logs qvi2
+    docker rm qvi1 qvi2
 
     echo
     print_green "[PERSON] Polling for OOR Credential in ${PERSON}..."
-    kli ipex list \
+    kli2 ipex list \
         --name "${PERSON}" \
         --alias "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
@@ -2097,44 +2195,59 @@ grant_oor_credential
 
 # 24.5. Person: Admit OOR credential from QVI
 function admit_oor_credential() {
-    VC_SAID=$(kli vc list \
+    VC_SAID=$(kli2 vc list \
         --name "${PERSON}" \
         --alias "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
         --said \
-        --schema ${OOR_SCHEMA})
+        --schema ${OOR_SCHEMA} | tr -d '[:space:]')
     if [ ! -z "${VC_SAID}" ]; then
         print_yellow "[PERSON] OOR credential already admitted"
         return
     fi
-    SAID=$(kli ipex list \
+    SAID=$(kli2 ipex list \
         --name "${PERSON}" \
         --alias "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
         --type "grant" \
         --poll \
-        --said | tail -1) # get the last grant, which should be the OOR credential
+        --said | tail -1 | tr -d '[:space:]') # get the last grant, which should be the OOR credential
 
     echo
     print_yellow "[PERSON] Admitting OOR credential ${SAID} to ${PERSON}"
 
-    kli ipex admit \
+    kli2d person ipex admit \
         --name ${PERSON} \
         --passcode ${PERSON_PASSCODE} \
         --alias ${PERSON} \
-        --said ${SAID}  & 
-    pid=$!
-    PID_LIST+=" $pid"
+        --said ${SAID}  
 
-    wait $PID_LIST
+    echo 
+    print_yellow "[PERSON] Admitting OOR credential - wait for signatures"
+    echo
+    print_dark_gray "waiting on Docker containers person"
+    docker wait person
+    docker logs person
+    docker rm person
 
-    echo
-    print_green "OOR Credential admitted"
-    echo
+    VC_SAID=$(kli2 vc list \
+        --name "${PERSON}" \
+        --alias "${PERSON}" \
+        --passcode "${PERSON_PASSCODE}" \
+        --said \
+        --schema ${OOR_SCHEMA} | tr -d '[:space:]')
+    if [ -z "${VC_SAID}" ]; then
+        print_red "[PERSON] OOR Credential not admitted"
+        exit 1
+    else 
+        print_green "[PERSON] OOR Credential admitted"
+    fi
 }
 admit_oor_credential
 
 # 25. QVI: Present issued ECR Auth and OOR Auth to Sally (vLEI Reporting API)
+print_red "Sally and Webhook not yet functional in Docker, exiting..."
+exit 0
 
 SALLY_PID=""
 WEBHOOK_PID=""
