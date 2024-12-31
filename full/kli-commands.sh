@@ -16,7 +16,9 @@ fi
 # Set current working directory for all scripts that must access files
 KLI1IMAGE="weboftrust/keri:1.1.27"
 # KLI2IMAGE="weboftrust/keri:1.2.0-rc1"
-KLI2IMAGE="weboftrust/keri:1.1.27"
+KLI2IMAGE="weboftrust/keri:1.2.1"
+# KLI2IMAGE="weboftrust/keri:1.1.27"
+
 LOCAL_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export KLI_DATA_DIR="${LOCAL_DIR}/data"
 export KLI_CONFIG_DIR="${LOCAL_DIR}/config"
@@ -34,11 +36,11 @@ function kli() {
 export -f kli
 
 function klid() {
-  echo "$@"
   name=$1
   # must pull first arg off to use as container name
   shift 1
   # pass remaining args to docker run
+  set -xe
   docker run -d \
     --network host \
     --name $name \
@@ -47,6 +49,7 @@ function klid() {
     -v "${KLI_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
     "${KLI1IMAGE}" "$@" 
+  set +xe
 }
 
 export -f klid
@@ -64,14 +67,20 @@ function kli2() {
 export -f kli2
 
 function kli2d() {
+  name=$1
+  # must pull first arg off to use as container name
+  shift 1
+  # pass remaining args to docker run
+  set -xe
   docker run -d \
     --network host \
-    --name $1 \
+    --name $name \
     -v "${KEYSTORE_DIR}":/usr/local/var/keri \
     -v "${KLI_CONFIG_DIR}:/config" \
     -v "${KLI_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
-    "${KLI2IMAGE}" "$@:2"
+    "${KLI2IMAGE}" "$@"
+  set +xe
 }
 
 export -f kli2d

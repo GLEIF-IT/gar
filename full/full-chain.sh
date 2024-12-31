@@ -144,6 +144,13 @@ function create_aid() {
     CONFIG_FILE=$5
     ICP_FILE=$6
 
+    # Check if exists
+    exists=$(kli list --name "${NAME}" --passcode "${PASSCODE}")
+    if [[ ! "$exists" =~ "Keystore must already exist" ]]; then
+        print_dark_gray "AID ${NAME} already exists"
+        return
+    fi
+
     kli init \
         --name "${NAME}" \
         --salt "${SALT}" \
@@ -181,12 +188,6 @@ function resolve_credential_oobis() {
 
 # 2. GAR: Create single Sig AIDs (2)
 function create_aids() {
-    if test -d $HOME/.keri/ks/${GEDA_PT1}; then
-        print_dark_gray "AIDs already exist"
-        return
-    fi
-    echo
-
     print_green "-----Creating AIDs-----"
     create_temp_icp_cfg
     create_aid "${GEDA_PT1}" "${GEDA_PT1_SALT}" "${GEDA_PT1_PASSCODE}" "${CONFIG_DIR}" "${INIT_CFG}" "${temp_icp_config}"
@@ -203,8 +204,9 @@ create_aids
 
 # 3. GAR: OOBI resolutions between single sig AIDs
 function resolve_oobis() {
-    if test -f $HOME/.keri/full-chain-oobis; then
-        print_dark_gray "OOBIs already resolved"
+    exists=$(kli contacts list --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" | jq .alias | tr -d '"' | grep "${GEDA_PT2}")
+    if [[ "$exists" =~ "${GEDA_PT2}" ]]; then
+        print_yellow "OOBIs already resolved"
         return
     fi
 
@@ -268,13 +270,18 @@ function resolve_oobis() {
     kli oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT1}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT1_PRE}/witness/${WAN_PRE}"
     kli oobi resolve --name "${PERSON}"  --oobi-alias "${GIDA_PT2}"  --passcode "${PERSON_PASSCODE}"   --oobi "${WIT_HOST}/oobi/${GIDA_PT2_PRE}/witness/${WAN_PRE}"
     
-    touch $HOME/.keri/full-chain-oobis
     echo
 }
 resolve_oobis
 
 # 3.5 GAR: Challenge responses between single sig AIDs
 function challenge_response() {
+    chall_length=$(kli contacts list --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" | jq "select(.alias == \"${GEDA_PT2}\") | .challenges | length")
+    if [[ "$chall_length" > 0 ]]; then
+        print_yellow "Challenges already processed"
+        return
+    fi
+
     print_yellow "-----Challenge Responses-----"
 
     print_dark_gray "---Challenge responses for GEDA---"
@@ -359,7 +366,7 @@ function challenge_response() {
 
     print_green "-----Finished challenge and response-----"
 }
-# challenge_response
+challenge_response
 
 # 4. GAR: Create Multisig AID (GEDA)
 function create_geda_multisig() {
@@ -522,15 +529,16 @@ create_gida_multisig
 
 # 9. QAR: Resolve GEDA OOBI
 function resolve_geda_oobis() {
-    if test -f $HOME/.keri/full-chain-qar-geda-oobi; then
-        print_dark_gray "GEDA OOBI already resolved for QARs"
+    exists=$(kli contacts list --name "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" | jq .alias | tr -d '"' | grep "${GEDA_MS}")
+    if [[ "$exists" =~ "${GEDA_MS}" ]]; then
+        print_yellow "GEDA OOBIs already resolved"
         return
     fi
+
     GEDA_OOBI=$(kli oobi generate --name ${GEDA_PT1} --passcode ${GEDA_PT1_PASSCODE} --alias ${GEDA_MS} --role witness)
     echo "GEDA OOBI: ${GEDA_OOBI}"
     kli oobi resolve --name "${QAR_PT1}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT1_PASSCODE}" --oobi "${GEDA_OOBI}"
     kli oobi resolve --name "${QAR_PT2}" --oobi-alias "${GEDA_MS}" --passcode "${QAR_PT2_PASSCODE}" --oobi "${GEDA_OOBI}"
-    touch $HOME/.keri/full-chain-qar-geda-oobi
 }
 resolve_geda_oobis
 
@@ -538,9 +546,10 @@ resolve_geda_oobis
 # 11. QVI: Create delegated AID with GEDA as delegator
 # 12. GEDA: delegate to QVI
 function create_qvi_multisig() {
-    if test -f $HOME/.keri/full-chain-qvi-ms; then
-    print_dark_gray "[QVI] delegated multisig AID ${QVI_MS} already exists"
-    return
+    exists=$(kli list --name "${QAR_PT1}" --passcode "${QAR_PT1_PASSCODE}" | grep "${QVI_MS}")
+    if [[ "$exists" =~ "${QVI_MS}" ]]; then
+        print_dark_gray "[QVI] Multisig AID ${QVI_MS} already exists"
+        return
     fi
 
     echo
@@ -625,8 +634,6 @@ EOM
 
     ms_prefix=$(kli status --name ${QAR_PT1} --alias ${QVI_MS} --passcode ${QAR_PT1_PASSCODE} | awk '/Identifier:/ {print $2}')
     print_green "[QVI] Multisig AID ${QVI_MS} with prefix: ${ms_prefix}"
-
-    touch $HOME/.keri/full-chain-qvi-ms
 }
 create_qvi_multisig
 
@@ -637,8 +644,9 @@ QVI_OOBI=$(kli oobi generate --name ${QAR_PT1} --passcode ${QAR_PT1_PASSCODE} --
 
 # 15. GEDA and GIDA: Resolve QVI OOBI
 function resolve_qvi_oobi() {
-    if test -f $HOME/.keri/full-chain-geda-qvi-oobi; then
-        print_dark_gray "GEDA QVI OOBI already resolved"
+    exists=$(kli contacts list --name "${GEDA_PT1}" --passcode "${GEDA_PT1_PASSCODE}" | jq .alias | tr -d '"' | grep "${QVI_MS}")
+    if [[ "$exists" =~ "${QVI_MS}" ]]; then
+        print_yellow "QVI OOBIs already resolved"
         return
     fi
 
@@ -650,8 +658,6 @@ function resolve_qvi_oobi() {
     kli oobi resolve --name "${GIDA_PT2}" --oobi-alias "${QVI_MS}" --passcode "${GIDA_PT2_PASSCODE}" --oobi "${QVI_OOBI}"
     kli oobi resolve --name "${PERSON}"   --oobi-alias "${QVI_MS}" --passcode "${PERSON_PASSCODE}"   --oobi "${QVI_OOBI}"
     echo
-
-    touch $HOME/.keri/full-chain-geda-qvi-oobi
 }
 resolve_qvi_oobi
 
