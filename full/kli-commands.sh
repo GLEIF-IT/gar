@@ -14,10 +14,13 @@ if [ ! -d "${KEYSTORE_DIR}" ]; then
 fi
 
 # Set current working directory for all scripts that must access files
-KLI1IMAGE="weboftrust/keri:1.1.27"
+# KLI1IMAGE="weboftrust/keri:1.1.27"
+KLI1IMAGE="kentbull/keri:1.1.27a"
+
 # KLI2IMAGE="weboftrust/keri:1.2.0-rc1"
-KLI2IMAGE="weboftrust/keri:1.2.1"
+# KLI2IMAGE="weboftrust/keri:1.2.1"
 # KLI2IMAGE="weboftrust/keri:1.1.27"
+KLI2IMAGE="kentbull/keri:1.1.27a"
 
 LOCAL_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export KLI_DATA_DIR="${LOCAL_DIR}/data"
@@ -25,7 +28,7 @@ export KLI_CONFIG_DIR="${LOCAL_DIR}/config"
 
 function kli() {
   docker run -it --rm \
-    --network host \
+    --network vlei \
     -v "${KEYSTORE_DIR}":/usr/local/var/keri \
     -v "${KLI_CONFIG_DIR}:/config" \
     -v "${KLI_DATA_DIR}":/data \
@@ -42,7 +45,7 @@ function klid() {
   # pass remaining args to docker run
   set -xe
   docker run -d \
-    --network host \
+    --network vlei \
     --name $name \
     -v "${KEYSTORE_DIR}":/usr/local/var/keri \
     -v "${KLI_CONFIG_DIR}:/config" \
@@ -56,7 +59,7 @@ export -f klid
 
 function kli2() {
   docker run -it --rm \
-    --network host \
+    --network vlei \
     -v "${KEYSTORE_DIR}":/usr/local/var/keri \
     -v "${KLI_CONFIG_DIR}:/config" \
     -v "${KLI_DATA_DIR}":/data \
@@ -73,7 +76,7 @@ function kli2d() {
   # pass remaining args to docker run
   set -xe
   docker run -d \
-    --network host \
+    --network vlei \
     --name $name \
     -v "${KEYSTORE_DIR}":/usr/local/var/keri \
     -v "${KLI_CONFIG_DIR}:/config" \

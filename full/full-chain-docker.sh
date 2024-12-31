@@ -17,10 +17,29 @@ echo
 # Load kli commands
 source ./kli-commands.sh $1
 
-trap ctrl_c INT
-function ctrl_c() {
+# Create docker network if it does not exist
+docker network inspect vlei >/dev/null 2>&1 || docker network create vlei
+
+# starts containers and waits for them all to be healthy before running the rest of the script
+docker compose -f docker-compose-fullchain.yaml up -d --wait
+
+trap cleanup INT
+function cleanup() {
     echo
-    print_red "Caught Ctrl+C, stopping containers and exiting script..."
+    docker compose -f docker-compose-fullchain.yaml kill
+    docker compose -f docker-compose-fullchain.yaml down -v
+    # print_red "Caught Ctrl+C, stopping containers and exiting script..."
+    # container_names=("geda1" "geda2" "gida1" "gida2" "qvi1" "qvi2")
+
+    # for name in "${container_names[@]}"; do
+    # if docker ps -a | grep -q "$name"; then
+    #     docker kill $name || true && docker rm $name || true
+    # fi
+    # done
+    exit 1
+}
+
+function clear_containers() {
     container_names=("geda1" "geda2" "gida1" "gida2" "qvi1" "qvi2")
 
     for name in "${container_names[@]}"; do
@@ -28,8 +47,8 @@ function ctrl_c() {
         docker kill $name || true && docker rm $name || true
     fi
     done
-    exit 1
 }
+clean
 
 required_commands=(docker kli klid kli2 kli2d jq)
 for cmd in "${required_commands[@]}"; do
@@ -45,15 +64,14 @@ done
 KEYSTORE_DIR=${1:-$HOME/.fullchain_docker}
 CONFIG_DIR=./config
 DATA_DIR=./data
-INIT_CFG=full-chain-init-config-dev-docker.json
 WAN_PRE=BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha
-WIT_HOST=http://host.docker.internal:5642
-SCHEMA_SERVER=http://host.docker.internal:7723
+WIT_HOST=http://witness-demo:5642
+SCHEMA_SERVER=http://vlei-server:7723
 
 # Container configuration
 CONT_CONFIG_DIR=/config
 CONT_DATA_DIR=/data
-CONT_INIT_CFG=full-chain-init-config-dev-docker.json
+CONT_INIT_CFG=full-chain-init-config-dev-docker-compose.json
 CONT_ICP_CFG=/config/single-sig-incept-config.json
 
 
@@ -435,8 +453,6 @@ function create_geda_multisig() {
 
     ms_prefix=$(kli status --name "${GEDA_PT1}" --alias "${GEDA_MS}" --passcode "${GEDA_PT1_PASSCODE}" | awk '/Identifier:/ {print $2}')
     print_green "[External] GEDA Multisig AID ${GEDA_MS} with prefix: ${ms_prefix}"
-
-    touch ${KEYSTORE_DIR}/full-chain-geda-ms
 }
 create_geda_multisig
 
@@ -2247,6 +2263,7 @@ admit_oor_credential
 
 # 25. QVI: Present issued ECR Auth and OOR Auth to Sally (vLEI Reporting API)
 print_red "Sally and Webhook not yet functional in Docker, exiting..."
+cleanup
 exit 0
 
 SALLY_PID=""
@@ -2267,7 +2284,7 @@ function sally_setup() {
         --name $SALLY \
         --alias $SALLY \
         --passcode $SALLY_PASSCODE \
-        --web-hook http://host.docker.internal:9923 \
+        --web-hook http://webhook:9923 \
         --auth ${GEDA_PRE} & # who will be presenting the credential
     SALLY_PID=$!
 
