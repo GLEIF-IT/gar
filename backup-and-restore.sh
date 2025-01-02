@@ -35,8 +35,7 @@ function create_backup() {
     CLIENT_NAME=$1
     echo "Creating backup for $CLIENT_NAME"
     # check if backup already exists
-    backup_name=$(jq --arg clientname cfca '.clients[$clientname]' $GLEIF_HOME/qvi-qualifications/backups/clients.json)
-    echo backup name is $backup_name
+    backup_name=$(jq --arg clientname $CLIENT_NAME '.clients[$clientname] // empty' $GLEIF_HOME/qvi-qualifications/backups/clients.json)
     if [ ! -z "$backup_name" ]; then
         echo "Backup for $CLIENT_NAME already exists: $backup_name"
         echo "Want to override it? (y/N)"
@@ -54,11 +53,8 @@ function create_backup() {
     int_passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
     int_salt="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-salt 2> /dev/null)"
 
-    echo "Backing up internal and external GAR salt, passcode, ~/.gar"
-
     BACKUP_NAME="gar-backup-$CLIENT_NAME-$DATE"
-
-    echo "Creating backup for $CLIENT_NAME to"
+    echo "Backing up internal and external GAR salt, passcode, ~/.gar for client $CLIENT_NAME to backup"
     echo "$BACKUPS_DIR/$BACKUP_NAME.tar.gz"
 
     BACKUP_DIR=$BACKUPS_DIR/tmp/$BACKUP_NAME
@@ -75,7 +71,7 @@ function create_backup() {
 }
 EOM
 
-    echo $gar_identity_config
+    echo "Backup configuration: $gar_identity_config"
 
     touch $BACKUP_DIR/gar-identity-config.json
     echo $gar_identity_config > $BACKUP_DIR/gar-identity-config.json
@@ -127,6 +123,7 @@ EOM
 }
 
 function restore_backup() {
+    # assumes that the backup exists
     CLIENT_NAME=$1
 
     echo
