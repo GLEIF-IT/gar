@@ -1,2 +1,3 @@
 # Intellij specific
 .idea
+full/node_modules
