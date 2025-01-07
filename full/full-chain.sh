@@ -8,20 +8,19 @@
 #   > vLEI-server -s ./schema/acdc -c ./samples/acdc/ -o ./samples/oobis/
 #
 
-trap ctrl_c INT
-function ctrl_c() {
+trap cleanup INT
+function cleanup() {
+    # Triggered on Control + C, cleans up resources the script uses
     echo
     print_red "Caught Ctrl+C, Exiting script..."
-    exit 1
+    exit 0
 }
 
 source ./script-utils.sh
 
-# Process outline:
 # 1. GAR: Prepare environment
 KEYSTORE_DIR=${1:-$HOME/.keri}
 print_yellow "KEYSTORE_DIR: ${KEYSTORE_DIR}"
-print_yellow "Using local configuration files"
 
 CONFIG_DIR=./config
 DATA_DIR=./data
@@ -1669,11 +1668,11 @@ admit_oor_auth_credential
 # 23.1 Prepare ECR Auth edge data
 function prepare_ecr_auth_edge() {
     ECR_AUTH_SAID=$(kli vc list \
-        --name ${QAR_PT1} \
-        --alias ${QVI_MS} \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
         --passcode "${QAR_PT1_PASSCODE}" \
         --said \
-        --schema ${ECR_AUTH_SCHEMA})
+        --schema "${ECR_AUTH_SCHEMA}")
     print_bg_blue "[QVI] Preparing [ECR Auth] edge with [ECR Auth] Credential SAID: ${ECR_AUTH_SAID}"
     read -r -d '' ECR_AUTH_EDGE_JSON << EOM
 {
@@ -1721,7 +1720,7 @@ function create_ecr_credential() {
         --passcode "${QAR_PT1_PASSCODE}" \
         --issued \
         --said \
-        --schema ${ECR_SCHEMA})
+        --schema "${ECR_SCHEMA}")
     if [ ! -z "${SAID}" ]; then
         print_dark_gray "[QVI] ECR credential already created"
         return
@@ -1735,36 +1734,36 @@ function create_ecr_credential() {
     SUBJ_NONCE=$(kli nonce)
     PID_LIST=""
     kli vc create \
-        --name ${QAR_PT1} \
-        --alias ${QVI_MS} \
-        --passcode ${QAR_PT1_PASSCODE} \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
         --private-credential-nonce "${CRED_NONCE}" \
         --private-subject-nonce "${SUBJ_NONCE}" \
         --private \
-        --registry-name ${QVI_REGISTRY} \
-        --schema ${ECR_SCHEMA} \
-        --recipient ${PERSON_PRE} \
+        --registry-name "${QVI_REGISTRY}" \
+        --schema "${ECR_SCHEMA}" \
+        --recipient "${PERSON_PRE}" \
         --data @./ecr-data.json \
         --edges @./ecr-auth-edge.json \
         --rules @./ecr-rules.json \
-        --time ${KLI_TIME} &
+        --time "${KLI_TIME}" &
     pid=$!
     PID_LIST+=" $pid"
 
     kli vc create \
-        --name ${QAR_PT2} \
-        --alias ${QVI_MS} \
-        --passcode ${QAR_PT2_PASSCODE} \
+        --name "${QAR_PT2}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
         --private \
         --private-credential-nonce "${CRED_NONCE}" \
         --private-subject-nonce "${SUBJ_NONCE}" \
-        --registry-name ${QVI_REGISTRY} \
-        --schema ${ECR_SCHEMA} \
-        --recipient ${PERSON_PRE} \
+        --registry-name "${QVI_REGISTRY}" \
+        --schema "${ECR_SCHEMA}" \
+        --recipient "${PERSON_PRE}" \
         --data @./ecr-data.json \
         --edges @./ecr-auth-edge.json \
         --rules @./ecr-rules.json \
-        --time ${KLI_TIME} &
+        --time "${KLI_TIME}" &
     pid=$!
     PID_LIST+=" $pid"
 
@@ -1775,6 +1774,7 @@ function create_ecr_credential() {
     echo
 }
 create_ecr_credential
+exit 0
 
 # 23.4 QVI Grant ECR credential to PERSON
 function grant_ecr_credential() {
@@ -1797,24 +1797,24 @@ function grant_ecr_credential() {
         --alias "${QVI_MS}" \
         --issued \
         --said \
-        --schema ${ECR_SCHEMA})
+        --schema "${ECR_SCHEMA}")
 
     echo
     print_yellow $'[QVI] IPEX GRANTing ECR credential with\n\tSAID'" ${SAID}"$'\n\tto'" ${PERSON} ${PERSON_PRE}"
     KLI_TIME=$(kli time)
     kli ipex grant \
-        --name ${QAR_PT1} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --alias ${QVI_MS} \
-        --said ${SAID} \
-        --recipient ${PERSON_PRE} \
-        --time ${KLI_TIME} &
+        --name "${QAR_PT1}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --recipient "${PERSON_PRE}" \
+        --time "${KLI_TIME}" &
     pid=$!
     PID_LIST+=" $pid"
 
     kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
         --auto &
     pid=$!
     PID_LIST+=" $pid"
@@ -1848,7 +1848,7 @@ function admit_ecr_credential() {
         --alias "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
         --said \
-        --schema ${ECR_SCHEMA})
+        --schema "${ECR_SCHEMA}")
     if [ ! -z "${VC_SAID}" ]; then
         print_yellow "[PERSON] ECR credential already admitted"
         return
@@ -1936,7 +1936,7 @@ function create_oor_credential() {
         --passcode "${QAR_PT1_PASSCODE}" \
         --issued \
         --said \
-        --schema ${OOR_SCHEMA})
+        --schema "${OOR_SCHEMA}")
     if [ ! -z "${SAID}" ]; then
         print_dark_gray "[QVI] OOR credential already created"
         return
@@ -1948,30 +1948,30 @@ function create_oor_credential() {
     KLI_TIME=$(kli time)
     PID_LIST=""
     kli vc create \
-        --name ${QAR_PT1} \
-        --alias ${QVI_MS} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --registry-name ${QVI_REGISTRY} \
-        --schema ${OOR_SCHEMA} \
-        --recipient ${PERSON_PRE} \
+        --name "${QAR_PT1}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --registry-name "${QVI_REGISTRY}" \
+        --schema "${OOR_SCHEMA}" \
+        --recipient "${PERSON_PRE}" \
         --data @./oor-data.json \
         --edges @./oor-auth-edge.json \
         --rules @./oor-rules.json \
-        --time ${KLI_TIME} &
+        --time "${KLI_TIME}" &
     pid=$!
     PID_LIST+=" $pid"
 
     kli vc create \
-        --name ${QAR_PT2} \
-        --alias ${QVI_MS} \
-        --passcode ${QAR_PT2_PASSCODE} \
-        --registry-name ${QVI_REGISTRY} \
-        --schema ${OOR_SCHEMA} \
-        --recipient ${PERSON_PRE} \
+        --name "${QAR_PT2}" \
+        --alias "${QVI_MS}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
+        --registry-name "${QVI_REGISTRY}" \
+        --schema "${OOR_SCHEMA}" \
+        --recipient "${PERSON_PRE}" \
         --data @./oor-data.json \
         --edges @./oor-auth-edge.json \
         --rules @./oor-rules.json \
-        --time ${KLI_TIME} &
+        --time "${KLI_TIME}" &
     pid=$!
     PID_LIST+=" $pid"
 
@@ -2004,22 +2004,22 @@ function grant_oor_credential() {
         --alias "${QVI_MS}" \
         --issued \
         --said \
-        --schema ${OOR_SCHEMA})
+        --schema "${OOR_SCHEMA}")
 
     echo
     print_yellow $'[QVI] IPEX GRANTing OOR credential with\n\tSAID'" ${SAID}"$'\n\tto'" ${PERSON} ${PERSON_PRE}"
     kli ipex grant \
-        --name ${QAR_PT1} \
-        --passcode ${QAR_PT1_PASSCODE} \
-        --alias ${QVI_MS} \
-        --said ${SAID} \
-        --recipient ${PERSON_PRE} &
+        --name "${QAR_PT1}" \
+        --passcode "${QAR_PT1_PASSCODE}" \
+        --alias "${QVI_MS}" \
+        --said "${SAID}" \
+        --recipient "${PERSON_PRE}" &
     pid=$!
     PID_LIST+=" $pid"
 
     kli ipex join \
-        --name ${QAR_PT2} \
-        --passcode ${QAR_PT2_PASSCODE} \
+        --name "${QAR_PT2}" \
+        --passcode "${QAR_PT2_PASSCODE}" \
         --auto &
     pid=$!
     PID_LIST+=" $pid"
@@ -2053,7 +2053,7 @@ function admit_oor_credential() {
         --alias "${PERSON}" \
         --passcode "${PERSON_PASSCODE}" \
         --said \
-        --schema ${OOR_SCHEMA})
+        --schema "${OOR_SCHEMA}")
     if [ ! -z "${VC_SAID}" ]; then
         print_yellow "[PERSON] OOR credential already admitted"
         return
@@ -2070,10 +2070,10 @@ function admit_oor_credential() {
     print_yellow "[PERSON] Admitting OOR credential ${SAID} to ${PERSON}"
 
     kli ipex admit \
-        --name ${PERSON} \
-        --passcode ${PERSON_PASSCODE} \
-        --alias ${PERSON} \
-        --said ${SAID}  & 
+        --name "${PERSON}" \
+        --passcode "${PERSON_PASSCODE}" \
+        --alias "${PERSON}" \
+        --said "${SAID}"  & 
     pid=$!
     PID_LIST+=" $pid"
 
@@ -2106,7 +2106,7 @@ function sally_setup() {
         --alias $SALLY \
         --passcode $SALLY_PASSCODE \
         --web-hook http://127.0.0.1:9923 \
-        --auth ${GEDA_PRE} & # who will be presenting the credential
+        --auth "${GEDA_PRE}" & # who will be presenting the credential
     SALLY_PID=$!
 
     sleep 5
@@ -2115,10 +2115,10 @@ sally_setup
 
 function present_le_cred_to_sally() {
     print_yellow "[QVI] Presenting LE Credential to Sally"
-    LE_SAID=$(kli vc list --name ${GIDA_PT1} \
-        --alias ${GIDA_MS} \
+    LE_SAID=$(kli vc list --name "${GIDA_PT1}" \
+        --alias "${GIDA_MS}" \
         --passcode "${GIDA_PT1_PASSCODE}" \
-        --said --schema ${LE_SCHEMA})
+        --said --schema "${LE_SCHEMA}")
 
     PID_LIST=""
     kli ipex grant \

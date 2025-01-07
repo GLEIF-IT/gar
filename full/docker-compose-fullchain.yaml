@@ -16,7 +16,7 @@ x-vlei-image: &vlei-image
 
 x-healthcheck: &healthcheck
     interval: 15s
-    timeout: 3s
+    timeout: 5s
     retries: 3
     start_period: 2s    
 
@@ -48,7 +48,7 @@ services:
       test: curl -f http://127.0.0.1:5642/oobi
       <<: *healthcheck
     volumes:
-      - ./config/witness-demo:/keripy/scripts/keri/cf/main
+      - ./config/witness-demo-docker:/keripy/scripts/keri/cf/main
     ports:
       - "5642:5642"
       - "5643:5643"
