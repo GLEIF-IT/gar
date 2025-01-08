@@ -1,5 +1,6 @@
 import { SignifyClient } from "signify-ts";
 import { waitOperation } from "./operations";
+import { OobiInfo } from "./qvi-data";
 
 export async function resolveOobi(
     client: SignifyClient,

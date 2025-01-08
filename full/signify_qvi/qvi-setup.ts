@@ -2,13 +2,12 @@ import { getOrCreateContact } from "./agent-contacts";
 import { getOrCreateAID, getOrCreateClients} from "./keystore-creation";
 import { resolveOobi } from "./oobis";
 import { resolveEnvironment, TestEnvironmentPreset } from "./resolve-env";
-import { AidInfo } from "./qvi-data";
 import { parseAidInfo } from "./create-aid";
 
 // Pull in arguments from the command line and configuration
 const args = process.argv.slice(2);
 const env = args[0] as 'local' | 'docker';
-const {url, bootUrl, witnessIds, vleiServerUrl, witnessUrls} = resolveEnvironment(env);
+const {witnessIds, vleiServerUrl} = resolveEnvironment(env);
 
 
 // Credential schema IDs and URLs to resolve from the credential schema caching server (vLEI server)
@@ -28,8 +27,7 @@ const OOR_SCHEMA_URL=`${vleiServerUrl}/oobi/${OOR_SCHEMA}`;
 
 
 // Create AIDs for the QARs and the person based on the command line arguments
-
-
+// aidInfoArg format: "qar1|Alice|salt1,qar2|Bob|salt2,qar3|Charlie|salt3,person|David|salt4"
 async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmentPreset) {
     const {QAR1, QAR2, QAR3, PERSON} = parseAidInfo(aidInfoArg);
 
@@ -136,7 +134,7 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
             agentOobi: QAR1AgentOobiResp.oobis[0],
             witnessOobi: QAR1WitnessOobiResp.oobis[0]
         },
-        qar2: {
+        QAR2: {
             aid: QAR2Id.prefix,
             agentOobi: QAR2AgentOobiResp.oobis[0],
             witnessOobi: QAR2WitnessOobiResp.oobis[0]
@@ -146,7 +144,7 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
             agentOobi: QAR3AgentOobiResp.oobis[0],
             witnessOobi: QAR3WitnessOobiResp.oobis[0]
         },
-        person: {
+        PERSON: {
             aid: personId.prefix,
             agentOobi: personAgentOobiResp.oobis[0],
             witnessOobi: personWitnessOobiResp.oobis[0]
