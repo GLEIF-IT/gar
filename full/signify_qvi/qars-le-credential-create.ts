@@ -90,6 +90,7 @@ async function createLeCredential(aidInfo: string, lePrefix: string, witnessIds:
 
         const registries:[{name: string, regk: string}] = await QAR1Client.registries().list(QVI_MS_NAME)
         const qviRegistry = registries[0];
+        console.log(`QVI registry: ${qviRegistry.regk}`);
         
         let data: string = "";
         data = await fs.promises.readFile(`${dataDir}/legal-entity-data.json`, 'utf-8');
@@ -137,15 +138,18 @@ async function createLeCredential(aidInfo: string, lePrefix: string, witnessIds:
             qviAID.name,
             kargsIss
         );
+        console.log("Credential issued, waiting operations...");
 
         await Promise.all([
             waitOperation(QAR1Client, IssOp1),
             waitOperation(QAR2Client, IssOp2),
             waitOperation(QAR3Client, IssOp3),
         ]);
+        console.log("Operations completed, waiting for notifications...");
 
         await waitAndMarkNotification(QAR1Client, '/multisig/iss');
 
+        console.log("LE credential issued, getting Issued Credential...");
         leCredbyQAR1 = await getIssuedCredential(
             QAR1Client,
             qviAID.prefix,
@@ -166,6 +170,7 @@ async function createLeCredential(aidInfo: string, lePrefix: string, witnessIds:
         );
 
         const grantTime = createTimestamp();
+        console.log("Granting LE credential...");
         await grantMultisig(
             QAR1Client,
             QAR1Id,
@@ -195,6 +200,7 @@ async function createLeCredential(aidInfo: string, lePrefix: string, witnessIds:
             grantTime
         );
 
+        console.log("Granting LE credential, waiting operations...");
         await waitAndMarkNotification(QAR1Client, '/multisig/exn');
         console.log("LE credential granted");
         return {
@@ -205,7 +211,7 @@ async function createLeCredential(aidInfo: string, lePrefix: string, witnessIds:
     }
 }
 const leCreateResult: any = await createLeCredential(aidInfoArg, lePrefix, witnessIds, env);
-await fs.writeFile(`${dataDir}/le-cred-info.json`, JSON.stringify(leCreateResult), (err) => {
+await fs.writeFile(`${dataDir}/signify_qvi/qvi_data/le-cred-info.json`, JSON.stringify(leCreateResult), (err) => {
     if (err) {
         console.log(`error writing LE credential info to file: ${err}`);        
         return

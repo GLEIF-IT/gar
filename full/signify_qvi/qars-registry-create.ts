@@ -104,6 +104,7 @@ async function createQviRegistry(aidInfo: string, witnessIds: Array<string>, env
         ]);
 
         await waitAndMarkNotification(QAR1Client, '/multisig/vcp');
+        await new Promise(r => setTimeout(r, 5000)); // wait five seconds for the registry to be witnessed;
 
         [qviRegistrybyQAR1, qviRegistrybyQAR2, qviRegistrybyQAR3] =
             await Promise.all([
