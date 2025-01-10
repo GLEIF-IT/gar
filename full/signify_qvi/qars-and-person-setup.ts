@@ -3,10 +3,20 @@ import { getOrCreateAID, getOrCreateClients} from "./keystore-creation";
 import { resolveOobi } from "./oobis";
 import { resolveEnvironment, TestEnvironmentPreset } from "./resolve-env";
 import { parseAidInfo } from "./create-aid";
+import fs from 'fs';
 
+/**
+ * Expects the following arguments, in order:
+ * 1. env: The runtime environment to use for resolving environment variables
+ * 2. aidInfoArg: A comma-separated list of AID information that is further separated by a pipe character for name, salt, and position
+ * 3. dataDir: The path prefix to the directory where the client info file will be written
+ */
 // Pull in arguments from the command line and configuration
 const args = process.argv.slice(2);
 const env = args[0] as 'local' | 'docker';
+const dataDir = args[1];
+const aidInfoArg = args[2];
+
 const {witnessIds, vleiServerUrl} = resolveEnvironment(env);
 
 
@@ -151,5 +161,10 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
         }
     }
 }
-const clientInfo: any = await setupQVIAndPerson(args[1], env);
-console.log(JSON.stringify(clientInfo)); // send output to standard out so the calling shell script can capture it
+const clientInfo: any = await setupQVIAndPerson(aidInfoArg, env);
+await fs.writeFile(`${dataDir}/qars-and-person-info.json`, JSON.stringify(clientInfo), (err) => {
+    if (err) {
+        console.log(`error writing client info to file: ${err}`);        
+        return
+    }
+});

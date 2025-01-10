@@ -13,3 +13,7 @@ export function parseAidInfo(aidInfoArg: string) {
     const PERSON = aidObjs.find((aid) => aid.position === 'person') as AidInfo;
     return {QAR1, QAR2, QAR3, PERSON};
 }
+
+export function createTimestamp() {
+    return new Date().toISOString().replace('Z', '000+00:00');
+}
