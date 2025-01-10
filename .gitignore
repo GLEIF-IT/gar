@@ -1,11 +1,18 @@
 # Intellij specific
 .idea
 full/node_modules
+full/ecr-auth-data.json
 full/ecr-auth-edge.json
+full/ecr-data.json
+full/legal-entity-data.json
 full/legal-entity-edge.json
+full/oor-auth-data.json
+full/oor-auth-edge.json
+full/oor-data.json
 full/qvi-edge.json
 full/config/multi-sig-delegated-incept-config.json
 full/config/multi-sig-incept-config.json
+full/config/single-sig-incept-config.json
 full/data/ecr-auth-edge.json
 full/data/ecr-data.json
 full/data/legal-entity-data.json
