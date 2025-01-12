@@ -592,19 +592,21 @@ function create_qvi_multisig() {
     print_lcyan "[External] GEDA members approve delegated inception with 'kli delegate confirm'"
     echo
 
+    print_yellow "GEDA1 confirm delegation"
     kli delegate confirm --name ${GEDA_PT1} --alias ${GEDA_MS} --passcode ${GEDA_PT1_PASSCODE} --interact --auto &
     pid=$!
     PID_LIST+=" $pid"
     
+    print_yellow "GEDA2 confirm delegation"
     kli delegate confirm --name ${GEDA_PT2} --alias ${GEDA_MS} --passcode ${GEDA_PT2_PASSCODE} --interact --auto &
     pid=$!
     PID_LIST+=" $pid"
 
+    print_yellow "Waiting on delegation completion"
     wait $PID_LIST
 
     print_lcyan "[QVI] QARs refresh GEDA multisig keystate to discover new GEDA delegation seal anchored in interaction event."
     tsx "${QVI_SIGNIFY_DIR}/qars-refresh-geda-multisig-state.ts" $ENVIRONMENT $SIGTS_AIDS $GEDA_PRE
-
 }
 create_qvi_multisig
 MULTISIG_INFO=$(cat $QVI_DATA_DIR/qvi-multisig-info.json)

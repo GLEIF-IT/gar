@@ -48,6 +48,7 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
         QAR3Client,
         personClient,
     ] = await getOrCreateClients(4, [QAR1.salt, QAR2.salt, QAR3.salt, PERSON.salt], environment);
+    console.log("QARs and Person SignifyClients created")
 
     const kargsAID = {
         toad: witnessIds.length,
@@ -66,6 +67,7 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
         getOrCreateAID(QAR3Client, QAR3.name, kargsAID),
         getOrCreateAID(personClient, PERSON.name, kargsAID),
     ]);
+    console.log("QARs and Person AIDs created")
     
     // Get Witness and Agent OOBIs
     const WitnessRole = 'witness';
@@ -92,10 +94,12 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
         QAR3Client.oobis().get(QAR3.name, AgentRole),
         personClient.oobis().get(PERSON.name, AgentRole),
     ]);
+    console.log("QAR and Person witness and agent OOBIs created.");
 
     // TODO perform challenge phrase exchange between QARs and between QARs and person
 
     // Perform all OOBI introductions between QAR participants and the person
+    console.log("QAR and Person resolving OOBIs...")
     await Promise.all([
         getOrCreateContact(QAR1Client, QAR2.name, QAR2AgentOobiResp.oobis[0]),
         getOrCreateContact(QAR1Client, QAR3.name, QAR3AgentOobiResp.oobis[0]),
@@ -115,6 +119,7 @@ async function setupQVIAndPerson(aidInfoArg: string, environment: TestEnvironmen
     ]);
 
     // resolve credential OOBIs
+    console.log("QAR and Person resolving credential OOBIs...")
     await Promise.all([
         resolveOobi(QAR1Client, QVI_SCHEMA_URL),
         resolveOobi(QAR2Client, QVI_SCHEMA_URL),

@@ -6,7 +6,7 @@
          * in the debug drop-down
          */
          {
-            "name": "tsx debug",
+            "name": "tsx debug data dir, AIDInfo, GEDA PRE",
             "type": "node",
             "request": "launch",
 
@@ -38,6 +38,24 @@
                 "<node_internals>/**",
 
                 // Ignore all dependencies (optional)
+                "${workspaceFolder}/full/node_modules/**",
+            ],
+         },
+         {
+            "name": "tsx debug AIDInfo and GEDA PRE",
+            "type": "node",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "local",
+                "qar1|galahad|0ACgCmChLaw_qsLycbqBoxDK,qar2|lancelot|0ACaYJJv0ERQmy7xUfKgR6a4,qar3|tristan|0AAzX0tS638c9SEf5LnxTlj4,person|mordred|0ABlXAYDE2TkaNDk4UXxxtaN", 
+                "EMCRBKH4Kvj03xbEVzKmOIrg0sosqHUF9VG2vzT9ybzv"
+            ],
+            "runtimeExecutable": "tsx",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
                 "${workspaceFolder}/full/node_modules/**",
             ],
          }
