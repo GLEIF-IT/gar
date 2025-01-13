@@ -48,7 +48,7 @@ function clear_containers() {
     fi
     done
 }
-clean
+clear_containers
 
 required_commands=(docker kli klid kli2 kli2d jq)
 for cmd in "${required_commands[@]}"; do
@@ -158,8 +158,8 @@ OOR_SCHEMA=EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy
 # functions
 function create_icp_config() {
     jq ".wits = [\"$WAN_PRE\"]" ./config/template-single-sig-incept-config.jq > ./config/single-sig-incept-config.json
-    # print_lcyan "Single sig inception config JSON:"
-    # print_lcyan "$(cat ./config/single-sig-incept-config.json)"
+    print_lcyan "Single sig inception config JSON:"
+    print_lcyan "$(cat ./config/single-sig-incept-config.json)"
 }
 
 # creates a single sig AID
