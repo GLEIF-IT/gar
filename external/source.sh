@@ -24,7 +24,7 @@ function kli() {
     -v "${EXT_GAR_SCRIPT_DIR}":/scripts \
     -v "${EXT_GAR_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
-    weboftrust/keri:1.1.27 "$@"
+    weboftrust/keri:1.1.30 "$@"
 }
 
 export -f kli
