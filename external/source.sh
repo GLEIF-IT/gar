@@ -6,6 +6,13 @@
 ##                                                              ##
 ##################################################################
 
+DEBUG=0
+
+if [ "$1" = "--debug" ]; then
+  DEBUG=1
+  echo "Debug mode is ON"
+fi
+
 if [ ! -f "${HOME}"/.gar/external.sh ]; then
     cp ./scripts/env.sh "${HOME}"/.gar/external.sh
 fi
@@ -24,6 +31,7 @@ function kli() {
     -v "${EXT_GAR_SCRIPT_DIR}":/scripts \
     -v "${EXT_GAR_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
+    -e DEBUG_KLI="${DEBUG}" \
     weboftrust/keri:1.1.30 "$@"
 }
 
