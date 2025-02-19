@@ -14,6 +14,7 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcod
 
 echo "Use `kli vc list` to determine the SAID of the legal entity (LE) credential issued to this LE by the QVI"
 read -p "Enter the SAID of the legal entity (LE) credential issued to this LE by the QVI: " -r le_said
+
 read -p "Enter your LEI : " -r lei
 read -p "Enter or Paste the AID of the recipient of the ECR credential: " -r AID
 read -p "Enter requested person legal name: " -r personLegalName
