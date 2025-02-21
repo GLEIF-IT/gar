@@ -12,7 +12,7 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
-echo "Use `kli vc list` to determine the SAID of the legal entity (LE) credential issued to this LE by the QVI"
+echo "Use 'kli vc list' to determine the SAID of the legal entity (LE) credential issued to this LE by the QVI"
 read -p "Enter the SAID of the legal entity (LE) credential issued to this LE by the QVI: " -r le_said
 
 read -p "Enter your LEI : " -r lei
