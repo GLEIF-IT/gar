@@ -1,6 +1,6 @@
 # Abbreviated Steps
 
-# GARs
+## GAR Part 1
 GLEIF_HOME should be exported in your user profile environment to be the directory with the `gar` repo, this repository.
 
 Then, from within either the `external/` or `internal/` directories:
@@ -31,7 +31,7 @@ Then, from within either the `external/` or `internal/` directories:
     - `./scripts/generate-oobi.sh` and select the "GLEIF External AID" option.
     - Keep a copy of this OOBI for the proxy setup step next.
 
-# QVI
+## QVI Part 2
 16. Set up the proxy for QVI delegated inception (single-sig).
   - Incept the proxy in a **separate terminal window**. 
     - The proxy allows the qvi delegate identifier to communicate to the delegator prior to the delegator approving the delegate. This is why it is called a proxy.
@@ -46,7 +46,7 @@ Then, from within either the `external/` or `internal/` directories:
           --config-file staging-bootstrap-config.json
       ```
   
-  - Resolve the OOBI of the GLEIF External AID for the QVI Habery **(separate terminal window)**:
+  - Resolve the OOBI of the GLEIF External AID for the QVI Habery/keystore **(separate terminal window)**:
     ```bash
     kli oobi resolve --name qvi \
         --passcode r2zXnzdOa1Dd6m4U61Ag3 \
@@ -54,7 +54,7 @@ Then, from within either the `external/` or `internal/` directories:
         --oobi http://47.242.47.124:5623/oobi/ECwSVfPF6jX6xIuJn62ijmT0gA-mhzsW6NfCvQwTgjVd/witness
     ```
 
-  - Incept the proxy AID in the QVI Habery **(separate terminal window)**:
+  - Incept the proxy AID in the QVI Habery/keystore **(separate terminal window)**:
     - ```bash
       kli incept --name qvi \
         --passcode r2zXnzdOa1Dd6m4U61Ag3 \
@@ -78,6 +78,8 @@ Then, from within either the `external/` or `internal/` directories:
   - Generate the QVI OOBI **(separate terminal window)**:
   - `kli oobi generate --name qvi --passcode r2zXnzdOa1Dd6m4U61Ag3 --alias qvi1 --role witness`
   - Resolve this OOBI for each GAR with `./scripts/resolve-oobi.sh`
+
+## GAR Part 3
 20. Create a credential registry for the GARs:
   - `./scripts/create-registry.sh` with GAR 1. Say "y" to creating a nonce and send it to the other GAR.
   - the other GAR should use the provided nonce with `./scripts/create-registry.sh`
@@ -102,6 +104,8 @@ Then, from within either the `external/` or `internal/` directories:
         --alias qvi \
         --said ELSgR5Aow_aCXeXbumy5CdDeOzIR-LbYTWRJk7IMA5ZZ
     ```    
+
+## GIDA Part 4    
 24. Then create a legal entity (LE) identifier using the GIDA internal scripts.
   In a separate terminal:
   - Both GIDAs: `cd $GLEIF_HOME/gar/internal`
@@ -115,7 +119,11 @@ Then, from within either the `external/` or `internal/` directories:
   - GIDA2: `./scripts/multisig-join.sh` to join the GIDA multisig inception from the other participant.
 25. Then have the QVI resolve the OOBI of the LE (GIDA)
   - GIDA: `./scripts/generate-oobi.sh` (then select the GLEIF Internal AID)
-  - QVI: `./scripts/resolve-oobi.sh`
+  - QVI: `kli oobi resolve --name qvi --passcode r2zXnzdOa1Dd6m4U61Ag3 --oobi-alias le --oobi <GEDA_OOBI>`
+  - Also have the GIDA participants resolve the OOBI of the QVI:
+    - GIDAs: `./scripts/resolve-oobi.sh`
+
+## QVI Part 5    
 26. Then create the QVI registry with:
   - In the QVI-specific terminal:
   ```bash
@@ -156,5 +164,97 @@ kli ipex grant --name qvi \
     --said ELySVeEQiinw8ss9ThaCwgIWiXcVfQ2_d6fvne9m0FF2 \
     --recipient EI__7tAZS8MAtpu4d6KVMncBb_y1IMClftNL-pVh6Tce
 ```
+
+- then resolve the QVI OOBI for GEDA 1 and 2:
+  - `./scripts/resolve-oobi.sh`
+
+## GIDA Part 6
 31. Then admit the credential as the two GIDA participants:
   - GIDA1: `./scripts/admit-le-credential.sh`
+
+32. Then create the GEDA (LE) registry:
+ - GEDA1 & 2: `./scripts/create-registry.sh`  
+33. Create the Person AID
+```bash
+kli init --name person \
+  --salt 0ADFtoh4btab6t1CTwHlvVk9 \
+  --passcode 9rD2qdzTGgQwFFSnNr9Co \
+  --config-dir "${GLEIF_HOME}"/gar/external/config \
+  --config-file staging-bootstrap-config.json
+
+kli incept --name person \
+  --passcode 9rD2qdzTGgQwFFSnNr9Co \
+  --alias person \
+  --file "${GLEIF_HOME}"/gar/external/config/person-incept-config.json
+```  
+
+34. Create the OOR Auth credential:
+ - GEDA 1 & 2: `./scripts/create-oor-auth-credential.sh`
+
+## QVI Part 7
+35. Admit the OOR Auth Credential with the QVI
+```bash
+kli ipex admit --name qvi --passcode r2zXnzdOa1Dd6m4U61Ag3 --alias qvi --said EKr-Oozy24OnfkzpA6vXveF_w5eZgutxM0xz_gSdV5et
+```
+
+36. Present the LE credential to Sally
+- First resolve the Sally OOBI for the QVI:
+  ```bash
+  kli oobi resolve --name qvi \
+    --passcode r2zXnzdOa1Dd6m4U61Ag3 \
+    --oobi-alias sally \
+    --oobi https://vlei-reporting-dry-run.gleif.org/oobi
+  ```
+- then present the LE credential with an IPEX Grant
+  ```bash
+  kli ipex grant --name qvi \
+    --passcode r2zXnzdOa1Dd6m4U61Ag3 \
+    --alias qvi \
+    --said <LE_CREDENTIAL_SAID> \
+    --recipient <SALLY_AID>
+  ```
+- verify in the Sally server logs that the credential presentation came in.
+
+37. Prepare and Create the OOR Credential.
+  - Add the appropriate data to `$GLEIF_HOME/gar/internal/data/edge-data-oor-auth.json`.
+    - SAIDify the edge with `kli saidify -f data/edge-data-oor-auth.json`
+  - add the appropriate data to `$GLEIF_HOME/gar/internal/oor-cred-data.json`.
+  - Create the OOR credential with:
+  ```bash
+  kli vc create --name qvi --alias qvi --passcode r2zXnzdOa1Dd6m4U61Ag3 --registry-name le-registry \
+        --schema EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy \
+        --recipient EEncVhh2YUe-29Hzf9EL0iMN1bSzWLbmz5OP7sTWrPoD \
+        --data @./data/oor-cred-data.json \
+        --edges @./data/edge-data-oor-auth-for-person-oor.json \
+        --rules @./data/oor-rules.json
+  ```
+
+38. Grant the OOR credential to the person
+- As the person resolve the OOBI of the QVI
+  ```bash
+  kli oobi resolve --name person --passcode 9rD2qdzTGgQwFFSnNr9Co --oobi-alias qvi --oobi http://47.242.47.124:5623/oobi/EDqb9oz7e454JmTP6uylQDeBd6dL1dRkeJdf1ppQPlC8/witness
+  ```
+
+- Then, as the QVI, grant the OOBI to the person:
+  ```bash
+  kli ipex grant --name qvi --passcode r2zXnzdOa1Dd6m4U61Ag3 --alias qvi --said ECFz8CyR0qlHjshaRCaMgkhKHMjSiuaLJG8o0NMVa9QA --recipient EEncVhh2YUe-29Hzf9EL0iMN1bSzWLbmz5OP7sTWrPoD
+  ```
+
+39. Admit the OOR credential as the person.
+- Admit the credential with
+  ```bash
+  kli ipex admit --name person --passcode 9rD2qdzTGgQwFFSnNr9Co --alias person --said EEXQcydWTWt_Q222XDz4mVxPBnlN5V4GtAIaHu89w0wz
+  ```
+
+40. Present the OOR credential to Sally.
+- First resolve the Sally OOBI as the Person:
+  ```bash
+  kli oobi resolve --name person --passcode 9rD2qdzTGgQwFFSnNr9Co --oobi-alias sally --oobi https://vlei-reporting-dry-run.gleif.org/oobi
+  ```
+
+- Then grant the OOR credential to Sally
+  ```bash
+  kli ipex grant --name person --passcode 9rD2qdzTGgQwFFSnNr9Co --alias person --said ECFz8CyR0qlHjshaRCaMgkhKHMjSiuaLJG8o0NMVa9QA --recipient EPZN94iifUVP-3u_6BNDOFS934c8nJDU2A5bcDF9FkzT
+  ```
+
+- Verify in the Sally logs that the credential came through  
