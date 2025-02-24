@@ -13,4 +13,4 @@ source $PWD/source.sh
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
 # Here's your credentials:
-kli mailbox list --name "${EXT_GAR_NAME}" --passcode "${passcode}" "$@"
+kli mailbox list --name "${EXT_GAR_NAME}"--alias "${EXT_GAR_AID_ALIAS}" --passcode "${passcode}" "$@"
