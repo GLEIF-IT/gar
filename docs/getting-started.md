@@ -30,7 +30,7 @@ Installation instructions for `jq` can be found here: https://stedolan.github.io
 Installation instructions for `git` can be found here: https://git-scm.com/download/mac, utilize the brew command.
 
 ### System Setup
-The scripts in this package rely on the KERIpy docker image `weboftrust/keri` hosted on docker hub.  The first step is to execute the
+The scripts in this package rely on the KERIpy docker image `gleif/keri` hosted on docker hub.  The first step is to execute the
 following script once, the first time you prepare to use this package, to set up the AID inception configuration files:
 
 ```bash
@@ -40,10 +40,10 @@ $ ./scripts/prepare.sh
 The output should resemble:
 
 ```bash
-enc-notifications: Pulling from weboftrust/keri
+enc-notifications: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for weboftrust/keri:enc-notifications
-docker.io/weboftrust/keri:enc-notifications
+Status: Image is up to date for gleif/keri:enc-notifications
+docker.io/gleif/keri:enc-notifications
 
 ```
 
