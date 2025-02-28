@@ -40,10 +40,10 @@ $ ./scripts/prepare.sh
 The output should resemble:
 
 ```bash
-1.1.31: Pulling from weboftrust/keri
+enc-notifications: Pulling from weboftrust/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for weboftrust/keri:1.1.31
-docker.io/weboftrust/keri:1.1.31
+Status: Image is up to date for weboftrust/keri:enc-notifications
+docker.io/weboftrust/keri:enc-notifications
 
 ```
 
