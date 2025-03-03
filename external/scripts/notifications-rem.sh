@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##  Script for listing notifications                            ##
+##  Script for removing notifications                           ##
 ##                                                              ##
 ##################################################################
 
@@ -12,4 +12,4 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s ext-gar-passcode)"
 
-kli notifications list --name "${EXT_GAR_NAME}" --passcode "${passcode}" "$@"
+kli notifications rem --name "${EXT_GAR_NAME}" --passcode "${passcode}" "$@"
