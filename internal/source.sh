@@ -32,7 +32,7 @@ function kli() {
     -v "${INT_GAR_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
     -e DEBUG_KLI="${DEBUG}" \
-    weboftrust/keri:1.1.31 "$@"
+    weboftrust/keri:1.1.32 "$@"
 }
 
 export -f kli
