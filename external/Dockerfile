@@ -1,4 +1,4 @@
-FROM gleif/keri:enc-notifications
+FROM weboftrust/keri:1.1.32
 
 RUN apt-get update
 RUN apt-get install -y vim
