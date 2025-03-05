@@ -8,7 +8,7 @@ the GLEIF Internal Autonomic Identifier (AID)
 ## Repository Layout
 This repository contains documentation in the `./docs` directory and Bash shell scripts in the `./scripts` directory.  The 
 scripts make it easy to use the KERI command line tool `kli` to perform all functions required of a GAR.  It utilizes the KERI
-docker image `gleif/keri:gleif/keri:1.1.33` with mounts to local directories to minimize the requirements on the local system.  
+docker image `gleif/keri:1.1.33` with mounts to local directories to minimize the requirements on the local system.  
 
 ## Getting Started
 The steps needed to bootstrap your system are described in [Getting Started](./docs/getting-started.md).  After following
