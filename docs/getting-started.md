@@ -42,8 +42,8 @@ The output should resemble:
 ```bash
 enc-notifications: Pulling from gleif/keri
 Digest: sha256:5dead12388be0a814c00044369a2dc52465318af329b1c7f4956810c83ae4e6c
-Status: Image is up to date for gleif/keri:1.1.33
-docker.io/gleif/keri:1.1.33
+Status: Image is up to date for weboftrust/keri:1.1.32
+docker.io/weboftrust/keri:1.1.32
 
 ```
 
