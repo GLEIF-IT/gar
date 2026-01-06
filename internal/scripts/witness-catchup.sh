@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##      Script for continuing a multisig event process          ##
+##       Script for sending full KEL to a witness to catch up   ##
 ##                                                              ##
 ##################################################################
 
@@ -12,6 +12,7 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
-read -p "Enter the Alias to submit: " -r alias
+read -p "Enter the Alias: " -r alias
+read -p "Enter the Witness AID: " -r witness
 
-kli witness submit --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}" "$@"
+kli witness catchup --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}" --witness "${witness}" "$@"
