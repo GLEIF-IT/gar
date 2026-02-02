@@ -20,6 +20,7 @@ echo "\"${lei}\"" | jq -f "${EXT_GAR_SCRIPT_DIR}/qvi-data.jq" > "${EXT_GAR_DATA_
 
 cp "${EXT_GAR_SCRIPT_DIR}/rules.json" "${EXT_GAR_DATA_DIR}/rules.json"
 
+<<<<<<< Updated upstream
 kli vc create \
     --name "${EXT_GAR_NAME}" \
     --passcode "${passcode}" \
@@ -30,3 +31,6 @@ kli vc create \
     --data @"/data/qvi-data.json" \
     --rules @"/data/rules.json" \
     --time "${datetime}"
+=======
+kli vc create --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --registry-name "${EXT_GAR_REG_NAME}" --schema EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao --recipient "${recipient}" --data @"/data/qvi-data.json" --rules @"/data/rules.json" --time "${datetime}"
+>>>>>>> Stashed changes
