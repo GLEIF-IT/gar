@@ -16,7 +16,6 @@ read -p "Enter the SAID of the new QVI credential: " -r SAID
 read -p "Enter the alias of the new QVI: " -r recipient
 read -p "Enter the datetime to use: " -r datetime
 
-<<<<<<< Updated upstream:external/scripts/qvi-credential-grant.sh
 kli ipex grant \
     --name "${EXT_GAR_NAME}" \
     --passcode "${passcode}" \
@@ -24,6 +23,3 @@ kli ipex grant \
     --said "${SAID}" \
     --recipient "${recipient}" \
     --time "${datetime}"
-=======
-kli ipex grant --name "${EXT_GAR_NAME}" --passcode "${passcode}" --alias "${EXT_GAR_AID_ALIAS}" --said "${SAID}" --recipient "${recipient}" --time "${datetime}"
->>>>>>> Stashed changes:external/scripts/grant-qvi-credential.sh
