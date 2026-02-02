@@ -12,7 +12,6 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
-read -p "Enter the Alias: " -r alias
 read -p "Enter the Witness AID: " -r witness
 
-kli witness catchup --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}" --witness "${witness}" "$@"
+kli witness catchup --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --witness "${witness}" "$@"
