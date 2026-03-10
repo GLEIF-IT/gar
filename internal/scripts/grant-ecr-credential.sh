@@ -2,7 +2,7 @@
 
 ##################################################################
 ##                                                              ##
-##      Script for continuing a multisig event process          ##
+##          Script for issuing ecr credential                   ##
 ##                                                              ##
 ##################################################################
 
@@ -12,6 +12,8 @@ source $PWD/source.sh
 # Capture password
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
-read -p "Enter the Alias to submit: " -r alias
+read -p "Enter the Alias of the recipient: " -r recipient
+read -p "Enter the ECR credential SAID: " -r SAID
+read -p "Enter the datetime to use: " -r datetime
 
-kli witness submit --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}" "$@"
+kli ipex grant --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --said "${SAID}" --time "${datetime}" --recipient "${recipient}"
