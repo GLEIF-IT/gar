@@ -30,6 +30,6 @@ echo "\"${le_said}\"" | jq -f "${INT_GAR_SCRIPT_DIR}/ecr-auth-edges-filter.jq" >
 kli saidify --file /data/ecr-auth-edge-data.json
 
 # Prepare the RULES section
-cp "${INT_GAR_SCRIPT_DIR}/ecr-rules.json" "${INT_GAR_DATA_DIR}/ecr-rules.json"
+cp "${INT_GAR_SCRIPT_DIR}/ecr-auth-rules.json" "${INT_GAR_DATA_DIR}/ecr-auth-rules.json"
 
-kli vc create --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --registry-name "${INT_GAR_REG_NAME}" --schema EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g --recipient "${recipient}" --data @"/data/ecr-auth-data.json" --edges @"/data/ecr-auth-edge-data.json" --rules @"/data/ecr-rules.json"  --time "${datetime}"
+kli vc create --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${INT_GAR_AID_ALIAS}" --registry-name "${INT_GAR_REG_NAME}" --schema EH6ekLjSr8V32WyFbGe1zXjTzFs9PkTYmupJ9H65O14g --recipient "${recipient}" --data @"/data/ecr-auth-data.json" --edges @"/data/ecr-auth-edge-data.json" --rules @"/data/ecr-auth-rules.json"  --time "${datetime}"
