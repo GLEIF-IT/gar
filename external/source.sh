@@ -32,7 +32,7 @@ function kli() {
     -v "${EXT_GAR_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
     -e DEBUG_KLI="${DEBUG}" \
-    gleif/keri:1.1.41 "$@"
+    gleif/keri:1.1.43 "$@"
 }
 
 export -f kli
