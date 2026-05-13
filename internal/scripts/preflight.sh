@@ -13,7 +13,7 @@ docker run -it --rm \
   -v "${INT_GAR_DATA_DIR}":/data \
   -e PYTHONWARNINGS="ignore::SyntaxWarning" \
   -e DEBUG_KLI="${DEBUG:-}" \
-  gleif/keri:1.1.42 \
+  gleif/keri:1.1.43 \
   /scripts/multisig_rotate_preflight.py \
     --name "${INT_GAR_NAME}" \
     --passcode "${passcode}" \
