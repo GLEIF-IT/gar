@@ -14,4 +14,4 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcod
 
 read -p "Enter the Alias to continue: " -r alias
 
-kli delegate request --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}"
+kli delegate request --name "${INT_GAR_NAME}" --passcode "${passcode}" --alias "${alias}" "$@"
