@@ -1,7 +1,11 @@
 {
   "dt": "2022-01-20T12:57:59.823350+00:00",
   "iurls": [
-    "http://47.242.47.124:5623/oobi?name=AS-CN-ALI-test"
+  "http://49.12.190.139:5623/oobi?name=eu-de-htz-test",
+  "http://139.99.193.43:5623/oobi?name=oc-au-ovh-test",
+  "http://20.3.144.86:5623/oobi?name=na-us-azr-test",
+  "http://13.245.64.114:5623/oobi?name=af-za-aws-test",
+  "http://47.242.47.124:5623/oobi?name=as-cn-ali-test"
   ],
   "durls": [
     "https://weboftrust.github.io/oobi/EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy",
