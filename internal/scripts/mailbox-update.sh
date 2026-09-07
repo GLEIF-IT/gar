@@ -13,4 +13,4 @@ source $PWD/source.sh
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
 # Here's your credentials:
-kli mailbox update --name "${INT_GAR_NAME}" --alias "$INT_GAR_AID_ALIAS}" --passcode "${passcode}" "$@"
+kli mailbox update --name "${INT_GAR_NAME}" --alias "${INT_GAR_AID_ALIAS}" --passcode "${passcode}" "$@"
