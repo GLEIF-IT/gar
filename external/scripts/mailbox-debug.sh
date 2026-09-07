@@ -39,7 +39,9 @@ debug() {
 
 if [ "${all}" = true ]; then
   # kli status --verbose prints "Witnesses:" followed by "\t1. <AID>" lines, then a blank line.
+  # kli runs under docker -t, so strip the \r the pseudo-terminal appends to every line.
   wits=$(kli status --name "${EXT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" --verbose \
+         | tr -d '\r' \
          | awk '/^Witnesses:/{f=1; next} f && /^[[:space:]]*[0-9]+\. /{print $2} f && /^[[:space:]]*$/{f=0}')
 
   if [ -z "${wits}" ]; then
@@ -49,7 +51,7 @@ if [ "${all}" = true ]; then
 
   for w in ${wits}; do
     echo "=================== Witness ${w} ==================="
-    debug --witness "${w}" "${args[@]}"
+    debug --witness "${w}" "${args[@]}" || echo "!! mailbox debug failed for witness ${w}" >&2
     echo
   done
 else
