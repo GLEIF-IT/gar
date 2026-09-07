@@ -47,8 +47,10 @@ docker.io/gleif/keri:1.1.44
 
 ```
         
-This script will perform a docker pull for the KERIpy image as well as creating your local directory that stores the
-datastore, keystore and configuration information generated as a GAR.  You will not need to run this script again.
+This script will perform a docker pull for the KERIpy image, build the local image `gar/keri:1.1.44` (the pulled image
+plus a few backported `kli` fixes, see `Dockerfile` and `patches/`) that all scripts use, and create your local
+directory that stores the datastore, keystore and configuration information generated as a GAR.  Re-run it if the
+`Dockerfile` or `patches/` change; otherwise you will not need to run this script again.
 
 The final step in system setup is to edit the `scripts/env.sh` initialization script under the directory 
 (external or internal) and role you are working as and set two values used as exported environment variables in the 

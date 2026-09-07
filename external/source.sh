@@ -25,6 +25,9 @@ EXT_GAR_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export EXT_GAR_SCRIPT_DIR="${EXT_GAR_DIR}/scripts"
 export EXT_GAR_DATA_DIR="${EXT_GAR_DIR}/data"
 
+# Local image built by scripts/prepare.sh: gleif/keri:1.1.44 plus backported kli fixes (see Dockerfile).
+export KERI_IMAGE="gar/keri:1.1.44"
+
 function kli() {
   docker run -it --rm \
     -v "${HOME}"/.gar:/usr/local/var/keri \
@@ -32,7 +35,7 @@ function kli() {
     -v "${EXT_GAR_DATA_DIR}":/data \
     -e PYTHONWARNINGS="ignore::SyntaxWarning" \
     -e DEBUG_KLI="${DEBUG}" \
-    gleif/keri:1.1.44 "$@"
+    "${KERI_IMAGE}" "$@"
 }
 
 export -f kli
