@@ -14,7 +14,12 @@
 ##                                                              ##
 ##  --alias <name> overrides the alias (default: group AID).    ##
 ##                                                              ##
+##  --from <AID> shows only messages sent by that AID (implies  ##
+##  --verbose; the sender is the "i" field of each message).    ##
+##                                                              ##
 ##################################################################
+
+set -o pipefail
 
 PWD=$(pwd)
 source $PWD/source.sh
@@ -24,17 +29,33 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcod
 
 alias="${INT_GAR_AID_ALIAS}"
 all=false
+sender=""
 args=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --all)        all=true; shift ;;
     --alias|-a)   alias="$2"; shift 2 ;;
+    --from)       sender="$2"; shift 2 ;;
     *)            args+=("$1"); shift ;;
   esac
 done
 
 debug() {
-  kli mailbox debug --name "${INT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" "$@"
+  if [ -z "${sender}" ]; then
+    kli mailbox debug --name "${INT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" "$@"
+    return
+  fi
+
+  # Verbose output is one blank-line separated block per message. Keep the local
+  # index block and the "Messages:" header, then only blocks containing the AID.
+  kli mailbox debug --name "${INT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" --verbose "$@" \
+    | tr -d '\r' \
+    | awk '{print} /^Messages:$/{print ""}' \
+    | awk -v aid="${sender}" '
+        BEGIN { RS=""; ORS="\n\n" }
+        NR <= 2 { print; next }
+        index($0, aid) { print; n++ }
+        END { if (!n) print "   (no messages from " aid ")" }'
 }
 
 if [ "${all}" = true ]; then
