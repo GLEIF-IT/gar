@@ -37,9 +37,27 @@ parser.add_argument("--kel", help="with --temp: CESR stream (e.g. an OOBI respon
 parser.add_argument("--quiet", "-q", action="store_true", help="suppress keripy debug logging")
 parser.add_argument("--poll", type=float, default=0, metavar="SECONDS",
                     help="run the real mailbox poller for this long instead of parsing --file directly")
+parser.add_argument("--verbose", "-V", action="store_true", help="with --poll: stream full keripy debug logging (very noisy)")
 args = parser.parse_args()
 
-if not args.quiet:
+# keripy 1.1.x has a broken debug format string that raises inside logging on every
+# escrow retry; without this, every retry dumps a traceback to stderr.
+logging.raiseExceptions = False
+
+# Poll mode is quiet by default: the director logs at debug level on every tock.
+# Informative keri lines (INFO and up) are collected and summarised at the end.
+stream_logs = (not args.quiet) and (not args.poll or args.verbose)
+collected = []
+class Collect(logging.Handler):
+    def emit(self, record):
+        try:
+            text = record.getMessage()
+        except Exception:
+            return
+        if len(collected) < 200:
+            collected.append(f"{record.levelname} {text.splitlines()[0][:160]}")
+
+if stream_logs:
     logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format="  log %(levelname)s %(name)s: %(message)s")
     for name in ("keri", "hio"):
         logging.getLogger(name).setLevel(logging.DEBUG)
@@ -50,13 +68,22 @@ from keri.app.cli.common import existing
 from keri.core import parsing, eventing, routing
 from keri.peer import exchanging
 
-help.ogler.level = logging.DEBUG
 lg = help.ogler.getLogger()
-lg.setLevel(logging.DEBUG)
-if not args.quiet and not any(isinstance(h, logging.StreamHandler) for h in lg.handlers):
-    lg.addHandler(logging.StreamHandler(sys.stdout))
-if args.quiet:
+if stream_logs:
+    help.ogler.level = logging.DEBUG   # also opens hio's console handler at debug
+    lg.setLevel(logging.DEBUG)
+    if not any(isinstance(h, logging.StreamHandler) for h in lg.handlers):
+        lg.addHandler(logging.StreamHandler(sys.stdout))
+elif args.quiet:
     logging.disable(logging.CRITICAL)
+else:
+    # Leave hio's console handler at its default (silent) level; raise only the
+    # logger so the collector below sees INFO and above.
+    for lg_ in (lg, logging.getLogger("keri")):
+        lg_.setLevel(logging.INFO)
+        for h in lg_.handlers:          # hio's console handlers: errors only
+            h.setLevel(logging.ERROR)
+        h = Collect(); h.setLevel(logging.INFO); lg_.addHandler(h)
 
 msg = open(args.file, "rb").read().strip()
 m = re.search(rb'"i":"([^"]+)"', msg)
@@ -117,6 +144,7 @@ try:
         print(f"---- polling for {args.poll:.0f}s via MailboxDirector (topics ['/challenge'])")
         mbd = indirecting.MailboxDirector(hby=hby, topics=["/challenge"], exc=exc)
         doist = doing.Doist(limit=args.poll, tock=0.03125, real=True)
+        collected.clear()   # only keep what is logged during the poll itself
         doist.do(doers=[habbing.HaberyDoer(habery=hby), mbd])
         after_idx = index_snapshot()
         print("---- result")
@@ -125,6 +153,12 @@ try:
             if b != a:
                 print(f"index moved     : {key[0][:12]}.. @ {key[1][:12]}..  /challenge {b} -> {a}")
         print(f"pollers created     : {len(mbd.pollers)}")
+        if collected:
+            print("---- keri log lines (INFO and above) during the poll")
+            seen = set()
+            for line in collected:
+                if line not in seen:
+                    seen.add(line); print("  " + line)
         print(f"processed via poller: {len(saved) > 0}  (\"Saved exn event\" log lines for this SAID: {len(saved)})")
     else:
         print("---- parsing")
