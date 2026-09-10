@@ -1,4 +1,7 @@
 # Intellij specific
 .idea
 external/data/*.json
-external/data/*.json
+
+# Python
+__pycache__/
+*.pyc
