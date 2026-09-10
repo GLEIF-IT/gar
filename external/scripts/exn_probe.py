@@ -139,13 +139,15 @@ try:
     ims = bytearray(msg)
     if args.poll:
         from hio.base import doing
-        from keri.app import habbing, indirecting
+        from keri.app import indirecting
         before_idx = index_snapshot()
         print(f"---- polling for {args.poll:.0f}s via MailboxDirector (topics ['/challenge'])")
         mbd = indirecting.MailboxDirector(hby=hby, topics=["/challenge"], exc=exc)
         doist = doing.Doist(limit=args.poll, tock=0.03125, real=True)
         collected.clear()   # only keep what is logged during the poll itself
-        doist.do(doers=[habbing.HaberyDoer(habery=hby), mbd])
+        # No HaberyDoer here: it would close the keystore when the doist finishes,
+        # and the report below still needs to read it.
+        doist.do(doers=[mbd])
         after_idx = index_snapshot()
         print("---- result")
         for key in sorted(set(before_idx) | set(after_idx)):
