@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eo pipefail
 
 ##################################################################
 ##                                                              ##
@@ -16,18 +16,20 @@ set -euo pipefail
 ##                                                              ##
 ##################################################################
 
-PWD=$(pwd)
-source "$PWD/source.sh"
-
 if [ $# -lt 1 ] || [ ! -f "$1" ]; then
   echo "usage: $0 <message file>" >&2
   exit 1
 fi
+msgfile="$1"; shift
+
+PWD=$(pwd)
+source "$PWD/source.sh"
+set -u
 
 passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcode)"
 
 # The container only sees the mounted data directory, so stage the file there.
-cp "$1" "${INT_GAR_DATA_DIR}/.probe-message"
+cp "${msgfile}" "${INT_GAR_DATA_DIR}/.probe-message"
 trap 'rm -f "${INT_GAR_DATA_DIR}/.probe-message"' EXIT
 
 docker run -it --rm \
@@ -37,5 +39,5 @@ docker run -it --rm \
   -v "${INT_GAR_DATA_DIR}":/data \
   -e PYTHONWARNINGS="ignore::SyntaxWarning" \
   "${KERI_IMAGE}" \
-  /scripts/exn_probe.py --name "${INT_GAR_NAME}" --passcode "${passcode}" --file /data/.probe-message "${@:2}" \
+  /scripts/exn_probe.py --name "${INT_GAR_NAME}" --passcode "${passcode}" --file /data/.probe-message "$@" \
   | tr -d '\r'
