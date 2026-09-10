@@ -73,6 +73,7 @@ Then, from within either the `external/` or `internal/` directories:
       ```  
 18. GARs confirm the delegation with:
   - `./scripts/kli.sh delegate confirm --alias "GLEIF External AID" --interact`
+  - the command prints a key-change summary before the accept prompt; for a rotation, verify it with the QAR out of band and match the event SAID `d` before answering Y (see [Approving QVI Rotation Events](../external/docs/approving-qvi-rotation.md))
   - do this for both GARs
 19. Then perform an OOBI resolution between the GARs and the QVI. 
   - Generate the QVI OOBI **(separate terminal window)**:
