@@ -54,3 +54,32 @@ lists of fractions.
    trying again.
 
 The summary is also printed when running with `--auto`, so it appears in logs even when no prompt is shown.
+
+## Manual anchor, when `delegate confirm` does not pick up the request
+
+If `delegate confirm` sits waiting and never shows the rotation, do not retry blindly and do not guess. The approval
+is only ever a seal of three values, `i`, `s` and `d`, anchored in an interaction event on the External AID, and those
+three values are exactly what was confirmed on the call. They can be anchored by hand with an identical result.
+
+1. Confirm `i` (the QVI AID), `s` (the sequence number, hex as it appears in the event, so sequence 31 is `1f`) and `d`
+   (the event SAID) with the QARs on the call, as above.
+2. Build the seal. This validates the three values, looks the event up in your keystore, prints the same key-change
+   summary `delegate confirm` prints so you can read it back on the call, and writes `scripts/anchor.json`:
+
+   ```bash
+   ./scripts/anchor-seal.sh <QVI AID> <hex sequence number> <event SAID>
+   ```
+
+   It refuses to write the seal if the values do not match the event it finds, or if the event is not in your keystore
+   at all. In the latter case the request never reached you. Re-check the values with the QARs first; only if the call
+   has confirmed all three and you accept anchoring an event you cannot see locally, add `--force`.
+3. Read `i`, `s` and `d` back from the printed seal once more, then propose the interaction event:
+
+   ```bash
+   ./scripts/multisig-interact.sh
+   ```
+
+4. The other External GARs join with `./scripts/multisig-join.sh`. The join prompt shows the seal data; each GAR
+   checks `i`, `s` and `d` against the call before answering `Y`.
+5. Once the interaction event is committed, the QARs query the External witnesses, see the anchor, and their rotation
+   leaves escrow, exactly as in the normal flow.
