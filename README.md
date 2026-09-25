@@ -47,6 +47,7 @@ following table describes the scripts, all of which can be used any time after t
 | `./scripts/delegate-confirm-preflight.sh` | External only. Read-only check before approving a QVI rotation: QVI key state held locally, escrows, witness reachability, current `anchor.json` |
 | `./scripts/challenge-members.sh` | Challenge several contacts (a QVI's QARs, the other GARs) one after another with your member AID and show their Authenticated state |
 | `./scripts/respond-for-group.sh` | Answer a challenge that was addressed to the group AID: prints the member alias, AID and OOBI the challenger needs, then responds with your member AID |
+| `./scripts/sent-exns.sh` | List the exchange messages your AIDs sent (IPEX grants and more) with the credential, its registry state, which members signed, who delivered it, and the admit if one came back; `--poll` fetches replies first |
 
 ## Challenge/response and multisig AIDs
 A group multisig AID can verify a challenge but cannot answer one with the `kli` this repository runs, so all
