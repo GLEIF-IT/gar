@@ -10,6 +10,44 @@ a seal of the rotation event for the QVI group multisig AID.
 
 Make sure your context is set with `source source.sh` and `./scripts/prepare.sh`
 
+## Before the call
+
+`delegate confirm` only shows a rotation whose prior KEL your keystore already holds. If the QVI's key state is
+missing, the rotation lands in the out-of-order escrow instead: `delegate confirm` sits waiting and never shows it,
+and `anchor-seal.sh` cannot verify it either. Every External GAR on the call needs the QVI's KEL, not only the one
+running `delegate confirm`, so each GAR runs this before the call:
+
+```bash
+./scripts/delegate-confirm-preflight.sh
+```
+
+It changes nothing. It prints the External AID and its members, the QVI's key state as your keystore holds it
+(sequence number, SAID, thresholds, signing keys, next-key digests, witnesses), anything for the QVI already in escrow,
+whether the External witness answers, and the seal currently sitting in `scripts/anchor.json`. The rotation you will
+approve must be at the next sequence number after the one it prints.
+
+If it reports no key state for the QVI, load the KEL and run the preflight again:
+
+```bash
+./scripts/kli.sh oobi resolve --force --oobi <QVI OOBI URL> --oobi-alias <alias>
+```
+
+`--force` matters. An OOBI that was resolved before (the QVI is already a contact) is skipped by `kli oobi resolve`
+without any error, and the KEL it serves is never loaded. `./scripts/resolve-oobi.sh --force` does the same.
+
+Loading the KEL this way also drops the QVI's latest, already accepted rotation into the partially-signed escrow that
+`delegate confirm` reads, so on the call it would offer that old rotation first. The preflight marks such an entry as
+stale (its `s` is not above the QVI's current sequence number). Remove it before the call:
+
+```bash
+./scripts/delegate-confirm-preflight.sh --clear-stale
+```
+
+If a stale request still shows up in `delegate confirm`, its `s` equals the current sequence number instead of the
+next one and every key is listed under `unchanged`; answer `n` and it moves on.
+
+## On the call
+
 ```bash
 ./scripts/kli.sh delegate confirm --alias "GLEIF External AID" --interact
 ```
@@ -57,7 +95,10 @@ The summary is also printed when running with `--auto`, so it appears in logs ev
 
 ## Manual anchor, when `delegate confirm` does not pick up the request
 
-If `delegate confirm` sits waiting and never shows the rotation, do not retry blindly and do not guess. The approval
+If `delegate confirm` sits waiting and never shows the rotation, do not retry blindly and do not guess. First check
+`./scripts/escrow-list.sh --escrow out-of-order-events`: a rotation listed there means your keystore lacks the QVI's
+prior KEL (see "Before the call"); loading it with `kli oobi resolve --force` and running `delegate confirm` again is
+the fix, not a manual anchor. The approval
 is only ever a seal of three values, `i`, `s` and `d`, anchored in an interaction event on the External AID, and those
 three values are exactly what was confirmed on the call. They can be anchored by hand with an identical result.
 
@@ -70,9 +111,11 @@ three values are exactly what was confirmed on the call. They can be anchored by
    ./scripts/anchor-seal.sh <QVI AID> <hex sequence number> <event SAID>
    ```
 
-   It refuses to write the seal if the values do not match the event it finds, or if the event is not in your keystore
-   at all. In the latter case the request never reached you. Re-check the values with the QARs first; only if the call
-   has confirmed all three and you accept anchoring an event you cannot see locally, add `--force`.
+   It refuses to write the seal if the values do not match the event it finds, if the event is not in your keystore
+   at all, or if the event is there but the QVI's key state is not (so the delegator and key changes cannot be
+   checked). In the first case, resolve the mismatch. In the second the request never reached you. In the third, load
+   the QVI's KEL as described in "Before the call" and run it again. Only if the call has confirmed all three values
+   and you accept anchoring an event you cannot verify locally, add `--force`.
 3. Read `i`, `s` and `d` back from the printed seal once more, then propose the interaction event:
 
    ```bash

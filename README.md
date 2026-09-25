@@ -44,6 +44,15 @@ following table describes the scripts, all of which can be used any time after t
 |--------|---------|
 | `./scripts/status.sh` | AID status script that can be used to inspect key state of any local AID |
 | `./scripts/contacts.sh` | Script to list any contacts locally resolved through OOBI exchange.  Indicates Authentication status |
+| `./scripts/delegate-confirm-preflight.sh` | External only. Read-only check before approving a QVI rotation: QVI key state held locally, escrows, witness reachability, current `anchor.json` |
+| `./scripts/challenge-members.sh` | Challenge several contacts (a QVI's QARs, the other GARs) one after another with your member AID and show their Authenticated state |
+| `./scripts/respond-for-group.sh` | Answer a challenge that was addressed to the group AID: prints the member alias, AID and OOBI the challenger needs, then responds with your member AID |
+
+## Challenge/response and multisig AIDs
+A group multisig AID can verify a challenge but cannot answer one with the `kli` this repository runs, so all
+challenge scripts sign and verify with your member AID. What to do when someone challenges the GLEIF External or
+Internal AID, how to challenge a QVI, and why the limitation exists are described in
+[Challenge/response and multisig AIDs](./docs/challenge-response.md).
 
 ## Abbreviations
 GEDA: GLEIF External Delegated AID

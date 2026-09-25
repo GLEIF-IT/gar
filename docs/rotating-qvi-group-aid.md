@@ -2,7 +2,8 @@
 
 When rotating the QVI group AID then the raw `kli.sh` script and `multisig-join.sh` must be used as follows for the GARs to approve the delegation.
 `delegate confirm` prints a key-change summary of the rotation before asking to accept; verify it with the QAR on a call, ending with the event SAID `d`, as described in
-[Approving QVI Rotation Events](../external/docs/approving-qvi-rotation.md).
+[Approving QVI Rotation Events](../external/docs/approving-qvi-rotation.md). Before the call, every GAR runs
+`./scripts/delegate-confirm-preflight.sh`: `delegate confirm` only shows a rotation whose prior KEL the keystore holds.
 
 ```bash
 # GAR 1

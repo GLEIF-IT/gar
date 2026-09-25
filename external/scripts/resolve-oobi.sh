@@ -4,6 +4,9 @@
 ##                                                              ##
 ##      Script for resolving OOBIs of other participants        ##
 ##                                                              ##
+##  Pass --force to re-fetch an OOBI resolved before; without   ##
+##  it kli skips the URL and any KEL it serves is not loaded.   ##
+##                                                              ##
 ##################################################################
 
 PWD=$(pwd)
@@ -18,9 +21,9 @@ echo " "
 
 if [ -z "$alias" ]
 then
-  kli oobi resolve --name "${EXT_GAR_NAME}" --passcode "${passcode}" --oobi "${oobi_url}"
+  kli oobi resolve --name "${EXT_GAR_NAME}" --passcode "${passcode}" --oobi "${oobi_url}" "$@"
 else
-  kli oobi resolve --name "${EXT_GAR_NAME}" --passcode "${passcode}" --oobi-alias "${alias}" --oobi "${oobi_url}"
+  kli oobi resolve --name "${EXT_GAR_NAME}" --passcode "${passcode}" --oobi-alias "${alias}" --oobi "${oobi_url}" "$@"
   echo " "
   kli contacts list --name "${EXT_GAR_NAME}" --passcode "${passcode}" | jq "if .alias == \"${alias}\" then \"Alias: \"+.alias+\"\n\rAID:   \"+.id  +\"\n\r\" else \"\" end" --raw-output
 fi

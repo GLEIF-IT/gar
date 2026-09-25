@@ -4,6 +4,8 @@ Hi all,
 
 Here is how we will run the upcoming delegated rotation. The goal is that nobody approves anything they have not verified with the other side directly.
 
+0. Before the call, each External GAR runs ./scripts/delegate-confirm-preflight.sh and fixes anything it reports. It confirms your keystore holds the QVI's current key state; without it the rotation never shows up in delegate confirm and lands in the out-of-order escrow instead. If it says the key state is missing, load it with `./scripts/kli.sh oobi resolve --force --oobi <QVI OOBI> --oobi-alias <alias>` and run the preflight again. It also tells you the sequence number to expect, one higher than the QVI's current one.
+
 1. Schedule a call. All required QARs and at least the External GARs needed to meet our signing threshold join.
 
 2. Rotate on your side. On the call, the QARs complete the multisig rotation and send the delegation request as usual. Do not wait for approval before sending it.

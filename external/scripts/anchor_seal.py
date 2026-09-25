@@ -53,12 +53,14 @@ def validate(i, s, d):
 def check_and_write(hby, i, s, d, out, force=False):
     """Check the event (i, d) in hby, print its summary, write the seal to out.
 
-    Returns 0 on success, 3 if the event is not held locally and force is False,
-    4 if the event is held but does not match the given values.
+    Returns 0 on success, 3 if the event is not held locally (or is held but the
+    delegate's key state is not) and force is False, 4 if the event is held but
+    does not match the given values.
     """
     raw = hby.db.getEvt(dbing.dgKey(i, d))
     found = raw is not None
     ok = True
+    unverifiable = False  # event held locally but the delegate's key state is not
 
     if found:
         serder = serdering.SerderKERI(raw=bytes(raw))
@@ -69,8 +71,20 @@ def check_and_write(hby, i, s, d, out, force=False):
             typ, delpre, dkever = "inception", ked["di"], None
         elif ilk == coring.Ilks.drt:
             typ = "rotation"
-            dkever = hby.kevers[i] if i in hby.kevers else None
-            delpre = dkever.delegator if dkever is not None else "(unknown: no key state for delegate)"
+            try:
+                dkever = hby.kevers[i]  # only item lookup loads a non-own AID's key state in 1.1.44
+            except KeyError:
+                dkever = None
+            if dkever is not None:
+                delpre = dkever.delegator
+            else:
+                # The rotation is here (out-of-order escrow) but the delegate's KEL is not, so
+                # neither the delegator nor the key changes can be checked locally.
+                delpre = None
+                unverifiable = True
+                print("  No key state for the delegate in this keystore: its KEL was never loaded, so the")
+                print("  delegator and the key changes cannot be checked here. Load it first and re-run:")
+                print("    ./scripts/kli.sh oobi resolve --force --oobi <QVI OOBI URL> --oobi-alias <alias>")
         else:
             print(f"  NOT a delegated event: type is '{ilk}', expected 'dip' or 'drt'.")
             typ, delpre, dkever, ok = ilk, "?", None, False
@@ -81,7 +95,7 @@ def check_and_write(hby, i, s, d, out, force=False):
         if serder.pre != i:
             print(f"  Prefix MISMATCH: event is for {serder.pre}, you gave {i}.")
             ok = False
-        if delpre not in hby.prefixes:
+        if delpre is not None and delpre not in hby.prefixes:
             print(f"  Delegator {delpre} is not an AID in this keystore; this GAR cannot approve it.")
             ok = False
         if dkever is not None and dkever.sn >= serder.sn:
@@ -89,12 +103,16 @@ def check_and_write(hby, i, s, d, out, force=False):
                   f"this event may already be accepted.")
 
         print()
-        try:
-            from keri.app.cli.commands.delegate.confirm import ConfirmDoer
-            ConfirmDoer.printSummary(eserder=serder, typ=typ, delpre=delpre, dkever=dkever)
-        except (ImportError, AttributeError):
-            print("(image lacks the delegate-confirm-summary patch; no key-change summary available)")
+        if unverifiable:
+            print("Event as held locally (no prior key state to diff against):")
             print(json.dumps(ked, indent=1))
+        else:
+            try:
+                from keri.app.cli.commands.delegate.confirm import ConfirmDoer
+                ConfirmDoer.printSummary(eserder=serder, typ=typ, delpre=delpre, dkever=dkever)
+            except (ImportError, AttributeError):
+                print("(image lacks the delegate-confirm-summary patch; no key-change summary available)")
+                print(json.dumps(ked, indent=1))
     else:
         print(f"Event {d} for {i} is NOT in the local keystore.")
         print("  The delegation request never arrived here, or arrived under a different SAID.")
@@ -108,6 +126,11 @@ def check_and_write(hby, i, s, d, out, force=False):
     if found and not ok:
         print("\nNot writing the seal; resolve the mismatches above first.")
         return 4
+
+    if found and unverifiable and not force:
+        print("\nNot writing the seal: the event is held here but cannot be verified without the delegate's")
+        print("key state. Load its KEL as shown above, or use --force only if the call has confirmed all three values.")
+        return 3
 
     seal = dict(i=i, s=s, d=d)
     with open(out, "w") as f:
