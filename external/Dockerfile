@@ -10,3 +10,4 @@ COPY ./patches /patches
 RUN python3 /patches/mailbox-debug.py
 RUN python3 /patches/exn-missing-rp.py
 RUN python3 /patches/delegate-confirm-summary.py
+RUN python3 /patches/exn-set-rp.py
