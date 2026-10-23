@@ -33,7 +33,7 @@ from keri.vdr import credentialing
 
 # Same directory (mounted at /scripts in the container): mailbox polling,
 # registry state lookup and alias resolution are shared with sent-exns.sh.
-from sent_exns import credential_state, party, poll
+from sent_exns import credential_state, get_exn, iter_exns, party, poll
 
 # Short names for the vLEI schemas this repository issues or chains to; any other
 # schema falls back to the title stored with it, then to its SAID.
@@ -96,7 +96,7 @@ def grants_by_credential(hby, org, issuer):
     """{credential SAID: [grant record, ...]} for every /ipex/grant exn the issuer sent."""
     db = hby.db
     out = defaultdict(list)
-    for (said,), serder in db.exns.getItemIter():
+    for said, serder in iter_exns(db):
         ked = serder.ked
         if ked.get("r") != "/ipex/grant" or ked.get("i") != issuer:
             continue
@@ -110,7 +110,7 @@ def grants_by_credential(hby, org, issuer):
                "to": party(hby, org, recipient) if recipient else None, "reply": None}
         reply = db.erpy.get(keys=(serder.said,))
         if reply is not None:
-            rserder = db.exns.get(keys=(reply.qb64,))
+            rserder = get_exn(db, reply.qb64)
             if rserder is not None:
                 rec["reply"] = {"route": rserder.ked["r"], "dt": rserder.ked.get("dt"),
                                 "from": party(hby, org, rserder.ked["i"]), "said": rserder.said}
