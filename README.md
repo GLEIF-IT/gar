@@ -48,6 +48,7 @@ following table describes the scripts, all of which can be used any time after t
 | `./scripts/challenge-members.sh` | Challenge several contacts (a QVI's QARs, the other GARs) one after another with your member AID and show their Authenticated state |
 | `./scripts/respond-for-group.sh` | Answer a challenge that was addressed to the group AID: prints the member alias, AID and OOBI the challenger needs, then responds with your member AID |
 | `./scripts/sent-exns.sh` | List the exchange messages your AIDs sent (IPEX grants and more) with the credential, its registry state, which members signed, who delivered it, and the admit if one came back; `--poll` fetches replies first |
+| `./scripts/contacts-credentials.sh` | Internal only. For each contact, the credentials the Internal AID issued to it or about it (OOR/ECR Authorization issuee or person AID), their registry state, and whether the IPEX grant was sent and admitted; `--poll` fetches admits first, `--json` for jq |
 
 ## Challenge/response and multisig AIDs
 A group multisig AID can verify a challenge but cannot answer one with the `kli` this repository runs, so all
