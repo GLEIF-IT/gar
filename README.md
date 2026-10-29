@@ -49,6 +49,9 @@ following table describes the scripts, all of which can be used any time after t
 | `./scripts/respond-for-group.sh` | Answer a challenge that was addressed to the group AID: prints the member alias, AID and OOBI the challenger needs, then responds with your member AID |
 | `./scripts/sent-exns.sh` | List the exchange messages your AIDs sent (IPEX grants and more) with the credential, its registry state, which members signed, who delivered it, and the admit if one came back; `--poll` fetches replies first |
 | `./scripts/contacts-credentials.sh` | Internal only. For each contact, the credentials the Internal AID issued to it or about it (OOR/ECR Authorization issuee or person AID), their registry state, and whether the IPEX grant was sent and admitted; `--poll` fetches admits first, `--json` for jq |
+| `./scripts/ungranted-credentials.sh` | Internal only. The credentials the Internal AID has created (issued into its registry) but not yet granted, i.e. the ones still waiting for a `grant-*.sh` run; `--poll` fetches first, `--json` for jq |
+| `./scripts/group-issuance-debug.sh` | Internal only. When a group OOR/ECR auth issuance stalls: what this keystore holds of the lead's `/multisig/iss` message, whether `kli multisig join` has a notification to act on, group ixn signature/witness escrows, credential escrow and TEL state, mailbox indexes; `--poll N` runs join's mailbox intake first. Runbook: [Debugging a group issuance](./internal/docs/debugging-group-issuance.md) |
+| `./scripts/notifications-list.sh` / `notifications-rem.sh` | List or remove the notifications `kli multisig join` and `kli ipex list` read |
 
 ## Challenge/response and multisig AIDs
 A group multisig AID can verify a challenge but cannot answer one with the `kli` this repository runs, so all

@@ -1,0 +1,598 @@
+
+Issuer: GLEIF Internal (EFcrtYzHx11TElxDmEDx355zm7nJhbmdcIluw7UMbUIL)
+
+Alias: AF-ZA-AWS-01-POOL-2
+AID:   BM4Ef3zlUzIAIx-VC8mXziIbtj-ZltM8Aor6TZzmTldj
+Authenticated: False
+Credentials: none
+
+Alias: AF-ZA-AZR-01-POOL-1
+AID:   BGYJwPAzjyJgsipO7GY9ZsBTeoUJrdzjI2w_5N-Nl6gG
+Authenticated: False
+Credentials: none
+
+Alias: Ali.internal
+AID:   EFbd1fZRuinXgaFLsK0YwxeNuDjLGjbXMsLg_XSRywby
+Authenticated: True
+Credentials: none
+
+Alias: alina.gleif.origin
+AID:   EIQdbGqvp-XwWuRXhsG3Bp7HFKO46vLai8OMuKASp6dL
+Authenticated: True
+Credentials: 1
+  as subject
+    EK_5q5D_O46k7K5sSiwvIgwz_StlNcvTq1P-Z6P-QfNR  ECR Authorization  [issued 2025-11-21T15:08:28]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Alina Sterker  |  alina.sterker@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:08:28
+        grant   EEiaaOM-JwPRYpiSf4383TDslSMe8BdH5ybkbYD-dih_  2025-11-21T15:08:28  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: andrew.gleif.origin
+AID:   EK4_v9LH0NXLXL9Y-mVcpu5TZi6WGxJ62ZsxQJIJ8A_G
+Authenticated: True
+Credentials: 1
+  as subject
+    EOjqdn48FVAUiWc0ks9ZcaGdTzBzAMBqqzHEjH6lug_v  ECR Authorization  [issued 2025-11-17T13:44:31]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Andrew Sullivan  |  andrew.sullivan@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:44:31
+        grant   EFeOIUUbYrzBHIKOYAbi274jgrKkY2bbl48031g1JWz_  2025-11-17T13:44:31  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:44:31  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EHJDXeE0x9b4DLoRUxtVqqRNtp84Qzm2VntTKQYMDVoo
+
+Alias: anja.gleif.origin
+AID:   EBrBTKbvent0yq_rEHzaHNFx0CsNMEsuwOHNjSkAa-c2
+Authenticated: True
+Credentials: 1
+  as subject
+    EAwE2c_fLhqwUhtWgf-MT3cFjdpebyU-Yv1ZhNPbCo1T  ECR Authorization  [issued 2025-11-17T13:29:00]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Anja Lechner  |  anja.lechner@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:29:00
+        grant   EFljo6Y_JTPeg3wP0W7fPP8u5L19vI6dtw7NcnnwUdmW  2025-11-17T13:29:00  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:29:00  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EKgC62elbzGcJ9609gYzW8VvThdB__78px69elMd3tn4
+
+Alias: Annette.gleif.origin
+AID:   EPJ0wTCbFWMQ5MxD9fGXPY9-8TLziYgpnnKJ3tipa9sZ
+Authenticated: True
+Credentials: 2
+  as subject
+    EKiLM8f_liAwVSb2PaUMQTge-kx8TBJD0HXY8yaGB1dK  OOR Authorization  [revoked 2025-06-03T15:05:13]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Annette Booth  |  Chief Financial Officer  |  LEI 506700GE1G29325QX363  |  issued 2024-06-12T13:56:53
+        grant   EMzwnadpFnxQP4_xmNGK26UsLMibcuHXbqXFrjJoRx8A  2024-06-12T13:56:53  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-12T13:56:53  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EECMInaSqY89EYVFDTylfc3FV2pRAOrLzhEGtxkqlbAY
+  as subject
+    EGWxnsAHunIUL7YkDBJAQNYCVmlEl6iCoSuzeYG9Rq6H  ECR Authorization  [issued 2025-06-04T14:02:08]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Annette Booth  |  Head of Finance  |  LEI 506700GE1G29325QX363  |  issued 2025-06-04T14:02:08
+        grant   EIGXvYb5rd-KRGEhsQBHnhEr03s0Vs4eULNIKyRtBdnt  2025-06-04T14:02:08  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: anukampa.gleif.origin
+AID:   EM3qh7SXq-P_aqL8Q6NBU7HHh7kaOKNgc74p2bXziqRY
+Authenticated: True
+Credentials: none
+
+Alias: Arshdeep.prov.new
+AID:   EKHxNUIdKe4ES7rkoWKpN-D2L0wN3JE5p3-WIrTsuBqX
+Authenticated: True
+Credentials: none
+
+Alias: arti.gleif.origin
+AID:   EK9g1b_bLolWYoUNYuqbchhv5XzPnrSsSBXNBcyPMSfQ
+Authenticated: True
+Credentials: 1
+  as subject
+    EHA5-Ucnxaee4PkZVD7lGlUHJLwpVhyLvcTHHK4aD3Dv  ECR Authorization  [issued 2025-11-05T15:40:13]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Arti Kulkarni  |  arti.kulkarni@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-05T15:40:13
+        grant   EH-x9VcOvbiJCP1oLLV_cC7k7GRLjLIDG0aNwfPEb9gs  2025-11-05T15:40:13  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-05T15:40:13  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EMye5sLTFFWSGkPP8t-g40JGH9VIYi7O0Ppy53c7KJ-W
+
+Alias: AS-CN-ALI-01-POOL-1
+AID:   BLmvLSt1mDShWS67aJNP4gBVBhtOc3YEu8SytqVSsyfw
+Authenticated: False
+Credentials: none
+
+Alias: AS-JP-AZR-01-POOL-2
+AID:   BICY3-X3S3iEsKH73Q1fF_w1JrXJ41V0c4Dn9aQjOSQ-
+Authenticated: False
+Credentials: none
+
+Alias: Christian.internal
+AID:   EAiBvnWS-ugbr-VxbrFL3b0u-TVlo-pdj5heuS_bUUTc
+Authenticated: True
+Credentials: none
+
+Alias: christian.internal.gar
+AID:   EKj1JY_-BDeLLxR-3ac-h1muqbqYM_g2fWi296_HkAw8
+Authenticated: True
+Credentials: none
+
+Alias: Christoph.gleif
+AID:   EH9aQmVfgEklC6iI7IqNEBrZvm4wjp1uY_Yto3idRqPO
+Authenticated: True
+Credentials: 1
+  as subject
+    EMUrHuZOx58goUONggS9BETjAcpwf8cL-CDNjh2yiRhf  ECR Authorization  [issued 2024-06-10T15:17:17]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Christoph Schneider  |  Head of IT Development and Operations  |  LEI 506700GE1G29325QX363  |  issued 2024-06-10T15:17:17
+        grant   ELpzS4Yz2EQDtZpz8-eMuKPXX6PJcZm4t4AxpbgfqLQb  2024-06-10T15:17:17  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-10T15:17:17  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ENEJsP8Pj8gdTk6FM8Rtwaf0PxSiNPTxO4SWAZdo-L6b
+
+Alias: christoph.gleif.origin
+AID:   EN_CJz4rtplC4YEbOlL0Eefo4GvU3HL6K4RGDkywmur_
+Authenticated: True
+Credentials: 1
+  as subject
+    EE90Xg4hbajGkIY4iLK5xAL_718pLdBnqzdlAgf4nP86  ECR Authorization  [issued 2025-11-05T16:01:59]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Christoph Schneider  |  christoph.schneider@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-05T16:01:59
+        grant   EGY3rtoYzrIXQV21WE4lAn4unUFc8tIlQECiDkxVSI85  2025-11-05T16:01:59  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-05T16:01:59  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EGYE8cgcHnkmfAEauEl8H0cHC-vor_Pa6EUjF8-FRnOS
+
+Alias: daniel-ey
+AID:   EKguXQStb2VOUsmUcHo_BLwp21_6MUbDBFpnnvzldiEO
+Authenticated: True
+Credentials: 1
+  as subject
+    ELR9pcc2NLa6VgFzbvY7O8h76xnMPoqqI2k9VCqnyfdR  OOR Authorization  [issued 2024-06-19T14:56:49]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Daniel Rohrer  |  Auditor  |  LEI 506700GE1G29325QX363  |  issued 2024-06-19T14:56:49
+        grant   EPb7lGB6GMW5H6R6DTBJO7q2miFbEG-owW-tQPhz-QTt  2024-06-19T14:56:49  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: dessa.gleif.origin
+AID:   EJDzowNimO54VlAVSDoEr9wbElSgJk1YOWoSBis0-IMc
+Authenticated: True
+Credentials: 1
+  as subject
+    ECoTM2N6n-bQ4Y0rfjk-i7MBkLDqgqE5YcvEtBhpvGeh  OOR Authorization  [issued 2024-06-17T13:46:47]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Teresa Glasser  |  Board Chair  |  LEI 506700GE1G29325QX363  |  issued 2024-06-17T13:46:47
+        grant   EB3D_JKFi75ykx_uBotsrb8iJavSbhkxkDkPW3lyKdfL  2024-06-17T13:46:47  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-17T13:46:47  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EC795Ko_LDGcZH5VzMpoZGbhSdtRJTCRNC06nbvpRVKX
+
+Alias: dinesh.gleif.origin
+AID:   EL8cVCe4jgTZiTCKKIeKliJ8pjfHb7L5W-goB-BTtZD8
+Authenticated: True
+Credentials: none
+
+Alias: EU-FI-HTZ-01-POOL-1
+AID:   BDkq35LUU63xnFmfhljYYRY0ymkCg7goyeCxN30tsvmS
+Authenticated: False
+Credentials: none
+
+Alias: EU-UK-ALI-01-POOL-2
+AID:   BLo6wQR73-eH5v90at_Wt8Ep_0xfz05qBjM3_B1UtKbC
+Authenticated: False
+Credentials: none
+
+Alias: francesco.gleif.origin
+AID:   ECcut82ezwrkKgKyrDjHHTdvY8Ms4sZEqEFl0SxMQMPr
+Authenticated: True
+Credentials: 1
+  as subject
+    EBQtdrUQfKsEkJW8gxZHoF0gjHFT8b938KiV7TpY1Q4Y  ECR Authorization  [issued 2025-11-17T14:04:27]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Francesco Barba  |  francesco.barba@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T14:04:27
+        grant   EJhyohHpItGGdkBOd1REy6sf2dURqVuGzPbsgrp7hnci  2025-11-17T14:04:27  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T14:04:27  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EP_NHdnscLF7DVQG2mRExesjKSPERo2XRpphedyFrYRa
+
+Alias: frank.gleif.origin
+AID:   ELtSw8IhdIuviXLl6Sjk5TjPblnlw_EirSPuUd0-3JfZ
+Authenticated: True
+Credentials: 2
+  as subject
+    EH9Hvfq17KT2BrrgOlvCaRNw-abFxjX6CAlptWWLHZQo  ECR Authorization  [issued 2025-11-21T15:32:45]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Frank Principe  |  frank.principe@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:32:45
+        grant   none sent
+  as subject
+    EFNKnmWrBHqyOvkFSWTYxS1hUe99Dq_8TeI7oDnl9a1N  ECR Authorization  [issued 2026-09-22T15:09:05]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Frank Principe  |  frank.principe@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-09-22T15:09:05
+        grant   EJm1CPAaGl4a03xLbXZLdwFoidEk9x6gpq_VrQeA5L9I  2026-09-22T15:09:05  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: GLEIF RoOT
+AID:   EDP1vHcw_wc4M__Fj53-cJaBnZZASd-aMTaSyWEQ-PC2
+Authenticated: False
+Credentials: none
+
+Alias: Ines.gleif.origin
+AID:   EKsTSR6lDaur3coek9-ay7XMRAkYgrVmF0fIrQQwUNHA
+Authenticated: True
+Credentials: 1
+  as subject
+    ELDAy9NUgbJ-1YLBse6EmDGt2D9cySJ0_W5NS0ys_3-b  ECR Authorization  [issued 2024-06-13T11:51:03]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Ines Gensinger  |  Head of Communications  |  LEI 506700GE1G29325QX363  |  issued 2024-06-13T11:51:03
+        grant   EJ5gPqY-Sq4OjXVBoR2hcohgj-58uxmJ0z4SSsnW99v3  2024-06-13T11:51:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-13T11:51:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EN05vYZFEq5smGMUuQpN2Vk_9z9vt9ewObfdW9RaDxni
+
+Alias: ivan.gleif
+AID:   EFjNcc1WMtv3PclrCDsHOyIewT4tyWmyDoKy9Wg2eng2
+Authenticated: True
+Credentials: 1
+  as subject
+    EL6n9DaMlGJzAUCFdTK0ZSmMczZdemAQ4oxL1zupxykY  ECR Authorization  [issued 2026-09-22T15:25:01]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Ivan Mortimer-Schutts  |  ivan.mortimer@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-09-22T15:25:01
+        grant   EE4D1wwK6gyWzzMcPccAwslKthyQc1P8lz35uEB5Ef7K  2026-09-22T15:25:01  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: ivan.marin.gleif.origin
+AID:   EKvbyrcxZh7EIC6fySS6tzG1sAVHiPlRanvKZS3PP8-C
+Authenticated: True
+Credentials: none
+
+Alias: janine.gleif.origin
+AID:   ED1VTpQjqkDKHQWVGWzgRZOgi3YgAC6QjRCPKOppTSCf
+Authenticated: True
+Credentials: none
+
+Alias: juan.gleif.origin
+AID:   EIVdMBbpzSbv_QocsJqGjvpORuMG8G6UAu_hwDpaqqip
+Authenticated: True
+Credentials: 1
+  as subject
+    EL7fdJuuVayifjQ0aFgEVjt9Lszr75a_9fw0yp46LyXM  ECR Authorization  [issued 2025-11-17T13:56:55]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Juan Arriaga  |  juan.arriaga@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:56:55
+        grant   EPU_Wp3qw9Q468qbfkBNdgtEaxenx_83kw9q_G0Zzoo2  2025-11-17T13:56:55  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:56:55  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EKx-6XEMo7G8CRJkvTtYD6wlS1-TLQhaVl1eVHHf5Nff
+
+Alias: kent.gleif.origin
+AID:   EPnhAv1U__LaoI9xWhvkz6IGc1G_F5Oa7e8cnaovnSs1
+Authenticated: True
+Credentials: none
+
+Alias: kent.internal.gar2
+AID:   EB4amQzsdaXki5epKAJf-B-hzt5caU7j9A6QpaaVcMzB
+Authenticated: True
+Credentials: none
+
+Alias: kevin.gleif.origin.delete
+AID:   EPgVrVx--s2JqNB5HRU2Gb4B5hYRu-u28JuBYiuCDl_0
+Authenticated: True
+Credentials: none
+
+Alias: khurram.gleif.origin
+AID:   ENCfchs8_pWNAzQHHYHB7Fdw_eepEU6WNxZKAu-twHV3
+Authenticated: False
+Credentials: none
+
+Alias: lola.gleif.origin
+AID:   EIXm6AWY8SiALVoM5lCJ4ERsMhkeoKYOEOv-ZM4LPGex
+Authenticated: True
+Credentials: none
+
+Alias: manuel.gleif.origin
+AID:   EAn70WU-5awIQ0ZGjKmOcmRIZWiP63zRPyGcRWTGhihB
+Authenticated: True
+Credentials: 1
+  as subject
+    ELvjyfEpvx9W5OGfFk5SzNsUxUlzJM45KH6_Gz4B6pFR  ECR Authorization  [issued 2025-11-21T15:24:51]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Manuel Wagner  |  manuel.wagner@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:24:51
+        grant   EDwpZjKzMP7p_y5DpPn-EpMheEbDacfg5zsVHexDJ4o-  2025-11-21T15:24:51  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: michael.gleif.origin
+AID:   ED9ta7Ne28J3MJTLQ8xp7TFVEs6U22HrynW-qyYpqvE5
+Authenticated: True
+Credentials: 1
+  as subject
+    EMLHF1A-e-FK08MkpMP-gO-5K-h9e-aPkAcr6Q3koVa2  ECR Authorization  [issued 2025-11-21T15:20:06]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Michael Kohler  |  michael.kohler@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:20:06
+        grant   EK6mBABeA3C-BOyfvX7ha1EZkU0Rhppr-mliuPHek2Wx  2025-11-21T15:20:06  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: michaela.gleif
+AID:   EPbTQWOylC4fu9FgdvGYeuK6ywRfzCAwKROEIDBGCjjB
+Authenticated: True
+Credentials: 1
+  as subject
+    EH3QIGMtemVhB1ZO6Vfkd9A77Scip6Dgvx-Dx8t6HWP7  OOR Authorization  [issued 2026-09-24T14:24:49]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Michaela Fleischer  |  COFO/Managing Director Germany  |  LEI 506700GE1G29325QX363  |  issued 2026-09-24T14:24:49
+        grant   EHpFCCV95erchVpb7pnOLoX3nwe5iV_h5ALhDjWAFsjW  2026-09-24T14:24:49  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: NA-CA-OVH-01-POOL-1
+AID:   BHxz8CDS_mNxAhAxQe1qxdEIzS625HoYgEMgqjZH_g2X
+Authenticated: False
+Credentials: none
+
+Alias: NA-US-HTZ-01-POOL-2
+AID:   BNfDO63ZpGc3xiFb0-jIOUnbr_bA-ixMva5cZb3s4BHB
+Authenticated: False
+Credentials: none
+
+Alias: OC-AU-OVH-01-POOL-2
+AID:   BDwydI_FJJ-tvAtCl1tIu_VQqYTI3Q0JyHDhO1v2hZBt
+Authenticated: False
+Credentials: none
+
+Alias: Phil.internal
+AID:   EIwP58RHVThBaHqLbANVuC19HkjI5ksg0fl2nPth2yZB
+Authenticated: True
+Credentials: none
+
+Alias: pr-as-qvi-euro
+AID:   ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm
+Authenticated: False
+Credentials: 27
+  as issuee
+    EHWEdU7GMOOQZlhjtGaV_5689WmfWIu4C5gc9Iy7TwH2  OOR Authorization  [revoked 2024-06-26T17:15:29]
+        issuee this contact  |  person Stephan.Wolf.GLEIF (EMJEwV9FfAOmjimm96Es2YKhg-KVycIuH2jE5y9Awaxn)
+        Stephan Wolf  |  Chief Executive Officer  |  LEI 506700GE1G29325QX363  |  issued 2022-12-09T17:41:25
+        grant   none sent
+  as issuee
+    EMUrHuZOx58goUONggS9BETjAcpwf8cL-CDNjh2yiRhf  ECR Authorization  [issued 2024-06-10T15:17:17]
+        issuee this contact  |  person Christoph.gleif (EH9aQmVfgEklC6iI7IqNEBrZvm4wjp1uY_Yto3idRqPO)
+        Christoph Schneider  |  Head of IT Development and Operations  |  LEI 506700GE1G29325QX363  |  issued 2024-06-10T15:17:17
+        grant   ELpzS4Yz2EQDtZpz8-eMuKPXX6PJcZm4t4AxpbgfqLQb  2024-06-10T15:17:17  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-10T15:17:17  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ENEJsP8Pj8gdTk6FM8Rtwaf0PxSiNPTxO4SWAZdo-L6b
+  as issuee
+    EEPkoTFFSKbTg4o8RAk8_pSZyXPKOtbUinVboSn1OOSf  OOR Authorization  [issued 2024-06-11T11:44:03]
+        issuee this contact  |  person Stephan.XBRL (EIgBGlOmxCwo8gy5DE2bYtmZqQt3DP4vXOGupTJQTOAI)
+        Stephan Wolf  |  Chief Executive Officer  |  LEI 506700GE1G29325QX363  |  issued 2024-06-11T11:44:03
+        grant   EKdAfF6e7_Yil8VREiN6yr8mbsCD_i6_GB4Rq8wgbYn2  2024-06-11T11:44:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-11T11:44:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EMJsa357oZVPMN2dM6U1e56dHCqO-0IQGZcjU-ciCNM7
+  as issuee
+    EMy4_y-2VExhOrMStEaJXhNt8wNedOS-k-n4Ejx-guZs  OOR Authorization  [issued 2024-06-12T11:20:03]
+        issuee this contact  |  person Sven.gleif.origin (EI3UR_Qzj7WTplWAseg-ped8MHB6_1RnRm68Tt-inkcI)
+        Sven Schumacher  |  General Counsel  |  LEI 506700GE1G29325QX363  |  issued 2024-06-12T11:20:03
+        grant   EIHqpbeK1ro10tXBV-Xn2yZRqB26QynFjiO5MnU83oKI  2024-06-12T11:20:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-12T11:20:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ENQbTH3_pbQdfpeAnEpUQoAgv2pUGaMt34l9qfG8Us8P
+  as issuee
+    EKiLM8f_liAwVSb2PaUMQTge-kx8TBJD0HXY8yaGB1dK  OOR Authorization  [revoked 2025-06-03T15:05:13]
+        issuee this contact  |  person Annette.gleif.origin (EPJ0wTCbFWMQ5MxD9fGXPY9-8TLziYgpnnKJ3tipa9sZ)
+        Annette Booth  |  Chief Financial Officer  |  LEI 506700GE1G29325QX363  |  issued 2024-06-12T13:56:53
+        grant   EMzwnadpFnxQP4_xmNGK26UsLMibcuHXbqXFrjJoRx8A  2024-06-12T13:56:53  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-12T13:56:53  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EECMInaSqY89EYVFDTylfc3FV2pRAOrLzhEGtxkqlbAY
+  as issuee
+    ELDAy9NUgbJ-1YLBse6EmDGt2D9cySJ0_W5NS0ys_3-b  ECR Authorization  [issued 2024-06-13T11:51:03]
+        issuee this contact  |  person Ines.gleif.origin (EKsTSR6lDaur3coek9-ay7XMRAkYgrVmF0fIrQQwUNHA)
+        Ines Gensinger  |  Head of Communications  |  LEI 506700GE1G29325QX363  |  issued 2024-06-13T11:51:03
+        grant   EJ5gPqY-Sq4OjXVBoR2hcohgj-58uxmJ0z4SSsnW99v3  2024-06-13T11:51:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-13T11:51:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EN05vYZFEq5smGMUuQpN2Vk_9z9vt9ewObfdW9RaDxni
+  as issuee
+    ECoTM2N6n-bQ4Y0rfjk-i7MBkLDqgqE5YcvEtBhpvGeh  OOR Authorization  [issued 2024-06-17T13:46:47]
+        issuee this contact  |  person dessa.gleif.origin (EJDzowNimO54VlAVSDoEr9wbElSgJk1YOWoSBis0-IMc)
+        Teresa Glasser  |  Board Chair  |  LEI 506700GE1G29325QX363  |  issued 2024-06-17T13:46:47
+        grant   EB3D_JKFi75ykx_uBotsrb8iJavSbhkxkDkPW3lyKdfL  2024-06-17T13:46:47  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-17T13:46:47  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EC795Ko_LDGcZH5VzMpoZGbhSdtRJTCRNC06nbvpRVKX
+  as issuee
+    EI8A-5aK5c_6STqEj-k1PKYwx_8kzn42l5PKrs0g-5mZ  OOR Authorization  [issued 2024-06-19T14:43:27]
+        issuee this contact  |  person yana-ey (EExYcI9HYIYVr1ozObtBPJlgEWc7naVWz5hyBJZ8gzHG)
+        Yana Toengi  |  Auditor  |  LEI 506700GE1G29325QX363  |  issued 2024-06-19T14:43:27
+        grant   EIF5CoALflHP1bW4X8xA_gdLYE0Y1Y7W_ai4bAKC9RnW  2024-06-19T14:43:27  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-19T14:43:27  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EFAYvSOBjWze8OCZuJfpbovkB0mlFNqobkSlJ-z1P5IP
+  as issuee
+    ELR9pcc2NLa6VgFzbvY7O8h76xnMPoqqI2k9VCqnyfdR  OOR Authorization  [issued 2024-06-19T14:56:49]
+        issuee this contact  |  person daniel-ey (EKguXQStb2VOUsmUcHo_BLwp21_6MUbDBFpnnvzldiEO)
+        Daniel Rohrer  |  Auditor  |  LEI 506700GE1G29325QX363  |  issued 2024-06-19T14:56:49
+        grant   EPb7lGB6GMW5H6R6DTBJO7q2miFbEG-owW-tQPhz-QTt  2024-06-19T14:56:49  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EKA599CJ9kKIgcVkbRAEJ2I2-A6Tljos-VsmS6Pqd--H  OOR Authorization  [issued 2025-05-08T14:05:31]
+        issuee this contact  |  person EC8c34hS1_-K_Qu372MF6trptqzE_RxaCVJbsrGA5PfX
+        Alexandre Kech  |  CEO  |  LEI 506700GE1G29325QX363  |  issued 2025-05-08T14:05:31
+        grant   EChyi4LIuEhSsnYlxi0bvIRGZw7Wpfr4KK6cQQrLkrW7  2025-04-28T13:04:24  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-05-08T14:05:31  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EFkuZGwkxmMeqoUabSEmoFkxpXHyr7_x3fE-ZqMsNkho
+  as issuee
+    EGWxnsAHunIUL7YkDBJAQNYCVmlEl6iCoSuzeYG9Rq6H  ECR Authorization  [issued 2025-06-04T14:02:08]
+        issuee this contact  |  person Annette.gleif.origin (EPJ0wTCbFWMQ5MxD9fGXPY9-8TLziYgpnnKJ3tipa9sZ)
+        Annette Booth  |  Head of Finance  |  LEI 506700GE1G29325QX363  |  issued 2025-06-04T14:02:08
+        grant   EIGXvYb5rd-KRGEhsQBHnhEr03s0Vs4eULNIKyRtBdnt  2025-06-04T14:02:08  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EHA5-Ucnxaee4PkZVD7lGlUHJLwpVhyLvcTHHK4aD3Dv  ECR Authorization  [issued 2025-11-05T15:40:13]
+        issuee this contact  |  person arti.gleif.origin (EK9g1b_bLolWYoUNYuqbchhv5XzPnrSsSBXNBcyPMSfQ)
+        Arti Kulkarni  |  arti.kulkarni@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-05T15:40:13
+        grant   EH-x9VcOvbiJCP1oLLV_cC7k7GRLjLIDG0aNwfPEb9gs  2025-11-05T15:40:13  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-05T15:40:13  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EMye5sLTFFWSGkPP8t-g40JGH9VIYi7O0Ppy53c7KJ-W
+  as issuee
+    EE90Xg4hbajGkIY4iLK5xAL_718pLdBnqzdlAgf4nP86  ECR Authorization  [issued 2025-11-05T16:01:59]
+        issuee this contact  |  person christoph.gleif.origin (EN_CJz4rtplC4YEbOlL0Eefo4GvU3HL6K4RGDkywmur_)
+        Christoph Schneider  |  christoph.schneider@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-05T16:01:59
+        grant   EGY3rtoYzrIXQV21WE4lAn4unUFc8tIlQECiDkxVSI85  2025-11-05T16:01:59  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-05T16:01:59  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EGYE8cgcHnkmfAEauEl8H0cHC-vor_Pa6EUjF8-FRnOS
+  as issuee
+    EAwE2c_fLhqwUhtWgf-MT3cFjdpebyU-Yv1ZhNPbCo1T  ECR Authorization  [issued 2025-11-17T13:29:00]
+        issuee this contact  |  person anja.gleif.origin (EBrBTKbvent0yq_rEHzaHNFx0CsNMEsuwOHNjSkAa-c2)
+        Anja Lechner  |  anja.lechner@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:29:00
+        grant   EFljo6Y_JTPeg3wP0W7fPP8u5L19vI6dtw7NcnnwUdmW  2025-11-17T13:29:00  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:29:00  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EKgC62elbzGcJ9609gYzW8VvThdB__78px69elMd3tn4
+  as issuee
+    EOjqdn48FVAUiWc0ks9ZcaGdTzBzAMBqqzHEjH6lug_v  ECR Authorization  [issued 2025-11-17T13:44:31]
+        issuee this contact  |  person andrew.gleif.origin (EK4_v9LH0NXLXL9Y-mVcpu5TZi6WGxJ62ZsxQJIJ8A_G)
+        Andrew Sullivan  |  andrew.sullivan@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:44:31
+        grant   EFeOIUUbYrzBHIKOYAbi274jgrKkY2bbl48031g1JWz_  2025-11-17T13:44:31  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:44:31  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EHJDXeE0x9b4DLoRUxtVqqRNtp84Qzm2VntTKQYMDVoo
+  as issuee
+    EJ4HbfHHQotmOphjJOq8oAeT4IQnLeZUtOfnxAEnmoAA  ECR Authorization  [issued 2025-11-17T13:52:41]
+        issuee this contact  |  person soumya.gleif.origin (EP9umw-e50bkeq-B3IFHyg4V9TA4Ae4Vim5h25Dl1lF-)
+        Soumya Celine  |  soumya.celine@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:52:41
+        grant   EGB2rmqR-qICvj9YLyT3HeagMkV7mx31iOtC_8xeNRo5  2025-11-17T13:52:41  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:52:41  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ECRAPAepEHEomG0xTqrUNXaMsWWbAO-cgFH9gm69LtdH
+  as issuee
+    EL7fdJuuVayifjQ0aFgEVjt9Lszr75a_9fw0yp46LyXM  ECR Authorization  [issued 2025-11-17T13:56:55]
+        issuee this contact  |  person juan.gleif.origin (EIVdMBbpzSbv_QocsJqGjvpORuMG8G6UAu_hwDpaqqip)
+        Juan Arriaga  |  juan.arriaga@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:56:55
+        grant   EPU_Wp3qw9Q468qbfkBNdgtEaxenx_83kw9q_G0Zzoo2  2025-11-17T13:56:55  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:56:55  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EKx-6XEMo7G8CRJkvTtYD6wlS1-TLQhaVl1eVHHf5Nff
+  as issuee
+    EBQtdrUQfKsEkJW8gxZHoF0gjHFT8b938KiV7TpY1Q4Y  ECR Authorization  [issued 2025-11-17T14:04:27]
+        issuee this contact  |  person francesco.gleif.origin (ECcut82ezwrkKgKyrDjHHTdvY8Ms4sZEqEFl0SxMQMPr)
+        Francesco Barba  |  francesco.barba@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T14:04:27
+        grant   EJhyohHpItGGdkBOd1REy6sf2dURqVuGzPbsgrp7hnci  2025-11-17T14:04:27  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T14:04:27  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EP_NHdnscLF7DVQG2mRExesjKSPERo2XRpphedyFrYRa
+  as issuee
+    EK1X2I2eDbhtvHdTVV_7BS4Emg7BKNGZU86P5P6oRwz2  ECR Authorization  [issued 2025-11-17T14:11:12]
+        issuee this contact  |  person tim.gleif.origin (EBXTFFdiNk1PaocDzgZf-K4RJjF8NX6OeLaXU85a5hfV)
+        Tim Sterker  |  tim.sterker@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T14:11:12
+        grant   EBbagfOwJCv239QCSyzXQlgJX_RZKFN134u1NoTfFkgv  2025-11-17T14:11:12  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T14:11:12  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EGktwFPI_4IM0hoAXVg-YFLDG1xZWMoReJsnfMpafk-N
+  as issuee
+    EK_5q5D_O46k7K5sSiwvIgwz_StlNcvTq1P-Z6P-QfNR  ECR Authorization  [issued 2025-11-21T15:08:28]
+        issuee this contact  |  person alina.gleif.origin (EIQdbGqvp-XwWuRXhsG3Bp7HFKO46vLai8OMuKASp6dL)
+        Alina Sterker  |  alina.sterker@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:08:28
+        grant   EEiaaOM-JwPRYpiSf4383TDslSMe8BdH5ybkbYD-dih_  2025-11-21T15:08:28  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EMLHF1A-e-FK08MkpMP-gO-5K-h9e-aPkAcr6Q3koVa2  ECR Authorization  [issued 2025-11-21T15:20:06]
+        issuee this contact  |  person michael.gleif.origin (ED9ta7Ne28J3MJTLQ8xp7TFVEs6U22HrynW-qyYpqvE5)
+        Michael Kohler  |  michael.kohler@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:20:06
+        grant   EK6mBABeA3C-BOyfvX7ha1EZkU0Rhppr-mliuPHek2Wx  2025-11-21T15:20:06  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    ELvjyfEpvx9W5OGfFk5SzNsUxUlzJM45KH6_Gz4B6pFR  ECR Authorization  [issued 2025-11-21T15:24:51]
+        issuee this contact  |  person manuel.gleif.origin (EAn70WU-5awIQ0ZGjKmOcmRIZWiP63zRPyGcRWTGhihB)
+        Manuel Wagner  |  manuel.wagner@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:24:51
+        grant   EDwpZjKzMP7p_y5DpPn-EpMheEbDacfg5zsVHexDJ4o-  2025-11-21T15:24:51  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EH9Hvfq17KT2BrrgOlvCaRNw-abFxjX6CAlptWWLHZQo  ECR Authorization  [issued 2025-11-21T15:32:45]
+        issuee this contact  |  person frank.gleif.origin (ELtSw8IhdIuviXLl6Sjk5TjPblnlw_EirSPuUd0-3JfZ)
+        Frank Principe  |  frank.principe@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-21T15:32:45
+        grant   none sent
+  as issuee
+    EG905QQE4xNacO9ZtXlWAqMRD7tXq93r2fs6Dtomj0-q  ECR Authorization  [issued 2026-01-21T14:35:52]
+        issuee this contact  |  person yogitha.gleif.origin (ENJB8iyzSylBKREV50zgRAGBB0kb3WtFQs8EIMrqkbmg)
+        Yogitha Baddela  |  yogitha.baddela@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-01-21T14:35:52
+        grant   EC8kvFgslV7G3qCETQGI4ebd6vI4TKthZ1yPjTVhv_tV  2026-01-21T14:35:52  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EFNKnmWrBHqyOvkFSWTYxS1hUe99Dq_8TeI7oDnl9a1N  ECR Authorization  [issued 2026-09-22T15:09:05]
+        issuee this contact  |  person frank.gleif.origin (ELtSw8IhdIuviXLl6Sjk5TjPblnlw_EirSPuUd0-3JfZ)
+        Frank Principe  |  frank.principe@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-09-22T15:09:05
+        grant   EJm1CPAaGl4a03xLbXZLdwFoidEk9x6gpq_VrQeA5L9I  2026-09-22T15:09:05  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EL6n9DaMlGJzAUCFdTK0ZSmMczZdemAQ4oxL1zupxykY  ECR Authorization  [issued 2026-09-22T15:25:01]
+        issuee this contact  |  person ivan.gleif (EFjNcc1WMtv3PclrCDsHOyIewT4tyWmyDoKy9Wg2eng2)
+        Ivan Mortimer-Schutts  |  ivan.mortimer@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-09-22T15:25:01
+        grant   EE4D1wwK6gyWzzMcPccAwslKthyQc1P8lz35uEB5Ef7K  2026-09-22T15:25:01  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+  as issuee
+    EH3QIGMtemVhB1ZO6Vfkd9A77Scip6Dgvx-Dx8t6HWP7  OOR Authorization  [issued 2026-09-24T14:24:49]
+        issuee this contact  |  person michaela.gleif (EPbTQWOylC4fu9FgdvGYeuK6ywRfzCAwKROEIDBGCjjB)
+        Michaela Fleischer  |  COFO/Managing Director Germany  |  LEI 506700GE1G29325QX363  |  issued 2026-09-24T14:24:49
+        grant   EHpFCCV95erchVpb7pnOLoX3nwe5iV_h5ALhDjWAFsjW  2026-09-24T14:24:49  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+Alias: Ruth.prov.new
+AID:   EAAzJEtsp4T6gkQS9vsIq9fBZrFPa3ILO17aQxtBCCE4
+Authenticated: True
+Credentials: none
+
+Alias: SA-BR-AWS-01-POOL-1
+AID:   BFl6k3UznzmEVuMpBOtUUiR2RO2NZkR3mKrZkNRaZedo
+Authenticated: False
+Credentials: none
+
+Alias: salvatore.gleif.origin
+AID:   EHrY2A_3ys-IY64Qy8xqDCEYSrb2wEQNNNkW5jquv1G8
+Authenticated: True
+Credentials: none
+
+Alias: soumya.gleif.origin
+AID:   EP9umw-e50bkeq-B3IFHyg4V9TA4Ae4Vim5h25Dl1lF-
+Authenticated: True
+Credentials: 1
+  as subject
+    EJ4HbfHHQotmOphjJOq8oAeT4IQnLeZUtOfnxAEnmoAA  ECR Authorization  [issued 2025-11-17T13:52:41]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Soumya Celine  |  soumya.celine@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T13:52:41
+        grant   EGB2rmqR-qICvj9YLyT3HeagMkV7mx31iOtC_8xeNRo5  2025-11-17T13:52:41  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T13:52:41  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ECRAPAepEHEomG0xTqrUNXaMsWWbAO-cgFH9gm69LtdH
+
+Alias: Stephan.Wolf.GLEIF
+AID:   EMJEwV9FfAOmjimm96Es2YKhg-KVycIuH2jE5y9Awaxn
+Authenticated: True
+Credentials: 1
+  as subject
+    EHWEdU7GMOOQZlhjtGaV_5689WmfWIu4C5gc9Iy7TwH2  OOR Authorization  [revoked 2024-06-26T17:15:29]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Stephan Wolf  |  Chief Executive Officer  |  LEI 506700GE1G29325QX363  |  issued 2022-12-09T17:41:25
+        grant   none sent
+
+Alias: Stephan.XBRL
+AID:   EIgBGlOmxCwo8gy5DE2bYtmZqQt3DP4vXOGupTJQTOAI
+Authenticated: True
+Credentials: 1
+  as subject
+    EEPkoTFFSKbTg4o8RAk8_pSZyXPKOtbUinVboSn1OOSf  OOR Authorization  [issued 2024-06-11T11:44:03]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Stephan Wolf  |  Chief Executive Officer  |  LEI 506700GE1G29325QX363  |  issued 2024-06-11T11:44:03
+        grant   EKdAfF6e7_Yil8VREiN6yr8mbsCD_i6_GB4Rq8wgbYn2  2024-06-11T11:44:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-11T11:44:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EMJsa357oZVPMN2dM6U1e56dHCqO-0IQGZcjU-ciCNM7
+
+Alias: Sven.gleif.origin
+AID:   EI3UR_Qzj7WTplWAseg-ped8MHB6_1RnRm68Tt-inkcI
+Authenticated: True
+Credentials: 1
+  as subject
+    EMy4_y-2VExhOrMStEaJXhNt8wNedOS-k-n4Ejx-guZs  OOR Authorization  [issued 2024-06-12T11:20:03]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Sven Schumacher  |  General Counsel  |  LEI 506700GE1G29325QX363  |  issued 2024-06-12T11:20:03
+        grant   EIHqpbeK1ro10tXBV-Xn2yZRqB26QynFjiO5MnU83oKI  2024-06-12T11:20:03  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-12T11:20:03  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  ENQbTH3_pbQdfpeAnEpUQoAgv2pUGaMt34l9qfG8Us8P
+
+Alias: tim.gleif.origin
+AID:   EBXTFFdiNk1PaocDzgZf-K4RJjF8NX6OeLaXU85a5hfV
+Authenticated: True
+Credentials: 1
+  as subject
+    EK1X2I2eDbhtvHdTVV_7BS4Emg7BKNGZU86P5P6oRwz2  ECR Authorization  [issued 2025-11-17T14:11:12]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Tim Sterker  |  tim.sterker@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2025-11-17T14:11:12
+        grant   EBbagfOwJCv239QCSyzXQlgJX_RZKFN134u1NoTfFkgv  2025-11-17T14:11:12  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2025-11-17T14:11:12  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EGktwFPI_4IM0hoAXVg-YFLDG1xZWMoReJsnfMpafk-N
+
+Alias: Vlad.internal
+AID:   EHg3SHYcNmzhtr_xUN0x5laYlSF9n-CH6g12JQ_MBK25
+Authenticated: True
+Credentials: none
+
+Alias: vlad.internal.gar
+AID:   EJAPLYforYYvTzE-LJ1TVQamiUi-JDj-I2b0TCyMU59k
+Authenticated: True
+Credentials: none
+
+Alias: xiaodi.gleif.origin
+AID:   EKCaiV_anezuVMlwksYudlmN53FxpXoiuakiwjMmSzlo
+Authenticated: True
+Credentials: none
+
+Alias: yana-ey
+AID:   EExYcI9HYIYVr1ozObtBPJlgEWc7naVWz5hyBJZ8gzHG
+Authenticated: True
+Credentials: 1
+  as subject
+    EI8A-5aK5c_6STqEj-k1PKYwx_8kzn42l5PKrs0g-5mZ  OOR Authorization  [issued 2024-06-19T14:43:27]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Yana Toengi  |  Auditor  |  LEI 506700GE1G29325QX363  |  issued 2024-06-19T14:43:27
+        grant   EIF5CoALflHP1bW4X8xA_gdLYE0Y1Y7W_ai4bAKC9RnW  2024-06-19T14:43:27  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                /ipex/admit  2024-06-19T14:43:27  from pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  EFAYvSOBjWze8OCZuJfpbovkB0mlFNqobkSlJ-z1P5IP
+
+Alias: yener.gleif.origin
+AID:   EMFlm-Z8IGQPmT286aa7rhqd5XmTACQJT0HxwhOfiVIE
+Authenticated: True
+Credentials: none
+
+Alias: yogitha.gleif.origin
+AID:   ENJB8iyzSylBKREV50zgRAGBB0kb3WtFQs8EIMrqkbmg
+Authenticated: True
+Credentials: 1
+  as subject
+    EG905QQE4xNacO9ZtXlWAqMRD7tXq93r2fs6Dtomj0-q  ECR Authorization  [issued 2026-01-21T14:35:52]
+        issuee pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)  |  person this contact
+        Yogitha Baddela  |  yogitha.baddela@gleif.org  |  LEI 506700GE1G29325QX363  |  issued 2026-01-21T14:35:52
+        grant   EC8kvFgslV7G3qCETQGI4ebd6vI4TKthZ1yPjTVhv_tV  2026-01-21T14:35:52  ->  pr-as-qvi-euro (ED88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm)
+                no admit received yet
+
+56 contact(s), 53 credential match(es)
