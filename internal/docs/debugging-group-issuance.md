@@ -185,6 +185,17 @@ and the signatures can never be combined. The member with the lowest signing ind
 The other member's grant needs only the credential body and anchor record in their keystore (`body held True`
 in the credential section), not the saved index, so an unsaved copy on their side (step 4b) does not stop it.
 
+## Avoiding mismatches: one parameters file
+
+Members' signatures only combine when every input is byte-identical, including the datetime with its
+microseconds. Typing or pasting values separately is how today's grant ended up waiting. Instead:
+
+```bash
+./scripts/prepare-auth-credential.sh ecr            # one GAR; prints the file path
+./scripts/create-ecr-auth-credential.sh <file>      # every GAR, same file
+./scripts/grant-ecr-auth-credential.sh  <file>      # every GAR, same file, after create
+```
+
 ## What to send if it is still stuck
 
 The output of step 1 from both GARs, the `mailbox-debug.sh --all` output from the other GAR, and the lead's
