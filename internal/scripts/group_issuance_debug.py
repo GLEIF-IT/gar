@@ -163,19 +163,33 @@ def report(hby, ghab, only_said):
     notifier = notifying.Notifier(hby=hby)
     notes = list(notifier.noter.notes.getItemIter())
     stale = 0
+    broken = []
     for keys_, note in notes:
-        a = note.attrs
-        route = a.get("r", "?")
+        a = note.attrs if isinstance(note.attrs, dict) else {}
+        route = a.get("r") if isinstance(a.get("r"), str) else "?"
+        said = a.get("d") if isinstance(a.get("d"), str) else None
+        rid = keys_[-1] if isinstance(keys_, tuple) else keys_
         tag = ""
         if route.startswith("/multisig/"):
-            exn, _ = exchanging.cloneMessage(hby, a.get("d"))
-            tag = "  (exn body MISSING)" if exn is None else ""
+            if said is None:
+                tag = "  !! no 'd' attribute"
+                broken.append(rid)
+            else:
+                exn, _ = exchanging.cloneMessage(hby, said)
+                tag = "  (exn body MISSING)" if exn is None else ""
         else:
             stale += 1
-        rid = keys_[-1] if isinstance(keys_, tuple) else keys_
-        print(f"  {str(note.datetime)[:19]}  {'read' if note.read else 'new '}  {route:<20}  {a.get('d')}  rid {rid}{tag}")
+        print(f"  {str(note.datetime)[:19]}  {'read' if note.read else 'new '}  {route:<20}  {said}  rid {rid}{tag}")
+        if said is None:
+            print(f"      attrs: {a}")
     if not notes:
         print("  (none)")
+    if broken:
+        print(f"  !! {len(broken)} /multisig notification(s) without a 'd' attribute (not written by keripy 1.1.44's")
+        print("     Multiplexor; left over from an older version). `kli multisig join` does attrs['d'] on these and")
+        print("     crashes with KeyError before it reaches any later notification. Remove them first:")
+        for rid in broken:
+            print(f"       ./scripts/notifications-rem.sh --rid {rid}")
     if stale:
         print(f"  !! {stale} non-multisig notification(s). `kli multisig join` stops waiting as soon as the table is")
         print("     non-empty and makes a single pass, so with these present it exits before a new /multisig/iss")

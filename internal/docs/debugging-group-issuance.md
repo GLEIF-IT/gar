@@ -53,6 +53,10 @@ Either remove the old notes:
 or skip the wait entirely by pulling the mailbox first (step 3) so the issuance notification already exists when
 join starts. Do not `--all` if a `/multisig/*` note is listed: that is the one you want.
 
+A `/multisig/*` note flagged `!! no 'd' attribute` was written by an older keripy and is worse than stale: join
+reads `attrs["d"]` from it and crashes with a `KeyError` before it reaches any later notification. Remove it with
+the `notifications-rem.sh --rid` line the script prints, then continue.
+
 ## Step 3: the message never arrived in this keystore
 
 ```bash
