@@ -74,8 +74,11 @@ def poll(hby, seconds):
             sys.stdout.flush()
             return False
 
-    doing.Doist(limit=seconds, tock=1.0, real=True).do(doers=[mbx, Tick()])
-    print()
+    try:
+        doing.Doist(limit=seconds, tock=1.0, real=True).do(doers=[mbx, Tick()])
+    finally:
+        print()
+        rgy.close()  # callers open their own Regery next; the same LMDB must not be open twice in one process
 
 
 def iter_exns(db):

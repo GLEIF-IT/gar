@@ -102,11 +102,14 @@ def main():
             return 2
         if args.poll:
             poll(hby, args.poll)
+        # One Regery for the whole run: opening the registry LMDB twice in one process is unsafe
+        # (MDB_BAD_RSLOT: invalid reuse of reader locktable slot).
+        rgy = credentialing.Regery(hby=hby, name=hby.name, base=hby.base)
         if args.resave:
-            rc = resave(hby, ghab, args.resave)
-            report(hby, ghab, args.resave)
+            rc = resave(hby, rgy, ghab, args.resave)
+            report(hby, rgy, ghab, args.resave)
             return rc
-        report(hby, ghab, args.said)
+        report(hby, rgy, ghab, args.said)
         return 0
     finally:
         hby.close()
@@ -136,12 +139,11 @@ def poll(hby, seconds):
           f"notifications: {before_notes} -> {notifier.noter.notes.cntAll()}")
 
 
-def resave(hby, ghab, said):
+def resave(hby, rgy, ghab, said):
     """Finish what a stopped `kli vc create` left undone: run the verifier's save for a credential whose body
     and anchor are held here but which never reached the saved/issus indexes. Only the verifier escrows
     (which nothing outside create/join re-runs, and which expire after an hour) stood between the two.
     Writes exactly what Verifier.saveCredential and Credentialer.processCredentialMissingSigEscrow would."""
-    rgy = credentialing.Regery(hby=hby, name=hby.name, base=hby.base)
     reger = rgy.reger
     h(f"resave {said}")
     creder = reger.creds.get(keys=(said,))
@@ -188,10 +190,9 @@ def resave(hby, ghab, said):
     return 0
 
 
-def report(hby, ghab, only_said):
+def report(hby, rgy, ghab, only_said):
     db = hby.db
     org = connecting.Organizer(hby=hby)
-    rgy = credentialing.Regery(hby=hby, name=hby.name, base=hby.base)
     reger = rgy.reger
     mhab = ghab.mhab
     kever = ghab.kever
