@@ -33,6 +33,7 @@ Read the sections in this order:
 | multisig exns held | a `/multisig/iss` for the new credential with `notification: present` | missing entirely: see step 3; present with no notification: see step 4 |
 | group KEL partially signed | the new interaction event with the lead's signature | nothing: the message has not been processed yet |
 | credential | the credential body held, missing-sig escrow YES | expected before you approve |
+| credential: edge | every edge node (the LE credential for OOR/ECR auth) `saved here True` | the verifier cannot chain to it and will never save this credential here; see step 4b |
 | mailbox indexes | one row per witness of your member AID | used in step 3 |
 
 The script never changes anything unless you give it `--poll`.
@@ -95,6 +96,20 @@ with the same data: `issue-oor-auth-credential.sh` hardcodes `--time 2024-03-18T
 the same person produces the identical credential SAID.
 
 Fix on the lead: re-create with a different `--time`, or change the data. Then start again from step 1 here.
+
+## Step 4b: approved, TEL issued, but never saved (edge not held)
+
+The credential section shows `body held True`, `TEL state issued ...` but `saved/indexed False` and `issued by
+group False`. Approval worked and the anchoring event was witnessed. What failed is the verifier's save: an
+OOR/ECR authorization credential has an `le` edge to the Legal Entity credential, and keripy only saves a
+credential when every edge node is already saved in the same keystore with a known TEL state. If the `edge 'le'`
+line says `saved here False`, this GAR never admitted that LE credential (`admit-le-credential.sh`). The
+credential went to the missing-chain escrow, which nothing outside the join loop re-processes and which is
+dropped after an hour, so `ungranted-credentials.sh` and `kli vc list --issued` never show it here.
+
+This does not block the lead: the lead's copy saved, and the grant to the QVI goes from the lead. It only means
+this GAR's keystore has no record to list, revoke from or re-grant. Admit the LE credential on this GAR before
+the next issuance so later credentials save.
 
 ## Step 5: on the lead
 

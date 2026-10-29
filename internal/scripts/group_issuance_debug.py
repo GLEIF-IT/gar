@@ -57,6 +57,7 @@ from keri.app import connecting, grouping, indirecting, notifying
 from keri.app.cli.common import existing
 from keri.core import coring, serdering
 from keri.db import dbing
+from keri.help import helping
 from keri.peer import exchanging
 from keri.vdr import credentialing
 
@@ -313,9 +314,44 @@ def report(hby, ghab, only_said):
         print(f"      body held        {creder is not None}" + (f"  schema {creder.sad.get('s')}" if creder else ""))
         print(f"      saved/indexed    {reger.saved.get(keys=said) is not None}")
         pend = [snq for (s, snq) in (k for k, _ in reger.cmse.getItemIter()) if s == said]
-        print(f"      missing-sig escrow {'YES (anchor sn ' + ', '.join(str(coring.Seqner(qb64=q).sn) for q in pend) + ')' if pend else 'no'}")
+        print(f"      missing-sig escrow {'YES (TEL iss sn ' + ', '.join(str(coring.Seqner(qb64=q).sn) for q in pend) + ')' if pend else 'no'}")
         print(f"      issued by group  {any(s.qb64 == said for s in reger.issus.get(keys=ghab.pre))}")
         print(f"      TEL state        {credential_state(reger, said)}")
+        print(f"      registrar done   ctel {reger.ctel.get(keys=(said, coring.Seqner(sn=0).qb64)) is not None}"
+              f"  ccrd {reger.ccrd.get(keys=(said,)) is not None}"
+              f"  (ccrd is what `kli multisig join` waits for before printing 'complete')")
+        # Verifier escrows: the credential sits in one of these until processCredential succeeds and
+        # saveCredential writes saved/issus. Entries older than the timeout are dropped on the next pass.
+        held = []
+        for label, table, timeout in (("missing registry/TEL", reger.mre, 3600), ("missing chain (edge)", reger.mce, 3600),
+                                      ("missing schema", reger.mse, 3600)):
+            dater = table.get(keys=(said,))
+            if dater is not None:
+                age = (helping.nowUTC() - helping.fromIso8601(dater.dts)).total_seconds()
+                held.append(f"{label} since {dater.dts[:19]} ({int(age)}s{', STALE: will be dropped' if age > timeout else ''})")
+        if held:
+            print("      verifier escrow  " + "; ".join(held))
+        elif reger.saved.get(keys=said) is None and creder is not None:
+            print("      verifier escrow  none, and not saved: the escrow timed out (1h) or join exited before the")
+            print("                       verifier re-processed it. Nothing in kli re-runs this; see edges below.")
+        # Edge chain: saveCredential requires every edge node to be saved here with a known TEL state.
+        if creder is not None:
+            edges = creder.sad.get("e") if isinstance(creder.sad.get("e"), dict) else {}
+            for label, node in edges.items():
+                if label in ("d", "o") or not isinstance(node, dict):
+                    continue
+                nsaid = node.get("n")
+                ncred = reger.creds.get(keys=(nsaid,))
+                nsaved = reger.saved.get(keys=nsaid) is not None
+                print(f"      edge '{label}'  {nsaid}  op {node.get('o') or '(default I2I)'}")
+                print(f"          saved here {nsaved}  body held {ncred is not None}  TEL state {credential_state(reger, nsaid)}")
+                if ncred is not None:
+                    ni = (ncred.sad.get("a") or {}).get("i")
+                    print(f"          issuee {who(hby, org, ni) if ni else None}  {'== group AID' if ni == ghab.pre else '!= group AID (I2I check fails)'}")
+                if not nsaved:
+                    print(f"          !! not saved in this keystore: the verifier cannot chain to it, so this credential")
+                    print(f"             will never be saved/indexed here. Admit the {label.upper()} credential first")
+                    print(f"             (admit-le-credential.sh) and have the lead re-issue, or re-process the escrow.")
 
     # ---- mailbox indexes ------------------------------------------------------
     h("mailbox indexes (/multisig topic, per local AID and witness)")
