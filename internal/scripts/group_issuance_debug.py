@@ -59,7 +59,7 @@ from keri.core import coring, serdering
 from keri.db import dbing
 from keri.help import helping
 from keri.peer import exchanging
-from keri.vdr import credentialing
+from keri.vdr import credentialing, verifying
 
 from sent_exns import alias_of, credential_state, iter_exns
 
@@ -73,6 +73,9 @@ def parse_args():
     p.add_argument("--said", "-s", default=None, help="only this credential SAID")
     p.add_argument("--poll", type=float, default=0, metavar="SECONDS",
                    help="first run the /multisig mailbox intake for this long (stores what arrives)")
+    p.add_argument("--resave", metavar="SAID", default=None,
+                   help="re-run the verifier save on a credential this keystore created but never saved/indexed "
+                        "(a `kli vc create` stopped before witness receipts arrived); then report on it")
     return p.parse_args()
 
 
@@ -99,6 +102,10 @@ def main():
             return 2
         if args.poll:
             poll(hby, args.poll)
+        if args.resave:
+            rc = resave(hby, ghab, args.resave)
+            report(hby, ghab, args.resave)
+            return rc
         report(hby, ghab, args.said)
         return 0
     finally:
@@ -127,6 +134,58 @@ def poll(hby, seconds):
     new = [said for said, _ in iter_exns(hby.db) if said not in before_exns]
     print(f"pollers: {len(mbx.pollers)}   new exns stored: {len(new)}   "
           f"notifications: {before_notes} -> {notifier.noter.notes.cntAll()}")
+
+
+def resave(hby, ghab, said):
+    """Finish what a stopped `kli vc create` left undone: run the verifier's save for a credential whose body
+    and anchor are held here but which never reached the saved/issus indexes. Only the verifier escrows
+    (which nothing outside create/join re-runs, and which expire after an hour) stood between the two.
+    Writes exactly what Verifier.saveCredential and Credentialer.processCredentialMissingSigEscrow would."""
+    rgy = credentialing.Regery(hby=hby, name=hby.name, base=hby.base)
+    reger = rgy.reger
+    h(f"resave {said}")
+    creder = reger.creds.get(keys=(said,))
+    if creder is None:
+        print("  credential body is not held in this keystore; nothing to save")
+        return 1
+    if creder.issuer != ghab.pre:
+        print(f"  credential issuer {creder.issuer} is not the group AID {ghab.pre}; refusing")
+        return 1
+    if reger.saved.get(keys=said) is not None:
+        print("  already saved/indexed here; nothing to do")
+        return 0
+    anc = reger.cancs.get(keys=(said,))
+    if anc is None:
+        print("  no anchor record (cancs) for this credential; it was never processed here")
+        return 1
+    prefixer, seqner, saider = anc
+    state = credential_state(reger, said)
+    print(f"  TEL state now: {state}")
+    vry = verifying.Verifier(hby=hby, reger=reger)
+    try:
+        vry.processCredential(creder=creder, prefixer=prefixer, seqner=seqner, saider=saider)
+    except kering.MissingRegistryError as ex:
+        print(f"  not saved: registry/TEL state still missing here ({ex}). Run the group escrows first")
+        print("  (e.g. witness-catchup.sh, or re-run the create and let it finish) and try again.")
+        return 1
+    except kering.MissingChainError as ex:
+        print(f"  not saved: an edge node credential is not saved here ({ex}); admit it first")
+        return 1
+    except kering.MissingSchemaError as ex:
+        print(f"  not saved: schema not cached here ({ex})")
+        return 1
+    except Exception as ex:
+        print(f"  not saved: {type(ex).__name__}: {ex}")
+        return 1
+    if reger.saved.get(keys=said) is None:
+        print("  verifier returned but the credential is still not saved; aborting")
+        return 1
+    for (s_, snq), _ in list(reger.cmse.getItemIter()):
+        if s_ == said:
+            reger.cmse.rem(keys=(s_, snq))
+    reger.ccrd.put(keys=(said,), val=creder)
+    print("  saved and indexed: it will now appear in ungranted-credentials.sh and `kli vc list --issued`")
+    return 0
 
 
 def report(hby, ghab, only_said):

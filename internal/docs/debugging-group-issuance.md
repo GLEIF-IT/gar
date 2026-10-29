@@ -32,8 +32,7 @@ Read the sections in this order:
 | notifications | none, or only `/multisig/*` routes | `!! N non-multisig notification(s)`: join will exit at once; see step 2 |
 | multisig exns held | a `/multisig/iss` for the new credential with `notification: present` | missing entirely: see step 3; present with no notification: see step 4 |
 | group KEL partially signed | the new interaction event with the lead's signature | nothing: the message has not been processed yet |
-| credential | the credential body held, missing-sig escrow YES | expected before you approve |
-| credential: edge | every edge node (the LE credential for OOR/ECR auth) `saved here True` | the verifier cannot chain to it and will never save this credential here; see step 4b |
+| credential | `saved/indexed True`, `issued by group True` | body held and TEL issued but not saved: create was stopped before receipts; see step 4b. Edge node `saved here False`: admit the LE credential first |
 | mailbox indexes | one row per witness of your member AID | used in step 3 |
 
 The script never changes anything unless you give it `--poll`.
@@ -97,19 +96,31 @@ the same person produces the identical credential SAID.
 
 Fix on the lead: re-create with a different `--time`, or change the data. Then start again from step 1 here.
 
-## Step 4b: approved, TEL issued, but never saved (edge not held)
+## Step 4b: created and TEL issued here, but never saved (create stopped early)
 
-The credential section shows `body held True`, `TEL state issued ...` but `saved/indexed False` and `issued by
-group False`. Approval worked and the anchoring event was witnessed. What failed is the verifier's save: an
-OOR/ECR authorization credential has an `le` edge to the Legal Entity credential, and keripy only saves a
-credential when every edge node is already saved in the same keystore with a known TEL state. If the `edge 'le'`
-line says `saved here False`, this GAR never admitted that LE credential (`admit-le-credential.sh`). The
-credential went to the missing-chain escrow, which nothing outside the join loop re-processes and which is
-dropped after an hour, so `ungranted-credentials.sh` and `kli vc list --issued` never show it here.
+The credential section shows `body held True`, `TEL state issued ...`, `missing-sig escrow YES`, but
+`saved/indexed False` and `issued by group False`. This is what a `kli vc create` that was stopped with ctrl-c
+before all witness receipts arrived leaves behind. Only the member whose key is at index 0 submits the group
+event to the witnesses; everyone else's create just asks the witnesses for receipts until all of them are in,
+which can take a while when a witness is slow. Stopping it leaves the credential in the verifier's
+missing-registry escrow. Later commands do pick up the receipts and accept the TEL event (hence `issued`), but
+that escrow is only re-processed inside create/join/ipex loops and is discarded as stale after an hour, so the
+save that writes the issuer index never runs. `ungranted-credentials.sh` and `kli vc list --issued` read that
+index, so the credential is invisible here even though it is fully issued.
 
-This does not block the lead: the lead's copy saved, and the grant to the QVI goes from the lead. It only means
-this GAR's keystore has no record to list, revoke from or re-grant. Admit the LE credential on this GAR before
-the next issuance so later credentials save.
+The lead is unaffected: the lead's copy saved and the grant goes from the lead. To make this keystore's copy
+visible without re-issuing:
+
+```bash
+./scripts/group-issuance-debug.sh --resave <credential SAID>
+```
+
+It re-runs the verifier save on the held credential and reports. If it says the TEL state is still missing,
+receipts have not been collected here yet: run `./scripts/witness-catchup.sh` or let a `kli vc create` /
+`kli multisig join` run for a minute, then try again. If the `edge 'le'` line shows `saved here False`, the
+save cannot chain to the Legal Entity credential; admit it (`admit-le-credential.sh`) first.
+
+To avoid it next time: let `kli vc create` run until it prints `<SAID> has been created.`
 
 ## Step 5: on the lead
 

@@ -17,6 +17,10 @@ set -eo pipefail
 ##            `kli multisig join` uses, then reports. This      ##
 ##            stores what arrives and creates the notification  ##
 ##            join needs.                                       ##
+##          group-issuance-debug.sh --resave <credential SAID>  ##
+##            finish a `kli vc create` that was stopped (ctrl-c) ##
+##            before witness receipts: saves/indexes the held    ##
+##            credential so it lists as created. Writes.         ##
 ##                                                              ##
 ##  Run it on the GAR that is NOT seeing the credential; on the ##
 ##  lead it shows the escrows the lead is waiting on.           ##
