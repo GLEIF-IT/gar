@@ -55,7 +55,7 @@ from hio.base import doing
 from keri import kering
 from keri.app import connecting, grouping, indirecting, notifying
 from keri.app.cli.common import existing
-from keri.core import coring, serdering
+from keri.core import coring, eventing, serdering
 from keri.db import dbing
 from keri.help import helping
 from keri.peer import exchanging
@@ -265,7 +265,10 @@ def report(hby, rgy, ghab, only_said):
             continue
         embeds = ked.get("e") if isinstance(ked.get("e"), dict) else {}
         acdc = embeds.get("acdc") if isinstance(embeds.get("acdc"), dict) else None
-        if only_said and (acdc or {}).get("d") != only_said:
+        inner = embeds.get("exn") if isinstance(embeds.get("exn"), dict) else None
+        inner_e = inner.get("e") if inner and isinstance(inner.get("e"), dict) else {}
+        inner_acdc = inner_e.get("acdc") if isinstance(inner_e.get("acdc"), dict) else None
+        if only_said and (acdc or inner_acdc or {}).get("d") != only_said:
             continue
         rows.append((ked.get("dt", ""), serder, embeds, acdc))
     rows.sort(key=lambda r: r[0])
@@ -283,6 +286,14 @@ def report(hby, rgy, ghab, only_said):
         iss = embeds.get("iss") if isinstance(embeds.get("iss"), dict) else None
         if iss:
             print(f"      iss   {iss.get('d')}  registry {iss.get('ri')}")
+        inner = embeds.get("exn") if isinstance(embeds.get("exn"), dict) else None
+        if inner:
+            inner_e = inner.get("e") if isinstance(inner.get("e"), dict) else {}
+            inner_acdc = inner_e.get("acdc") if isinstance(inner_e.get("acdc"), dict) else {}
+            inner_a = inner.get("a") if isinstance(inner.get("a"), dict) else {}
+            print(f"      exn   {inner.get('r')}  {inner.get('d')}  dt {str(inner.get('dt', ''))[:19]}"
+                  f"  acdc {inner_acdc.get('d')}  to {who(hby, org, inner_a.get('i')) if inner_a.get('i') else '?'}")
+            print(f"            stored (fully signed) here: {db.exns.get(keys=(inner.get('d'),)) is not None}")
         anc = embeds.get("anc") if isinstance(embeds.get("anc"), dict) else embeds.get("ixn") if isinstance(embeds.get("ixn"), dict) else None
         sn = None
         if anc:
@@ -319,6 +330,84 @@ def report(hby, rgy, ghab, only_said):
                     print("      !! notification was removed or never written; `kli multisig join` has nothing to show.")
     if not rows:
         print("  (none)" + (f" for credential {only_said}" if only_said else ""))
+
+    # ---- IPEX grant exns -------------------------------------------------------
+    h("IPEX grant exn(s) for the credential (what a group `kli ipex grant` waits on)")
+    gkeys = [v.qb64 for v in kever.verfers]
+
+    def signers(exn_said):
+        names = []
+        for _, _, _, sigers in eventing.fetchTsgs(db.esigs, coring.Saider(qb64=exn_said)):
+            for sg in sigers:
+                m = next((m for m in ghab.smids if sg.index < len(gkeys)
+                          and hby.kevers[m].verfers[0].qb64 == gkeys[sg.index]), None)
+                names.append(alias_of(hby, org, m) or m or f"index {sg.index}")
+        return names
+
+    def grant_rows(table):
+        out = []
+        for (said_,), serder in table.getItemIter():
+            ked = serder.ked
+            if ked.get("r") != "/ipex/grant" or ked.get("i") != ghab.pre:
+                continue
+            e = ked.get("e") if isinstance(ked.get("e"), dict) else {}
+            a = e.get("acdc") if isinstance(e.get("acdc"), dict) else {}
+            if a.get("d") in gsaids:
+                out.append((a.get("d"), serder))
+        return out
+
+    gsaids = [only_said] if only_said else list(dict.fromkeys(s for s in cred_saids if s))
+    pending = grant_rows(db.epse)
+    done = grant_rows(db.exns)
+    # who sent us a /multisig/exn carrying a given grant exn SAID
+    received = {}
+    for said_, serder in iter_exns(db):
+        ked = serder.ked
+        if ked.get("r") != "/multisig/exn" or ked.get("i") in hby.prefixes:
+            continue
+        e = ked.get("e") if isinstance(ked.get("e"), dict) else {}
+        inner = e.get("exn") if isinstance(e.get("exn"), dict) else None
+        if inner and inner.get("d"):
+            received.setdefault(inner["d"], []).append(ked["i"])
+    for csaid, serder in pending + done:
+        ked = serder.ked
+        a = ked.get("a") if isinstance(ked.get("a"), dict) else {}
+        complete = db.exns.get(keys=(serder.said,)) is not None
+        names = signers(serder.said)
+        print(f"  {'COMPLETE ' if complete else 'PARTIAL  '} {serder.said}  dt {str(ked.get('dt', ''))[:19]}"
+              f"  credential {csaid}")
+        print(f"      to {who(hby, org, a.get('i')) if a.get('i') else '?'}  signatures {len(names)} of {len(ghab.smids)}"
+              f" (threshold {kever.tholder.sith!r}): {', '.join(names) or 'none'}")
+        subs = received.get(serder.said, [])
+        print(f"      /multisig/exn carrying this exn SAID received from: "
+              + (", ".join(alias_of(hby, org, p) or p for p in subs) or "nobody"))
+        if not complete:
+            print("      !! `kli ipex grant` sits in `while not exc.complete()` until the other members' signatures on")
+            print("         THIS exn SAID arrive. Each other member must run the same grant script with identical")
+            print("         --said, --time and recipient so their exn SAID matches; the signature comes back inside a")
+            print("         /multisig/exn on the /multisig topic (see 'multisig exns held' above and mailbox indexes).")
+    if not pending and not done:
+        print("  (no /ipex/grant exn from the group for this credential here: grant not run from this keystore, or it")
+        print("   failed before signing)")
+    # /multisig/exn from other members whose embedded grant does not match any exn we hold
+    ours = {serder.said for _, serder in pending + done}
+    for said_, serder in iter_exns(db):
+        ked = serder.ked
+        if ked.get("r") != "/multisig/exn" or ked.get("i") in hby.prefixes:
+            continue
+        e = ked.get("e") if isinstance(ked.get("e"), dict) else {}
+        inner = e.get("exn") if isinstance(e.get("exn"), dict) else None
+        if not inner or inner.get("r") != "/ipex/grant":
+            continue
+        ie = inner.get("e") if isinstance(inner.get("e"), dict) else {}
+        ia = ie.get("acdc") if isinstance(ie.get("acdc"), dict) else {}
+        if gsaids and ia.get("d") not in gsaids:
+            continue
+        if inner.get("d") not in ours:
+            print(f"  !! {who(hby, org, ked['i'])} sent a grant exn {inner.get('d')} (dt {str(inner.get('dt', ''))[:19]},"
+                  f" to {who(hby, org, (inner.get('a') or {}).get('i', '?'))}) that matches none of ours:")
+            print("     they ran the grant with different values (--time, recipient or SAID). Their signature cannot")
+            print("     be combined with yours. Re-run on one side with the same values as the other.")
 
     # ---- KEL escrows for the group --------------------------------------------
     h("group KEL: partially signed events")

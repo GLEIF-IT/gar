@@ -67,8 +67,12 @@ This runs the same `/multisig` intake join uses and reports what arrived. If a `
 step 6. If nothing arrives, find out whether it is sitting at a witness:
 
 ```bash
-./scripts/mailbox-debug.sh --all --alias "<your member alias>"
+./scripts/mailbox-debug.sh --all --alias "<your member alias>" --summary
 ```
+
+Use your **member** alias, not the group's: `/multisig` messages are addressed to members. `--summary` prints
+route, sender, time, SAID and the embedded credential or grant per message; without it only the first 20 bytes
+show and nothing can be told apart.
 
 Compare each witness's `/multisig` messages against the `mailbox indexes` printed in step 1. The poller fetches
 from the stored index plus one, so:
@@ -96,31 +100,40 @@ the same person produces the identical credential SAID.
 
 Fix on the lead: re-create with a different `--time`, or change the data. Then start again from step 1 here.
 
-## Step 4b: created and TEL issued here, but never saved (create stopped early)
+## Step 4b: created and TEL issued here, but never saved
 
 The credential section shows `body held True`, `TEL state issued ...`, `missing-sig escrow YES`, but
-`saved/indexed False` and `issued by group False`. This is what a `kli vc create` that was stopped with ctrl-c
-before all witness receipts arrived leaves behind. Only the member whose key is at index 0 submits the group
-event to the witnesses; everyone else's create just asks the witnesses for receipts until all of them are in,
-which can take a while when a witness is slow. Stopping it leaves the credential in the verifier's
-missing-registry escrow. Later commands do pick up the receipts and accept the TEL event (hence `issued`), but
-that escrow is only re-processed inside create/join/ipex loops and is discarded as stale after an hour, so the
-save that writes the issuer index never runs. `ungranted-credentials.sh` and `kli vc list --issued` read that
-index, so the credential is invisible here even though it is fully issued.
+`saved/indexed False` and `issued by group False`. The create (or join) did its part and the anchoring event was
+witnessed. What never ran to completion is the verifier's save, which is the only thing that writes the issuer
+index that `ungranted-credentials.sh` and `kli vc list --issued` read. The `verifier escrow` and `edge` lines say
+which gate failed:
 
-The lead is unaffected: the lead's copy saved and the grant goes from the lead. To make this keystore's copy
-visible without re-issuing:
+- **`edge 'le' ... saved here False`** (escrow `missing chain`): this keystore does not hold the Legal Entity
+  credential whose SAID was typed into the create. keripy only saves a credential when every edge node is saved
+  in the same keystore with a known TEL state, so this credential can never save here until the LE credential
+  is. Get it in with either route, then resave:
 
-```bash
-./scripts/group-issuance-debug.sh --resave <credential SAID>
-```
+  1. Mailbox route. The QVI's grant shipped the LE credential, its chain and TELs to the group AID's `/credential`
+     mailbox. Pull it: `./scripts/list-credentials.sh --alias "<group alias>"` and look for the LE SAID under
+     received credentials.
+  2. Export/import route, if the mailbox no longer delivers it. On a GAR that holds it:
+     `./scripts/export-credential.sh <LE SAID>` and send the `.cesr` file. On this GAR:
+     `./scripts/import-credential.sh <file.cesr>`; it reports `saved True` for the LE and its QVI chain.
 
-It re-runs the verifier save on the held credential and reports. If it says the TEL state is still missing,
-receipts have not been collected here yet: run `./scripts/witness-catchup.sh` or let a `kli vc create` /
-`kli multisig join` run for a minute, then try again. If the `edge 'le'` line shows `saved here False`, the
-save cannot chain to the Legal Entity credential; admit it (`admit-le-credential.sh`) first.
+  Then `./scripts/group-issuance-debug.sh --resave <credential SAID>`.
 
-To avoid it next time: let `kli vc create` run until it prints `<SAID> has been created.`
+- **`verifier escrow none, and not saved`** with the edge `saved here True`: the create was stopped (ctrl-c)
+  before witness receipts, the missing-registry escrow expired after an hour and nothing re-ran the save. Just
+  `./scripts/group-issuance-debug.sh --resave <credential SAID>`. If it says the TEL state is still missing,
+  run `./scripts/witness-catchup.sh` or let a create/join run for a minute and retry.
+
+This state has never blocked an issuance, a grant or a revocation. All three read only the credential body
+and its anchor record (`reger.creds` / `reger.cancs`), which this keystore has; the other members' part of a
+group `kli ipex grant` or `kli vc revoke` works from them too. Only the listings read the saved index:
+`kli vc list --issued`, `ungranted-credentials.sh`, `contacts-credentials.sh`. The visible symptoms are an empty
+listing on this GAR and a `kli vc create` that never prints `has been created` (it waits for the save), which is
+why it gets ctrl-c'd. Fixing it is about this keystore's records being complete, not about the issuance. To avoid the second case, let `kli vc create` run until it prints
+`<SAID> has been created.`
 
 ## Step 5: on the lead
 
@@ -149,6 +162,28 @@ Approve the `/multisig/iss` when prompted. If join shows an old event first, ans
 After approving, the lead's `kli vc create` should complete within a minute; it then runs `kli ipex grant`.
 Confirm from either side with `./scripts/contacts-credentials.sh --contact pr-as-qvi-euro --poll 10`, which
 lists the new credential under the QVI and whether an admit has come back.
+
+## Step 7: the grant hangs
+
+A group `kli ipex grant` (`grant-*-credential.sh`) signs the grant exn with your member key, sends it to the
+other members inside a `/multisig/exn`, and then waits in `while not exc.complete()` until enough member
+signatures on **that exact exn SAID** are in this keystore. The threshold is the group's signing threshold (two
+members for the five-member 1/2-weighted Internal AID). The other member produces their signature by running the
+same grant script with identical `--said`, `--time` and recipient; different values give a different exn SAID
+and the signatures can never be combined. The member with the lowest signing index then sends to the QVI.
+
+`./scripts/group-issuance-debug.sh --said <credential SAID>` on the hanging side, section
+`IPEX grant exn(s)`:
+
+| What it shows | Meaning |
+|---|---|
+| `PARTIAL ... signatures 1 of 5 ... submissions from: nobody` | no other member's `/multisig/exn` has arrived. Either they have not run the grant, it crashed on their side (ask for the output), or it is stuck at a witness: step 3 with topic `/multisig` |
+| `!! <member> sent a grant exn ... that matches none of ours` | they ran it with different values; re-run on one side with the other's values |
+| `COMPLETE` but no `... grant message sent` printed | the exn is fully signed; the lowest-index signer sends. If that is not you, the other side sends |
+| nothing listed | the grant was never signed here: it failed before signing (bad recipient alias, credential not held) |
+
+The other member's grant needs only the credential body and anchor record in their keystore (`body held True`
+in the credential section), not the saved index, so an unsaved copy on their side (step 4b) does not stop it.
 
 ## What to send if it is still stuck
 

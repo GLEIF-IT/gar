@@ -30,17 +30,31 @@ passcode="$(security find-generic-password -w -a "${LOGNAME}" -s int-gar-passcod
 alias="${INT_GAR_AID_ALIAS}"
 all=false
 sender=""
+summary=false
 args=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --all)        all=true; shift ;;
     --alias|-a)   alias="$2"; shift 2 ;;
     --from)       sender="$2"; shift 2 ;;
+    --summary)    summary=true; shift ;;
     *)            args+=("$1"); shift ;;
   esac
 done
 
 debug() {
+  if [ "${summary}" = true ]; then
+    # One line per message (type, route, sender, dt, SAID, embeds) instead of the first 20 bytes.
+    # Senders are labelled with contact aliases (refreshed once per run, best effort).
+    if [ ! -f "${INT_GAR_DATA_DIR}/aliases.json" ]; then
+      kli contacts list --name "${INT_GAR_NAME}" --passcode "${passcode}" 2>/dev/null \
+        | tr -d '\r' | jq -s 'map({(.id): .alias}) | add // {}' > "${INT_GAR_DATA_DIR}/aliases.json" || true
+    fi
+    kli mailbox debug --name "${INT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" --verbose "$@" \
+      | tr -d '\r' \
+      | python3 "${INT_GAR_SCRIPT_DIR}/mailbox_summary.py" "${INT_GAR_DATA_DIR}/aliases.json"
+    return
+  fi
   if [ -z "${sender}" ]; then
     kli mailbox debug --name "${INT_GAR_NAME}" --alias "${alias}" --passcode "${passcode}" "$@"
     return
@@ -58,6 +72,7 @@ debug() {
         END { if (!n) print "   (no messages from " aid ")" }'
 }
 
+rm -f "${INT_GAR_DATA_DIR}/aliases.json"   # regenerate per run
 if [ "${all}" = true ]; then
   # kli status --verbose prints "Witnesses:" followed by "\t1. <AID>" lines, then a blank line.
   # kli runs under docker -t, so strip the \r the pseudo-terminal appends to every line.
