@@ -100,6 +100,17 @@ and will not recreate them
 The `source.sh` script also initializes several environment variables (via `scripts/env.sh`) used by the rest of the scripts as well
 as a Bash function for `kli` that executes the docker image as a throw away container for each command run.
 
+GARs that are already members of their group (GLEIF Internal or GLEIF External) should then catch up with the rest of the
+group before doing anything else (from `internal/` or `external/`):
+
+```bash
+$ ./scripts/sync.sh
+```
+
+This pulls the group credentials other members have sent you, sends them the ones they are missing, and reports which
+credentials you can take part in revoking. See the catch-up playbook for [internal](../internal/docs/catch-up-playbook.md)
+or [external](../external/docs/catch-up-playbook.md).
+
 ## Create Your Local AID
 As a GLEIF Authorized Representative you will be a member of the group multisig AID for either the GLEIF External AID or
 the GLEIF Internal AID.  To participate as a member of a group multisig, you must first create your local AID that will contribute 

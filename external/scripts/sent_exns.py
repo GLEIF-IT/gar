@@ -33,9 +33,10 @@ import sys
 
 from hio.base import doing
 
+from keri import kering
 from keri.app import connecting, indirecting, notifying
 from keri.app.cli.common import existing
-from keri.core import coring, eventing
+from keri.core import coring, eventing, serdering
 from keri.help import helping
 from keri.peer import exchanging
 from keri.vc import protocoling
@@ -73,8 +74,44 @@ def poll(hby, seconds):
             sys.stdout.flush()
             return False
 
-    doing.Doist(limit=seconds, tock=1.0, real=True).do(doers=[mbx, Tick()])
-    print()
+    try:
+        # The mailbox poller hands over one message per tick, so tick fast; only the dots are once a second.
+        doing.Doist(limit=seconds, tock=0.03125, real=True).do(doers=[mbx, Tick(tock=1.0)])
+    finally:
+        print()
+        rgy.close()  # callers open their own Regery next; the same LMDB must not be open twice in one process
+
+
+def iter_exns(db):
+    """Yield (said, serder) for every exn held, skipping records this keripy cannot parse.
+
+    Older keystores hold challenge/response exns written before the exn body
+    gained its i/p/q/e fields; SerderKERI rejects those, so the typed
+    db.exns.getItemIter() raises on the first one. kli contacts list works
+    around the same records one SAID at a time; this does it for the whole table.
+    """
+    for key, raw in db.getTopItemIter(db=db.exns.sdb):
+        try:
+            yield db.exns._tokeys(key)[0], serdering.SerderKERI(raw=bytes(raw))
+        except kering.ValidationError:
+            continue
+
+
+def iter_serders(db, suber):
+    """Like iter_exns, for any SerderSuber table of exns (e.g. db.epse, the partially signed escrow)."""
+    for key, raw in db.getTopItemIter(db=suber.sdb):
+        try:
+            yield suber._tokeys(key)[0], serdering.SerderKERI(raw=bytes(raw))
+        except kering.ValidationError:
+            continue
+
+
+def get_exn(db, said):
+    """The exn with this SAID, or None when absent or unparseable (see iter_exns)."""
+    try:
+        return db.exns.get(keys=(said,))
+    except kering.ValidationError:
+        return None
 
 
 def alias_of(hby, org, pre):
@@ -145,7 +182,7 @@ def report(hby, args):
         only = hab.pre
 
     rows = []
-    for (said,), serder in db.exns.getItemIter():
+    for said, serder in iter_exns(db):
         ked = serder.ked
         sent = ked["i"] in hby.prefixes
         if not sent and not args.received:
@@ -227,7 +264,7 @@ def describe(hby, org, rgy, exc, dt, sent, serder, verbose):
 
     reply = hby.db.erpy.get(keys=(serder.said,))
     if reply is not None:
-        rserder = hby.db.exns.get(keys=(reply.qb64,))
+        rserder = get_exn(hby.db, reply.qb64)
         if rserder is not None:
             rec["reply"] = {"route": rserder.ked["r"], "dt": rserder.ked.get("dt"),
                             "from": party(hby, org, rserder.ked["i"]), "said": rserder.said}

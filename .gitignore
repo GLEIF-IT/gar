@@ -5,3 +5,7 @@ external/data/*.json
 # Python
 __pycache__/
 *.pyc
+
+# Group credential exports (export-group-credentials.sh): personal data, shared out of band
+internal/data/group-credentials-*
+external/data/group-credentials-*

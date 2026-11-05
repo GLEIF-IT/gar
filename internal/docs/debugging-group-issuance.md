@@ -196,6 +196,39 @@ microseconds. Typing or pasting values separately is how today's grant ended up 
 ./scripts/grant-ecr-auth-credential.sh  <file>      # every GAR, same file, after create
 ```
 
+## Revoking: every signing GAR needs the credential
+
+Normally `./scripts/sync.sh` keeps every GAR caught up; see `catch-up-playbook.md`. The commands below are the
+file-based fallback and the checks.
+
+`kli vc revoke` and the revoke branch of `kli multisig join` build the TEL revocation event locally. A GAR
+can only take part when its keystore has all three of these:
+
+- the group registry, registered under `INT_GAR_REG_NAME`
+- the credential's TEL issuance event
+- the credential body
+
+A revoke needs two members (5 at 1/2 each) that both have them. A GAR only holds the credentials it helped
+issue, and a GAR that joined the group later has no registry at all. A late joiner can't create credentials
+either: create and revoke fail with `invalid registry name`.
+
+```bash
+./scripts/revoke-readiness.sh                        # any GAR: only credentials it already knows about
+./scripts/export-group-credentials.sh                # a GAR that holds them: writes <x>.cesr and <x>.json
+./scripts/import-credential.sh <x>.cesr <x>.json     # the other GAR (also adds missing schemas)
+./scripts/adopt-registry.sh <x>.json                 # only if readiness says the registry is not registered
+./scripts/revoke-readiness.sh <x>.json               # compare against the export
+```
+
+Adopt the existing registry; never run `create-registry.sh` for this. A credential names its registry in `ri`
+and can only be revoked in that registry's TEL, and all members must issue into the same one. Adopting
+writes one local record, the same one join writes when a member approves the registry inception. It
+doesn't sign or send anything.
+
+Without a manifest, readiness can only check credentials this keystore already knows about. A new GAR shows 0 credentials and an unregistered registry, so always give it the manifest. With a manifest, the list is everything in the export, and readiness also flags credentials held here that are missing from the manifest. They
+mean the exporter doesn't hold everything, so export from this GAR too. `never issued` means the exporter
+has no TEL issuance either: that create never completed, and there is nothing to revoke.
+
 ## What to send if it is still stuck
 
 The output of step 1 from both GARs, the `mailbox-debug.sh --all` output from the other GAR, and the lead's

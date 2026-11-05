@@ -75,7 +75,8 @@ def poll(hby, seconds):
             return False
 
     try:
-        doing.Doist(limit=seconds, tock=1.0, real=True).do(doers=[mbx, Tick()])
+        # The mailbox poller hands over one message per tick, so tick fast; only the dots are once a second.
+        doing.Doist(limit=seconds, tock=0.03125, real=True).do(doers=[mbx, Tick(tock=1.0)])
     finally:
         print()
         rgy.close()  # callers open their own Regery next; the same LMDB must not be open twice in one process

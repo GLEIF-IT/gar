@@ -10,14 +10,20 @@ Reads the stream through the same Kevery / Tevery / Verifier path the mailbox
 poller uses, runs the escrows until nothing moves, then reports whether each
 credential in the stream is now saved and indexed here.
 
+With --manifest (the JSON export-group-credentials.sh writes next to its
+stream), first caches any schema in the manifest this keystore lacks; without
+the schema a credential stays in the missing-schema escrow.
+
 Usage (normally via import-credential.sh):
   import_credential.py --name <keystore> --passcode <bran> --file <stream.cesr>
+                       [--manifest <manifest.json>]
 """
 import argparse
+import json
 import sys
 
 from keri.app.cli.common import existing
-from keri.core import eventing, parsing, serdering
+from keri.core import eventing, parsing, scheming, serdering
 from keri.vdr import credentialing, verifying
 from keri.vdr.eventing import Tevery
 
@@ -30,6 +36,7 @@ def parse_args():
     p.add_argument("--base", "-b", default="")
     p.add_argument("--passcode", "-p", dest="bran", default=None)
     p.add_argument("--file", "-f", required=True, help="CESR stream from `kli vc export --full`")
+    p.add_argument("--manifest", "-m", default=None, help="manifest from export-group-credentials.sh (schemas)")
     return p.parse_args()
 
 
@@ -50,6 +57,19 @@ def credential_saids(raw):
     return saids
 
 
+def load_schemas(hby, path):
+    with open(path) as f:
+        schemas = json.load(f).get("schemas", {})
+    resolver = scheming.CacheResolver(db=hby.db)
+    added = []
+    for said, raw in schemas.items():
+        if hby.db.schema.get(said) is None:
+            resolver.add(said, raw.encode("utf-8"))  # ignored unless the raw schema's SAID matches
+            if hby.db.schema.get(said) is not None:
+                added.append(said)
+    print(f"schemas: {len(schemas)} in manifest, {len(added)} added here{': ' + ', '.join(added) if added else ''}")
+
+
 def main():
     args = parse_args()
     with open(args.file, "rb") as f:
@@ -59,6 +79,8 @@ def main():
         return 2
     hby = existing.setupHby(name=args.name, base=args.base, bran=args.bran)
     try:
+        if args.manifest:
+            load_schemas(hby, args.manifest)
         rgy = credentialing.Regery(hby=hby, name=hby.name, base=hby.base)
         reger = rgy.reger
         # Same settings as the mailbox poller: these are remote events, not our own.

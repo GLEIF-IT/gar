@@ -53,3 +53,8 @@ if [ -z "${salt}" ]; then
   echo "Generating random salt and storing in Keychain"
   security add-generic-password -a "${LOGNAME}" -s int-gar-salt -w "$(kli salt | tr -d '\r')"
 fi
+
+# Interactive `source ./source.sh` only (every script also sources this file): remind to catch up first.
+if [[ $- == *i* ]] && [ -d "${HOME}/.gar/db/${INT_GAR_NAME}" ]; then
+  echo "Catch up with the rest of the group before anything else: ./scripts/sync.sh"
+fi
