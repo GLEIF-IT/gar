@@ -7,9 +7,10 @@ session, after `source ./source.sh`.
   1. pull:   polls this keystore's mailboxes (topics /credential /replay /reply,
              the same intake `kli ipex list --poll` uses) and ingests any group
              credentials, their TELs, chains and KELs other members pushed here.
-  2. adopt:  if no registry is registered under the registry name yet (a GAR
-             that joined after the registry was incepted), registers the
-             group's existing registry, as adopt-registry.sh does.
+  2. adopt:  registers every group registry the held credentials name that
+             has no local name yet (a GAR that joined after the registry was
+             incepted), as adopt-registry.sh does: under the registry name if
+             it is free, else "<registry name> <first 8 of the prefix>".
   3. push:   sends every member of the group the group-issued credentials this
              keystore holds that the member did not sign itself (a signer holds
              the credential already), with everything needed to verify them (KELs,
@@ -42,7 +43,7 @@ from keri.core import coring, serdering
 from keri.db.dbing import dgKey, snKey
 from keri.vdr import credentialing
 
-from adopt_registry import adopt, group_registries
+from adopt_registry import ensure_registered, group_registries, registered_names
 from export_group_credentials import Exporter, group_credentials
 from revoke_readiness import collect
 from sent_exns import alias_of, poll
@@ -96,6 +97,27 @@ def other_members(ghab):
         if pre != mine and pre not in members:
             members.append(pre)
     return members
+
+
+def has_tel(reger, regk):
+    try:
+        reger.tevers[regk]  # lazy table: only item lookup loads a registry
+        return True
+    except KeyError:
+        return False
+
+
+def latest_registry(reger, group):
+    """Registry of the most recently issued group credential with a TEL issuance here, or None."""
+    best = None
+    for said in group_credentials(reger, group):
+        creder = reger.creds.get(keys=(said,))
+        if creder is None or reger.getTel(snKey(pre=said, sn=0)) is None:
+            continue
+        dt = creder.attrib.get("dt", "") if isinstance(creder.attrib, dict) else ""
+        if best is None or dt > best[0]:
+            best = (dt, creder.regi)
+    return best[1] if best else None
 
 
 def saved_group_credentials(reger, group):
@@ -276,17 +298,25 @@ def main():
         print()
         print("2. registry")
         rc_adopt = 0
-        if rgy.registryByName(args.registry_name) is not None:
-            print(f"  {args.registry_name!r} registered: {rgy.registryByName(args.registry_name).regk}")
-        else:
-            regks = group_registries(rgy.reger, ghab.pre)
-            if not regks:
-                print(f"  {args.registry_name!r} not registered, and no group credential has arrived yet to "
-                      f"name the registry. Another member must run sync.sh (push), then run sync.sh again here.")
+        regks = [r for r in group_registries(rgy.reger, ghab.pre) if has_tel(rgy.reger, r)]
+        if not regks and rgy.registryByName(args.registry_name) is None:
+            print(f"  {args.registry_name!r} not registered, and no group credential has arrived yet to "
+                  f"name the registry. Another member must run sync.sh (push), then run sync.sh again here.")
+            rc_adopt = 1
+        for regk in regks:  # normally one; a group with an older registry too gets both
+            names = registered_names(rgy.reger)
+            if regk in names:
+                print(f"  {names[regk]!r} registered: {regk}")
+            elif ensure_registered(rgy, ghab, args.alias, args.registry_name, regk) is None:
                 rc_adopt = 1
-            else:
-                rc_adopt = adopt(rgy, ghab, args.alias, args.registry_name, regks,
-                                 "credentials the group issued held here")
+
+        current = rgy.registryByName(args.registry_name)
+        latest = latest_registry(rgy.reger, ghab.pre)
+        if current is not None and latest is not None and current.regk != latest:
+            print(f"  WARNING: {args.registry_name!r} is registry {current.regk}, but the group's latest credential "
+                  f"was issued into {latest}. Creates from this GAR would go to a different registry than the other "
+                  f"members' and their signatures would never combine. Check the registry name in ~/.gar/*.sh "
+                  f"with the other GARs.")
 
         # 3. push
         ok = True

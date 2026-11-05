@@ -22,8 +22,9 @@ uses to deliver a credential chain to the QVI:
 
 1. **pull**: polls this GAR's mailboxes and ingests group credentials other members pushed, with their TELs,
    LE/QVI chain and KELs
-2. **adopt**: if no registry is registered under `INT_GAR_REG_NAME` (a GAR that joined later), registers the
-   group's existing one
+2. **adopt**: registers every group registry this GAR's credentials name that has no local name yet (a GAR
+   that joined later). It uses `INT_GAR_REG_NAME` if that's free, and warns if `INT_GAR_REG_NAME` points at a
+   different registry from the one the group issues into.
 3. **push**: sends every other member the group credentials they didn't sign and haven't been sent yet. A
    member that signed a credential's issuance (and its revocation, if any) already holds it. Each GAR records
    locally what reached whom, in `~/.gar/sync/`, so later runs send only what's new, including revocations.
@@ -123,8 +124,11 @@ actually need: Kevin plus one new GAR. Both run `./scripts/sync.sh` first, then:
 ./scripts/revoke-ecr-auth-credential.sh     # or revoke-oor-auth-credential.sh; both enter the SAME datetime
 ```
 
-As with grants, both members must enter the identical datetime, including microseconds, or the two
-revocation events differ and the signatures never combine. Afterwards, everyone's next sync carries the
+The revoke scripts look up the registry the credential was issued into (its `ri`) instead of passing
+`INT_GAR_REG_NAME` blindly. If this GAR can't revoke the credential (not held, no TEL issuance, already
+revoked), they stop with the reason before anything is signed. As with grants, both members must enter the
+identical datetime, including microseconds, or the two revocation events differ and the signatures never
+combine. Afterwards, everyone's next sync carries the
 revocation to the members who didn't sign.
 
 ---
@@ -164,8 +168,8 @@ and it combines with sync.
 | `sync: … not registered, and no group credential has arrived yet to name the registry` | Nobody has pushed to this GAR yet, or the pull was cut off. Ask Kevin to run `sync.sh`, then rerun with `--poll 60`. |
 | `sync: … failed: no witness endpoint known … re-resolve their OOBI` | This GAR doesn't know where that member's witnesses are. Resolve the member's OOBI (`./scripts/resolve-oobi.sh`) and sync again. Only the unsent part is retried. |
 | `sync: … failed: no response from witness … / answered HTTP …` | That witness is down or refused the message. Rerun later: each run picks a random witness of the member, and only the unsent part is resent. |
-| `the name 'Internal GAR Registry' is already registered here for a different registry E…` | This GAR has a different registry under that name, most likely from an earlier `create-registry.sh`. **Do not delete anything.** Send Kevin the prefix it printed. A registry the group never co-signed is unusable but harmless. The fix is to set `INT_GAR_REG_NAME` in `~/.gar/internal.sh` to a new name, for example `Internal GAR Registry 2`, then sync again. |
-| `registry E… is already registered here as 'X'` | It's already adopted, under a different name. Set `INT_GAR_REG_NAME="X"` in `~/.gar/internal.sh` instead of adding a second name. |
+| `WARNING: 'Internal GAR Registry' is registry E…, but the group's latest credential was issued into E…` | This GAR's `INT_GAR_REG_NAME` points at a different registry from the one the group issues into, most likely one an earlier `create-registry.sh` made. Creates from this GAR would never combine with the others. **Do not delete anything.** Sync has already registered the group's registry as `Internal GAR Registry <first 8 of its prefix>`. Set `INT_GAR_REG_NAME` in `~/.gar/internal.sh` to that name (readiness lists every registry here), then sync again. |
+| `credential E… is in registry E…, registered here as 'X' (not 'Internal GAR Registry'); revoking there` | Informational. The revoke scripts revoke in the registry the credential was issued into, whatever its local name. |
 | `registry E… was incepted by E…, not the group` | The credentials or files are from someone else's registry. Stop and tell Kevin. |
 | Readiness `missing: TEL issuance` on a credential the others can revoke | The pull was cut off before that credential's TEL event arrived. Rerun with `--poll 60`. |
 | `not sending N credential(s) with no TEL issuance here` | A `create` on this GAR never completed for those. They were never issued, so there is nothing to sync or revoke. |

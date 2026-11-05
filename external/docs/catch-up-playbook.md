@@ -18,8 +18,10 @@ none and has no registry, so its create and revoke fail with `invalid registry n
 
 1. **pull**: ingests QVI credentials other members pushed, with their TELs and the key event logs needed to
    verify them (GLEIF External and its delegator)
-2. **adopt**: on a GAR that joined later, registers the group's existing registry under `EXT_GAR_REG_NAME`.
-   Never run `create-registry.sh` for this: a new registry can't revoke the group's credentials.
+2. **adopt**: registers every group registry this GAR's credentials name that has no local name yet (a GAR
+   that joined later). It uses `EXT_GAR_REG_NAME` if that's free, and warns if `EXT_GAR_REG_NAME` points at a
+   different registry from the one the group issues into. Never run `create-registry.sh` for this: a new
+   registry can't revoke the group's credentials.
 3. **push**: sends every other member the QVI credentials they didn't sign and haven't been sent yet. What
    reached whom is recorded in `~/.gar/sync/`.
 4. **report**: what this GAR can revoke now
@@ -88,5 +90,10 @@ the same as on the internal side: `--dry-run`, `--poll 60`, `--no-push` / `--no-
 ./scripts/revoke-readiness.sh group-credentials-<ts>.json
 ```
 
-Send the files privately. The error messages and fixes are the same as in the troubleshooting table of
+Send the files privately.
+
+**Revoking.** `revoke-qvi-credential.sh` revokes in the registry the credential was issued into (its `ri`),
+whatever its local name, and stops with the reason before anything is signed if this GAR can't revoke it.
+GLEIF External has more than one registry: Kevin's test-net keystore holds a second, empty one. So this
+matters, and `revoke-readiness.sh` lists every registry a GAR has. The error messages and fixes are the same as in the troubleshooting table of
 `internal/docs/catch-up-playbook.md`, with `EXT_GAR_*` in place of `INT_GAR_*`.

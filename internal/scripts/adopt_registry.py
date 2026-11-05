@@ -126,6 +126,27 @@ def adopt(rgy, ghab, alias, registry_name, regks, source):
     return report(rgy, registry_name)
 
 
+def registered_names(reger):
+    """registry prefix -> local name, for every registry registered here."""
+    return {rec.registryKey: name for (name,), rec in reger.regs.getItemIter()}
+
+
+def ensure_registered(rgy, ghab, alias, preferred, regk):
+    """Local name of registry regk, registering it first if needed. None (and a message) if it can't be.
+
+    The preferred name (INT_GAR_REG_NAME / EXT_GAR_REG_NAME) is used when it is free; a group with
+    an older registry as well gets that one under "<preferred> <first 8 of prefix>".
+    """
+    names = registered_names(rgy.reger)
+    if regk in names:
+        return names[regk]
+    taken = rgy.reger.regs.get(keys=preferred) is not None
+    name = f"{preferred} {regk[:8]}" if taken else preferred
+    if adopt(rgy, ghab, alias, name, [regk], "the credential") != 0:
+        return None
+    return name
+
+
 def report(rgy, name):
     registry = rgy.registryByName(name)
     if registry is None:

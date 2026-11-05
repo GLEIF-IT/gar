@@ -4,9 +4,10 @@ Show, for every credential the group AID has issued, whether THIS keystore can
 take part in revoking it, and what it is missing if not.
 
 `kli vc revoke` and the revoke branch of `kli multisig join` build the TEL rev
-event locally, so a member needs: the group registry registered under the
-registry name the scripts pass (adopt-registry.sh), the credential's TEL
-issuance event, and the credential body. Join also shows the schema title, so
+event locally, so a member needs: the credential's registry registered here
+under some local name (sync.sh / adopt-registry.sh; the revoke scripts look the
+name up from the credential), the credential's TEL issuance event, and the
+credential body. Join also shows the schema title, so
 it needs the schema. A revoke needs two members (5 members at 1/2 each) that
 both have all of these.
 
@@ -58,7 +59,7 @@ def tel_state(reger, said, regk):
     return {"iss": "iss", "bis": "iss", "rev": "rev", "brv": "rev"}.get(et, et), dt
 
 
-def assess(hby, rgy, said, adopted, listed):
+def assess(hby, rgy, said, registered, listed):
     reger = rgy.reger
     creder = reger.creds.get(keys=(said,))
     regk = creder.regi if creder is not None else (listed or {}).get("registry")
@@ -69,10 +70,8 @@ def assess(hby, rgy, said, adopted, listed):
         missing.append("credential body")
     if et is None:
         missing.append("TEL issuance")
-    if adopted is None:
-        missing.append("registry not adopted")
-    elif regk and regk != adopted:
-        missing.append(f"credential is in registry {regk}, not the adopted one")
+    if regk and regk not in registered:
+        missing.append(f"registry {regk} not registered here")
     never = et is None and listed and str(listed.get("state", "")).startswith("no TEL")
     if et == "rev":
         verdict = "revoked"
@@ -109,10 +108,11 @@ def collect(hby, rgy, ghab, registry_name, manifest=None):
     """(rows, counts by verdict, adopted registry prefix or None) for every group credential known here."""
     regrec = rgy.reger.regs.get(keys=registry_name)
     adopted = regrec.registryKey if regrec is not None and regrec.registryKey in rgy.regs else None
+    registered = {rec.registryKey for _, rec in rgy.reger.regs.getItemIter() if rec.registryKey in rgy.regs}
     listed = {c["said"]: c for c in manifest.get("credentials", [])} if manifest else {}
     saids = list(listed)
     saids += [s for s in group_credentials(rgy.reger, ghab.pre) if s not in listed]
-    rows = [assess(hby, rgy, s, adopted, listed.get(s) if manifest else {}) for s in saids]
+    rows = [assess(hby, rgy, s, registered, listed.get(s) if manifest else {}) for s in saids]
     rows.sort(key=lambda r: r["dt"] or "")
     counts = {}
     for r in rows:
@@ -145,7 +145,10 @@ def main():
 
         print()
         print(f"Group: {args.alias} ({ghab.pre})")
-        print(f"Registry {args.registry_name!r}: {adopted or 'NOT registered here (run adopt-registry.sh)'}")
+        print(f"Registry {args.registry_name!r}: {adopted or 'NOT registered here (run sync.sh or adopt-registry.sh)'}")
+        for (name,), rec in rgy.reger.regs.getItemIter():
+            if name != args.registry_name:
+                print(f"Registry {name!r}: {rec.registryKey}")
         if manifest:
             print(f"Manifest: {len(listed)} credential(s), exported {manifest.get('exportedAt', '?')[:19]}"
                   f" by {manifest.get('exportedBy') or '?'}")
@@ -156,10 +159,10 @@ def main():
                   "received are not listed. Run it with the manifest from export-group-credentials.sh to check "
                   "against everything the group issued.")
         if adopted is None:
-            print(f"This keystore cannot revoke (or create) anything until the group registry is registered as "
-                  f"{args.registry_name!r}: import the export, then run adopt-registry.sh <manifest>.")
+            print(f"The create scripts cannot issue from this keystore until a group registry is registered as "
+                  f"{args.registry_name!r}: run ./scripts/sync.sh (or import an export, then adopt-registry.sh).")
         shown = [r for r in rows if args.all or r["verdict"] == "cannot revoke" or r["notes"]]
-        if not shown and rows and adopted is not None:
+        if not shown and rows:
             print("every listed credential not already revoked can be revoked from this keystore")
         for r in shown:
             print()
