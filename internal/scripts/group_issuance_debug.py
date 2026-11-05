@@ -61,7 +61,7 @@ from keri.help import helping
 from keri.peer import exchanging
 from keri.vdr import credentialing, verifying
 
-from sent_exns import alias_of, credential_state, iter_exns
+from sent_exns import alias_of, credential_state, get_exn, iter_exns, iter_serders
 
 
 def parse_args():
@@ -293,7 +293,7 @@ def report(hby, rgy, ghab, only_said):
             inner_a = inner.get("a") if isinstance(inner.get("a"), dict) else {}
             print(f"      exn   {inner.get('r')}  {inner.get('d')}  dt {str(inner.get('dt', ''))[:19]}"
                   f"  acdc {inner_acdc.get('d')}  to {who(hby, org, inner_a.get('i')) if inner_a.get('i') else '?'}")
-            print(f"            stored (fully signed) here: {db.exns.get(keys=(inner.get('d'),)) is not None}")
+            print(f"            stored (fully signed) here: {get_exn(db, inner.get('d')) is not None}")
         anc = embeds.get("anc") if isinstance(embeds.get("anc"), dict) else embeds.get("ixn") if isinstance(embeds.get("ixn"), dict) else None
         sn = None
         if anc:
@@ -313,7 +313,7 @@ def report(hby, rgy, ghab, only_said):
                 or (anc and isinstance(sn, int) and sn <= kever.sn) \
                 or ked["r"] in ("/multisig/icp", "/multisig/rot") \
                 or (ked["r"] == "/multisig/exn" and isinstance(embeds.get("exn"), dict)
-                    and db.exns.get(keys=(embeds["exn"].get("d"),)) is not None)
+                    and get_exn(db, embeds["exn"].get("d")) is not None)
             if serder.said in noted:
                 print("      notification: present" + ("  (already handled; join will show it again)" if handled else ""))
             elif handled:
@@ -346,7 +346,7 @@ def report(hby, rgy, ghab, only_said):
 
     def grant_rows(table):
         out = []
-        for (said_,), serder in table.getItemIter():
+        for said_, serder in iter_serders(db, table):  # tolerates 2022-era exns (see iter_exns)
             ked = serder.ked
             if ked.get("r") != "/ipex/grant" or ked.get("i") != ghab.pre:
                 continue
@@ -372,7 +372,7 @@ def report(hby, rgy, ghab, only_said):
     for csaid, serder in pending + done:
         ked = serder.ked
         a = ked.get("a") if isinstance(ked.get("a"), dict) else {}
-        complete = db.exns.get(keys=(serder.said,)) is not None
+        complete = get_exn(db, serder.said) is not None
         names = signers(serder.said)
         print(f"  {'COMPLETE ' if complete else 'PARTIAL  '} {serder.said}  dt {str(ked.get('dt', ''))[:19]}"
               f"  credential {csaid}")

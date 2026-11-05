@@ -96,6 +96,15 @@ def iter_exns(db):
             continue
 
 
+def iter_serders(db, suber):
+    """Like iter_exns, for any SerderSuber table of exns (e.g. db.epse, the partially signed escrow)."""
+    for key, raw in db.getTopItemIter(db=suber.sdb):
+        try:
+            yield suber._tokeys(key)[0], serdering.SerderKERI(raw=bytes(raw))
+        except kering.ValidationError:
+            continue
+
+
 def get_exn(db, said):
     """The exn with this SAID, or None when absent or unparseable (see iter_exns)."""
     try:
