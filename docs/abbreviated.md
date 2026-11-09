@@ -85,10 +85,11 @@ Then, from within either the `external/` or `internal/` directories:
   - `./scripts/create-registry.sh` with GAR 1. Say "y" to creating a nonce and send it to the other GAR.
   - the other GAR should use the provided nonce with `./scripts/create-registry.sh`
 21. Then Issue the QVI credential with:
-  - `./scripts/create-qvi-credential.sh`
-  - Use the LEI for your target organization, the alias of the QVI OOBI you resolved, and the same date time across both QVIs
+  - `./scripts/prepare-qvi-credential.sh` on one GAR: enter the LEI for your target organization and the AID of the QVI you resolved. It writes a parameters file (with one generated datetime); send it to the other GAR
+  - `./scripts/create-qvi-credential.sh <file>` on both GARs, with the same file
+  - (without a file, `create-qvi-credential.sh` prompts for the LEI, the QVI alias and a datetime that must match across both GARs)
 22. Present (GRANT) the QVI credential with:
-  - `./scripts/qvi-grant-credential.sh`  
+  - `./scripts/qvi-credential-grant.sh <file>` with the same file
   - Do this from both of the GARs.
 23. Admit the QVI credential from the QVI after polling for it:
   - ```bash
